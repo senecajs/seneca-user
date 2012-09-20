@@ -1,0 +1,29 @@
+{
+  "name": "seneca-user",
+  "version": "0.0.0",
+  "description": "user plugin for seneca",
+  "main": "lib/user.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "seneca",
+    "user",
+    "plugin"
+  ],
+  "author": "Richard Rodger",
+  "license": "BSD",
+
+  "dependencies": {
+    "underscore":     "1.1.x",
+    "node-uuid":      "*"
+  },
+
+  "devDependencies": {
+    "vows":"*",
+    "async":"*",
+    "eyes":"*",
+    "gex":"*"
+  }
+}
