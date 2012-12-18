@@ -64,7 +64,7 @@ module.exports = {
           nick:'nick1',
           password:'testtest'
         }, cberr(function(out){
-          assert.ok(out.pass)
+          assert.ok(out.ok)
           var token = out.login.token
         }))
       },
