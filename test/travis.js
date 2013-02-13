@@ -11,7 +11,7 @@ var mock = {
 
 var user_plugin = require('..')
 
-user_plugin.init(mock,{},function(){
+user_plugin(mock,{},function(){
   var rand = Math.random()
   var start = new Date().getTime()
   mock.cmd.ping({rand:rand},function(err,res){

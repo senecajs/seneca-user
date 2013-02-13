@@ -1,13 +1,13 @@
-# seneca-user - Node.js module
+# seneca-user - Node.js plugin module for the Seneca toolkit
 
 ## A user management plugin for the [Seneca](/rjrodger/seneca) toolkit
 
-Dependencies: [seneca-user](/rjrodger/seneca-user)
+Current Version: 0.2.0
 
-Current Version: 0.1.1
+[![Build Status](https://secure.travis-ci.org/rjrodger/seneca-user.png)](http://travis-ci.org/rjrodger/seneca-user)
 
-[![Build Status](https://secure.travis-ci.org/rjrodger/seneca-user.png?a)](http://travis-ci.org/rjrodger/seneca-user)
 
-NOTE: documentation is in progress.
+Documentation is in progress. Take a look at the <a href="http://github.com/rjrodger/seneca-examples">user accounts example</a>.
+
 
 
