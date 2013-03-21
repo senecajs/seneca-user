@@ -13,3 +13,8 @@ results
 
 node_modules
 npm-debug.log
+
+README.html
+
+.DS_Store
+*~
