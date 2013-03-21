@@ -30,7 +30,7 @@ function cberr(win){
 
 
 var si = seneca()
-si.use( require('../lib/user.js') )
+si.use( '..' )
 
 
 describe('user', function() {
@@ -72,9 +72,7 @@ describe('user', function() {
           assert.ok(out.ok)
           var token = out.login.token
         }))
-      },
-
-
+      }
     })
   })
 })
