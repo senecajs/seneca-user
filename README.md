@@ -142,7 +142,7 @@ The login entity has a default type of _-/sys/login_ and standard properties:
    * _email_: copied from user
    * _user_: user.id string
    * _when_: creation time, ISO String, like 2013-03-21T17:32:24.039Z
-   * _active_: if true, login against this token will success, otherwise not
+   * _active_: if true, login against this token will succeed, otherwise not
 
 You can add your own properties, but be careful not to use the standard property names.
 
@@ -201,7 +201,7 @@ user properties. The nick and email fields will be checked for uniqueness. The n
    * _username_: a convenience - just an alias for nick.
    * _password_: Plaintext password, supplied by user - will be encrypted.
    * _repeat_: Password, repeated. Optional - if provided, must match password.
-   * _name_: Name of user. Just a text field. [Cultural imperialism damages your conversions, ya know...](http://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/)!
+   * _name_: Name of user. Just a text field.
    * _active_: if true, user can log in, if false, user can't. Default: true.
 
 #### Provides:
@@ -338,16 +338,15 @@ node your-app.js --seneca.log=type:plugin,plugin:user
 
 You can also set up the logging programmatically:
 
-var seneca = require('seneca')({
-  log:{
-    map:[
-      {plugin:'user',handler:'print'}
-    ]
-  }
-})
+    var seneca = require('seneca')({
+      log:{
+        map:[
+          {plugin:'user',handler:'print'}
+        ]
+      }
+    })
 
-
-For more on logging, see the (seneca logging example)[http://senecajs.org/logging-example.html].
+For more on logging, see the [seneca logging example](http://senecajs.org/logging-example.html).
 
 
 
@@ -359,6 +358,7 @@ As with all seneca plugins, you can customize behavior simply by overwriting act
 For example, to add some custom fields when registering a user:
 
 
+```javascript
     // override by using the same action pattern
     seneca.add({role:'user',cmd:'register'},function(args,done){
     
@@ -374,12 +374,12 @@ For example, to add some custom fields when registering a user:
     function(err,out) {
       console.log('user has team: '+out.user.team)
     })
-
+```
 
 
 ## Test
 
-```bash
+```sh
 cd test
 mocha user.test.js --seneca.log.print
 ```
