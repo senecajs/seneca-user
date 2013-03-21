@@ -18,4 +18,21 @@ seneca.ready(function(){
       })
     })
   })
+
+
+  // override by using the same action pattern
+  seneca.add({role:'user',cmd:'register'},function(args,done){
+
+    // assign user to one of 10 random "teams"
+    args.team = Math.floor( 10 * Math.random() )
+
+    // this calls the original action, as provided by the user plugin
+    this.parent(args,done)
+  })
+
+
+  userpin.register( {name:"Brian O'Nolan",email:'brian@swim-two-birds.com',password:'na-gCopaleen'}, function(err,out) {
+    console.log('user has team: '+out.user.team)
+  })
+
 })

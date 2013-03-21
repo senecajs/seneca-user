@@ -39,7 +39,8 @@ seneca.ready(function(){
 
   var userpin = seneca.pin({role:'user',cmd:'*'})
 
-  userpin.register( {name:"Flann O'Brien",email:'nincompoop@deselby.com',password:'blackair'}, function(err,out) {
+  userpin.register( {name:"Flann O'Brien",email:'nincompoop@deselby.com',password:'blackair'}, 
+  function(err,out) {
 
     userpin.login({email:'nincompoop@deselby.com',password:'bicycle'}, function(err,out){
       console.log('login success: '+out.ok)
@@ -115,7 +116,13 @@ _nick_ or their email address. The _nick_ property is the traditional
 
 The user entity has a default type of _-/sys/user_ and standard properties:
 
-   * _nick_: username
+   * _nick_: Username, mostly. If not provided, will be set to email value.
+   * _email_: Email address. At least one of nick or email is required.
+   * _name_: Name of user. Just a text field. [Cultural imperialism damages your conversions, ya know...](http://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/)!
+   * _active_: if true, user can log in, if false, user can't. Default: true.
+   * _when_: creation time, ISO String, like 2013-03-21T17:32:24.039Z
+   * _salt_: salt for encrypted password
+   * _pass_: encrypted password
 
 You can add your own properties, but be careful not to use the standard property names.
 
@@ -125,12 +132,20 @@ You can add your own properties, but be careful not to use the standard property
 The login entity has a default type of _-/sys/login_ and standard properties:
 
    * _token_: authentication token
+   * _nick_: copied from user
+   * _email_: copied from user
+   * _user_: user.id string
+   * _when_: creation time, ISO String, like 2013-03-21T17:32:24.039Z
+   * _active_: if true, login against this token will success, otherwise not
 
 You can add your own properties, but be careful not to use the standard property names.
 
 
 
 ## Actions
+
+All actions provide results via the standard callback format: <code>function(error,data){ ... }</code>.
+
 
 ### role:user, cmd:login
 
@@ -152,6 +167,139 @@ Object with properties:
    * _user_: user entity
 
 
+
+### role:user, cmd:logout
+
+Logout a user. Update sys_login entry to active:false. Adds login.ended field with ISOString date time.  
+
+#### Arguments:
+   
+   * _token_: existing login.token, maybe from a cookie
+
+#### Provides:
+
+Same object format as login command result: {ok:true|false,user:,login:}
+
+
+
+### role:user, cmd:register
+
+Register a new user. You'll probably call this after a user fills out a regstration form. Any additional action arguments are saved as
+user properties. The nick and email fields will be checked for uniqueness. The new user is not logged in, use the login action for that.
+
+
+#### Arguments:
+   
+   * _nick_: Username, mostly. If not provided, will be set to args.username value, if defined, otherwise args.email value.
+   * _email_: Email address. At least one of nick or email is required.
+   * _username_: a convenience - just an alias for nick.
+   * _password_: Plaintext password, supplied by user - will be encrypted.
+   * _repeat_: Password, repeated. Optional - if provided, must match password.
+   * _name_: Name of user. Just a text field. [Cultural imperialism damages your conversions, ya know...](http://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/)!
+   * _active_: if true, user can log in, if false, user can't. Default: true.
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if registration succeeded, false if not
+   * _user_: new user entity
+
+
+
+### role:user, cmd:auth
+
+Authenticate a login token, returning the associated login and user if
+the token is valid and active. Use this, for example, when handling
+HTTP requests with an authentication cookie, to get the user.
+
+
+#### Arguments:
+   
+   * _token_: existing login.token, maybe from a cookie
+
+#### Provides:
+
+Same object format as login command result: {ok:true|false,user:,login:}
+
+
+### role:user, cmd:update
+
+Update the user's details, such as nick and/or password.
+
+
+#### Arguments:
+   
+   * _orig_nick_: original nick, so user can be found, or use orig_email
+   * _orig_email_: original email, so user can be found, or use orig_nick
+   * _nick_: new nick, optional
+   * _email_: new email, optional
+   * _name_: new name, optional
+   * _password_: new password, optional
+   * _repeat_: new password, repeated. Optional - if provided, must match password
+
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if update succeeded, false if not
+   * _user_: user entity
+
+
+
+### role:user, cmd:clean
+
+Strips sensitive information from user entity. In particular, the pass, salt, and active properties.
+
+#### Arguments:
+   
+None.
+
+#### Provides:
+
+User entity.
+
+
+
+### role:user, cmd:encrypt_password
+
+Encrypts a plaintext password, providing the salt and ciphertext.
+
+#### Arguments:
+   
+   * _password_: plaintext password.
+
+#### Provides:
+
+Object with properties:
+
+   * _salt_: the salt string
+   * _pass_: the ciphertext string
+
+
+### role:user, cmd:verify_password
+
+Verifies that a password matches a given salt and ciphertext.
+
+#### Arguments:
+   
+   * _salt_: the salt string to use, take this from user.salt
+   * _pass_: the pass string to use, take this from user.pass
+   * _proposed_: the proposed plaintext password to verify
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if password matches
+
+
+
+
+
+
+
 ### role:user, cmd:entity
 
 Provide an instance of the user or login entities. Used by other
@@ -168,5 +316,66 @@ Seneca entity object for user or login.
 
 
 
+## Logging
+
+To see what this plugin is doing, try:
+
+```sh
+node your-app.js --seneca.log=plugin:user
+```
+
+This will print action logs and plugin logs for the user plugin. To skip the action logs, use:
+
+```sh
+node your-app.js --seneca.log=type:plugin,plugin:user
+```
+
+You can also set up the logging programmatically:
+
+var seneca = require('seneca')({
+  log:{
+    map:[
+      {plugin:'user',handler:'print'}
+    ]
+  }
+})
+
+
+For more on logging, see the (seneca logging example)[http://senecajs.org/logging-example.html].
+
+
+
+
+### Customization
+
+As with all seneca plugins, you can customize behavior simply by overwriting actions.
+
+For example, to add some custom fields when registering a user:
+
+
+    // override by using the same action pattern
+    seneca.add({role:'user',cmd:'register'},function(args,done){
+    
+      // assign user to one of 10 random "teams"
+      args.team = Math.floor( 10 * Math.random() )
+    
+      // this calls the original action, as provided by the user plugin
+      this.parent(args,done)
+    })
+    
+    
+    userpin.register( {name:"Brian O'Nolan",email:'brian@swim-two-birds.com',password:'na-gCopaleen'}, 
+    function(err,out) {
+      console.log('user has team: '+out.user.team)
+    })
+
+
+
+## Test
+
+```bash
+cd test
+mocha user.test.js --seneca.log.print
+```
 
 
