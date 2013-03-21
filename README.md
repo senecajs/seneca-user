@@ -61,6 +61,12 @@ In the example code, a user is registered, and then two login attempts are made.
 password. The successful login provides a login instance. The _login.token_ property can be used to authenticate this login. For example,
 the [seneca-auth](http://github.com/rjrodger/seneca-auth) plugin uses this token as a HTTP authentication cookie.
 
+To run this example (and the other code in this README), try:
+
+```sh
+node test/readme.js
+```
+
 
 ## Deeper example
 
