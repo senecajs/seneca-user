@@ -28,7 +28,7 @@
   "devDependencies": {
     "gex": "~0.0.3",
     "chai": "~1.5.0",
-    "async": "~0.1.22",
+    "async": "~0.2.5",
     "seneca": "~0.5.3"
   },
   "repository": {
