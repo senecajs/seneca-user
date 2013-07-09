@@ -15,17 +15,18 @@ and a _login_, representing an instance of a user that has been authenticated. A
 This module does not make any assumptions about the context it runs in. 
 Use the [seneca-auth](http://github.com/rjrodger/seneca-auth) plugin to handle web and social media authentication.
 
+For a working example, see the <a href="https://github.com/rjrodger/seneca-examples/tree/master/user-accounts">Seneca user accounts example</a>.
+
 
 ## Support
 
-If you're using this module, feel free to contact me on twitter if you
+If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.2.1 
+Current Version: 0.2.2
 
-Tested on: node 0.8.16, seneca 0.5.3
+Tested on: Node 0.10.6, 0.8.7, Seneca 0.5.9
 
-[![Build Status](https://secure.travis-ci.org/rjrodger/seneca-user.png)](http://travis-ci.org/rjrodger/seneca-user)
 
 
 

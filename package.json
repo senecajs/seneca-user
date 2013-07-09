@@ -1,7 +1,7 @@
 {
   "name": "seneca-user",
   "description": "User management plugin for the seneca module.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "keywords": [
     "seneca",
     "user",
@@ -29,7 +29,7 @@
     "gex": "~0.0.3",
     "chai": "~1.5.0",
     "async": "~0.2.5",
-    "seneca": "~0.5.3"
+    "seneca": ">=0.5.9"
   },
   "repository": {
     "type": "git",
