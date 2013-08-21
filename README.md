@@ -7,7 +7,7 @@ This module is a plugin for the Seneca framework. It provides business logic for
    * login
    * logout
    * registration
-   * password handling
+   * password handling, incl. resets
 
 There are two core concepts: user and login. A _user_, storing the user account details and encrypted passwords, 
 and a _login_, representing an instance of a user that has been authenticated. A user can have multiple logins.
@@ -23,9 +23,9 @@ For a working example, see the <a href="https://github.com/rjrodger/seneca-examp
 If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.2.2
+Current Version: 0.2.3
 
-Tested on: Node 0.10.6, 0.8.7, Seneca 0.5.9
+Tested on: Node 0.10.6, 0.8.7, Seneca 0.5.10
 
 
 
