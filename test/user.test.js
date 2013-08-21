@@ -32,19 +32,13 @@ function cberr(win){
 var si = seneca()
 si.use( '..' )
 
+var userpin = si.pin({role:'user',cmd:'*'})
+var userent = si.make('sys','user')
+
 
 describe('user', function() {
   
-  it('version', function() {
-    assert.ok(gex(si.version),'0.5.*')
-  }),
-
-
   it('happy', function() {
-
-    var userpin = si.pin({role:'user',cmd:'*'})
-    var userent = si.make('test','sys','user')
-    
     async.series({
       prep: function(cb){
         userent.load$({nick:'nick1'},cberr(function(user){
@@ -73,6 +67,78 @@ describe('user', function() {
           var token = out.login.token
         }))
       }
+    })
+  })
+
+
+  it('nick-uniq', function() {
+    userpin.register({
+      nick:'aaa',
+    }, function(err,out){
+      assert.isNull(err)
+      assert.ok(out.ok)
+
+      userpin.register({
+        nick:'aaa',
+      }, function(err,out){
+        assert.isNull(err)
+        assert.ok(!out.ok)
+        assert.equal('nick-exists',out.why)
+      })
+    })
+  })
+
+
+  it('password-mismatch', function() {
+    userpin.register({
+      nick:'npm',
+      password:'a',
+      repeat:'b'
+    }, function(err,out){
+      assert.isNull(err)
+      assert.ok(!out.ok)
+      assert.equal('password_mismatch',out.why)
+    })
+  })
+
+
+  it('login-logic', function() {
+    userpin.register({
+      nick:'n2',
+      password:'a',
+      repeat:'a'
+    }, function(err,out){
+      assert.isNull(err)
+      assert.ok(out.ok)
+
+      userpin.login({}, function(err,out){
+        assert.isNotNull(err)
+        assert.equal('seneca/invalid-act-args',err.seneca.code)
+
+        userpin.login({nick:'not-here'}, function(err,out){
+          assert.isNull(err)
+          assert.ok(!out.ok)
+          assert.equal('user-not-found',out.why)
+
+          userpin.login({nick:'n2'}, function(err,out){
+            assert.isNull(err)
+            assert.ok(!out.ok)
+            assert.equal('invalid-password',out.why)
+
+            userpin.login({nick:'n2',password:'b'}, function(err,out){
+              assert.isNull(err)
+              assert.ok(!out.ok)
+              assert.equal('invalid-password',out.why)
+
+              userpin.login({nick:'n2',password:'a'}, function(err,out){
+                assert.isNull(err)
+                assert.ok(out.ok)
+                assert.equal('password',out.why)
+              })
+            })
+          })
+        })
+      })
     })
   })
 })
