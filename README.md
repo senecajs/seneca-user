@@ -59,7 +59,7 @@ This example, uses a _pin_ for convenience: <code>userpin.register( ... )</code>
 <code>seneca.act({role:'user',cmd:'register', ... )</code>.
 
 In the example code, a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
-password. The successful login provides a login instance. The _login.token_ property can be used to authenticate this login. For example,
+password. The successful login provides a login instance. The _login.id_ property can be used to authenticate this login. For example,
 the [seneca-auth](http://github.com/rjrodger/seneca-auth) plugin uses this token as a HTTP authentication cookie.
 
 To run this example (and the other code in this README), try:
