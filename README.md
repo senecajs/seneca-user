@@ -23,9 +23,9 @@ For a working example, see the <a href="https://github.com/rjrodger/seneca-examp
 If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.2.5
+Current Version: 0.2.6
 
-Tested on: Node 0.10.6, 0.8.7, Seneca 0.5.10
+Tested on: Node 0.10.6, 0.8.7, Seneca 0.5.12
 
 
 

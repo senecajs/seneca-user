@@ -120,21 +120,15 @@ describe('user', function() {
           assert.ok(!out.ok)
           assert.equal('user-not-found',out.why)
 
-          userpin.login({nick:'n2'}, function(err,out){
+          userpin.login({nick:'n2',password:'b'}, function(err,out){
             assert.isNull(err)
             assert.ok(!out.ok)
             assert.equal('invalid-password',out.why)
 
-            userpin.login({nick:'n2',password:'b'}, function(err,out){
+            userpin.login({nick:'n2',password:'a'}, function(err,out){
               assert.isNull(err)
-              assert.ok(!out.ok)
-              assert.equal('invalid-password',out.why)
-
-              userpin.login({nick:'n2',password:'a'}, function(err,out){
-                assert.isNull(err)
-                assert.ok(out.ok)
-                assert.equal('password',out.why)
-              })
+              assert.ok(out.ok)
+              assert.equal('password',out.why)
             })
           })
         })
