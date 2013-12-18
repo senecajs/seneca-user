@@ -168,4 +168,38 @@ describe('user', function () {
       })
     })
   })
+
+  it('delete', function () {
+    userpin.register({
+      nick: 'd1',
+      email:'d1',
+      password: 'd1',
+      repeat: 'd1'
+    }, function (err, out) {
+      assert.isNull(err)
+      assert.ok(out.ok)
+
+      userpin.login({
+        nick: 'd1',
+        password: 'd1'
+      }, function (err, out) {
+        assert.ok(out.ok)
+
+        userpin.delete({
+          nick: 'd1'
+        }, function (err, out) {
+          assert.isNull(err)
+          assert.ok(out.ok)
+
+//          userpin.login({
+//            nick: 'd1',
+//            password: 'd1'
+//          }, function (out) {
+//            assert.isNull(err)
+//            assert.notOk(out.ok)
+//          })
+        })
+      })
+    })
+  })
 })
