@@ -23,7 +23,7 @@ For a working example, see the <a href="https://github.com/rjrodger/seneca-examp
 If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.2.6
+Current Version: 0.2.7
 
 Tested on: Node 0.10.6, 0.8.7, Seneca 0.5.12
 
@@ -353,6 +353,39 @@ Verifies that a password matches a given salt and ciphertext.
    * _salt_: the salt string to use, find this in user.salt
    * _pass_: the pass string to use, find this in user.pass
    * _proposed_: the proposed plaintext password to verify
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if password matches
+
+### role:user, cmd:update
+
+Updates a user.
+
+#### Arguments:
+   
+   * nick: the nick of the user to be updated
+   * orig_nick: if nick will be changed on this update then orig_nick will be used to identify the user
+   * email: the email of the user to be updated
+   * orig_email: if email will be changed on this update then orig_email will be used to identify the user
+   * 
+At least one of these arguments must be present.
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if password matches
+
+### role:user, cmd:delete
+
+Deletes an user and all relationed records.
+
+#### Arguments:
+   
+   * nick: the nick of the user to be updated
 
 #### Provides:
 
