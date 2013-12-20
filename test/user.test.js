@@ -190,14 +190,55 @@ describe('user', function () {
         }, function (err, out) {
           assert.isNull(err)
           assert.ok(out.ok)
+        })
+      })
+    })
+  })
 
-//          userpin.login({
-//            nick: 'd1',
-//            password: 'd1'
-//          }, function (out) {
-//            assert.isNull(err)
-//            assert.notOk(out.ok)
-//          })
+  it('enable-disable-logic', function () {
+    userpin.register({
+      nick: 'en',
+      password: 'a',
+      repeat: 'a'
+    }, function (err, out) {
+      assert.isNull(err)
+      assert.ok(out.ok)
+
+      userpin.login({nick: 'en', password: 'a'}, function (err, out) {
+        assert.isNull(err)
+        assert.ok(out.ok)
+
+        userpin.disable({nick: 'en'}, function (err, out) {
+          assert.isNull(err)
+          assert.ok(out.ok)
+
+          userpin.login({nick: 'en', password: 'a'}, function (err, out) {
+            assert.isNull(err)
+            assert.notOk(out.ok)
+            assert.equal('not-active', out.why)
+
+            userpin.enable({nick: 'en'}, function (err, out) {
+              assert.isNull(err)
+              assert.ok(out.ok)
+
+              userpin.login({nick: 'en', password: 'a'}, function (err, out) {
+                assert.isNull(err)
+                assert.ok(out.ok)
+
+                userpin.enable({}, function (err, out) {
+                  assert.isNull(err)
+                  assert.notOk(out.ok)
+                  assert.equal('cannot-identify-user', out.why)
+
+                  userpin.disable({}, function (err, out) {
+                    assert.isNull(err)
+                    assert.notOk(out.ok)
+                    assert.equal('cannot-identify-user', out.why)
+                  })
+                })
+              })
+            })
+          })
         })
       })
     })
