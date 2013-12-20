@@ -377,7 +377,7 @@ At least one of these arguments must be present.
 
 Object with properties:
 
-   * _ok_: true if password matches
+   * _ok_: true if operation is OK
 
 ### role:user, cmd:delete
 
@@ -391,9 +391,42 @@ Deletes an user and all relationed records.
 
 Object with properties:
 
-   * _ok_: true if password matches
+   * _ok_: true if operation is OK
 
 
+### role:user, cmd:enable
+
+Enables an user.
+
+#### Arguments:
+
+   * nick: the nick of the user to be updated
+   * email: the email of the user to be updated
+
+At least one of these arguments must be present
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if operation is OK
+
+### role:user, cmd:disable
+
+Disables an user.
+
+#### Arguments:
+
+   * nick: the nick of the user to be updated
+   * email: the email of the user to be updated
+
+At least one of these arguments must be present
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if operation is OK
 
 
 
