@@ -361,7 +361,73 @@ Object with properties:
 
    * _ok_: true if password matches
 
+### role:user, cmd:update
 
+Updates a user.
+
+#### Arguments:
+   
+   * nick: the nick of the user to be updated
+   * orig_nick: if nick will be changed on this update then orig_nick will be used to identify the user
+   * email: the email of the user to be updated
+   * orig_email: if email will be changed on this update then orig_email will be used to identify the user
+   * 
+At least one of these arguments must be present.
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if operation is OK
+
+### role:user, cmd:delete
+
+Deletes an user and all relationed records.
+
+#### Arguments:
+   
+   * nick: the nick of the user to be updated
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if operation is OK
+
+
+### role:user, cmd:enable
+
+Enables an user.
+
+#### Arguments:
+
+   * nick: the nick of the user to be updated
+   * email: the email of the user to be updated
+
+At least one of these arguments must be present
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if operation is OK
+
+### role:user, cmd:disable
+
+Disables an user.
+
+#### Arguments:
+
+   * nick: the nick of the user to be updated
+   * email: the email of the user to be updated
+
+At least one of these arguments must be present
+
+#### Provides:
+
+Object with properties:
+
+   * _ok_: true if operation is OK
 
 
 
