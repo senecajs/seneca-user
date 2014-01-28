@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2013 Richard Rodger, MIT License */
+/* Copyright (c) 2012-2014 Richard Rodger, MIT License */
 "use strict";
 
 
@@ -14,7 +14,7 @@ var uuid = require('node-uuid')
 
 module.exports = function user(options) {
   var seneca = this
-  var name = "user"
+  var plugin = "user"
 
 
   options = seneca.util.deepextend({
@@ -45,67 +45,67 @@ module.exports = function user(options) {
 
 
   // actions provided
-  seneca.add( {role:name, cmd:'encrypt_password'},
+  seneca.add( {role:plugin, cmd:'encrypt_password'},
               {password:'string$',repeat:'string$'},
               cmd_encrypt_password )
 
-  seneca.add( {role:name, cmd:'verify_password'},
+  seneca.add( {role:plugin, cmd:'verify_password'},
               {proposed:'required$,string$',pass:'required$,string$',salt:'required$,string$'},
               cmd_verify_password )
 
-  seneca.add( {role:name, cmd:'change_password'},
+  seneca.add( {role:plugin, cmd:'change_password'},
               {nick:'string$',email:'string$',username:'string$',atleastone$:['nick','email','user','username'],
                password:'required$,string$',repeat:'string$'},
               resolve_user(cmd_change_password,true) )
 
-  seneca.add( {role:name, cmd:'register'},
+  seneca.add( {role:plugin, cmd:'register'},
               {nick:'string$',email:'string$',username:'string$',atleastone$:['nick','email','username'],
                 name:'string$',active:'boolean$',password:'string$',repeat:'string$',confirm:'boolean$' },
               cmd_register )    
 
-  seneca.add( {role:name, cmd:'login'},
+  seneca.add( {role:plugin, cmd:'login'},
               {nick:'string$',email:'string$',user:'object$',username:'string$',atleastone$:['nick','email','user','username'],
                password:'string$',auto:'boolean$'
               },
               resolve_user(cmd_login,false) )
 
-  seneca.add( {role:name, cmd:'confirm'},
+  seneca.add( {role:plugin, cmd:'confirm'},
               {code:'string$,required$'},
               cmd_confirm )
 
-  seneca.add( {role:name, cmd:'auth'},
+  seneca.add( {role:plugin, cmd:'auth'},
               {token:'required$,string$' },
               cmd_auth )
 
-  seneca.add( {role:name, cmd:'logout'},
+  seneca.add( {role:plugin, cmd:'logout'},
               {token:'required$,string$'},
               cmd_logout )
 
-  seneca.add( {role:name, cmd:'clean'},
+  seneca.add( {role:plugin, cmd:'clean'},
               {user:'required$,object$'},
               cmd_clean )
 
-  seneca.add( {role:name, cmd:'create_reset'},
+  seneca.add( {role:plugin, cmd:'create_reset'},
               {nick:'string$',email:'string$',user:'object$',username:'string$',atleastone$:['nick','email','user','username'] },
               resolve_user(cmd_create_reset,false) )
 
-  seneca.add( {role:name, cmd:'load_reset'},
+  seneca.add( {role:plugin, cmd:'load_reset'},
               {token:'required$,string$'},
               cmd_load_reset )
 
-  seneca.add( {role:name, cmd:'execute_reset'},
+  seneca.add( {role:plugin, cmd:'execute_reset'},
               {token:'required$,string$',password:'required$,string$'},
               cmd_execute_reset )
 
 
   // DEPRECATED
-  seneca.add( {role:name, cmd:'update'},
+  seneca.add( {role:plugin, cmd:'update'},
               cmd_update )
 
 
 
   // DEPRECATED
-  seneca.add({role:name, cmd:'entity'},function(args,done){
+  seneca.add({role:plugin, cmd:'entity'},function(args,done){
     var kind = args.kind || 'user'
     var ent = ( 'user' == kind ? userent : loginent ).make$()
     done(null, ent )
@@ -177,6 +177,7 @@ module.exports = function user(options) {
   }
 
 
+
   function hide(args,propnames){
     var outargs = _.extend({},args)
     for( var pn in propnames ) {
@@ -184,6 +185,7 @@ module.exports = function user(options) {
     }
     return outargs
   }
+
 
 
   function hasher( src, rounds, done ) {
@@ -278,7 +280,7 @@ module.exports = function user(options) {
     var user = args.user
 
     seneca.act(
-      { role:name, cmd:'encrypt_password', whence:'change/user='+user.id+','+user.nick,
+      { role:plugin, cmd:'encrypt_password', whence:'change/user='+user.id+','+user.nick,
         password: args.password, repeat: args.repeat },
       function( err, out ){
         if( err ) return done(err);
@@ -364,7 +366,7 @@ module.exports = function user(options) {
     }
 
     function saveuser() {
-      seneca.act({ role:name, cmd:'encrypt_password', whence:'register/user='+user.nick,
+      seneca.act({ role:plugin, cmd:'encrypt_password', whence:'register/user='+user.nick,
                    password: args.password, repeat: args.repeat },function( err, out ){
         if( err ) return done(err);
         if( !out.ok ) return done(null,out);
@@ -403,7 +405,7 @@ module.exports = function user(options) {
       return make_login( user, 'auto' );
     }
     else {
-      seneca.act({role:name,cmd:'verify_password',proposed:args.password,pass:user.pass,salt:user.salt}, function(err,out){
+      seneca.act({role:plugin,cmd:'verify_password',proposed:args.password,pass:user.pass,salt:user.salt}, function(err,out){
         if( err ) return done(err);
         if( !out.ok ) {
           seneca.log.debug('login/fail',why='invalid-password',user)
@@ -609,7 +611,7 @@ module.exports = function user(options) {
         return done(null,{ok:false,token:args.token,why:'reset-stale'})
       }
 
-      seneca.act({ role:name,cmd:'change_password',user:reset.user,
+      seneca.act({ role:plugin,cmd:'change_password',user:reset.user,
                    password:args.password,repeat:args.repeat },
                  function( err, out ) {
                    if( err ) return done(err);
@@ -706,7 +708,7 @@ module.exports = function user(options) {
 
 
 
-  seneca.add({init:name},function(args,done){
+  seneca.add({init:plugin},function(args,done){
     this.act('role:util, cmd:define_sys_entity', {list:[
       { entity:userent.entity$, fields:options.user.fields},
       { entity:loginent.entity$,fields:options.login.fields},
@@ -716,6 +718,6 @@ module.exports = function user(options) {
 
 
   return {
-    name:name
+    name:plugin
   }
 }

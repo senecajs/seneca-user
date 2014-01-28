@@ -23,10 +23,11 @@ For a working example, see the <a href="https://github.com/rjrodger/seneca-examp
 If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.2.6
+Current Version: 0.2.7
 
-Tested on: Node 0.10.6, 0.8.7, Seneca 0.5.12
+Tested on: Node 0.10.24, Seneca 0.5.15
 
+[![Build Status](https://travis-ci.org/rjrodger/seneca-user.png?branch=master)](https://travis-ci.org/rjrodger/seneca-user)
 
 
 
