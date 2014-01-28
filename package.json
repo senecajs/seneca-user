@@ -16,7 +16,7 @@
   "files": [
     "LICENSE.txt",
     "README.md",
-    "lib"
+    "user.js"
   ],
   "dependencies": {
     "underscore": "1.5.x",
