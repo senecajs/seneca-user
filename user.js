@@ -321,19 +321,19 @@ module.exports = function user(options) {
   // - password: password text, alias: pass
   // - confirmed:  user already confirmed, default: false
   // Generated fields:
-  // - when: date and time of registration
+  // - dateRegistered: date and time of registration
   // - confirmcode: used for confirmation
-  // Provides: 
+  // Provides:
   // - success: {ok:true,user:}
   // - failure: {ok:false,why:,nick:}
   function cmd_register(args,done){
     var user = userent.make$()
 
-    user.nick     = args.nick || args.username || args.email
-    user.email    = args.email
-    user.name     = args.name || ''
-    user.active   = void 0==args.active ? true : args.active
-    user.when     = new Date().toISOString()
+    user.nick           = args.nick || args.username || args.email
+    user.email          = args.email
+    user.name           = args.name || ''
+    user.active         = void 0==args.active ? true : args.active
+    user.dateRegistered = new Date().toISOString()
 
     if( options.confirm ) {
       user.confirmed = args.confirmed || false
@@ -399,7 +399,7 @@ module.exports = function user(options) {
   // - nick, email: to resolve user
   // - user:     user entity
   // - password: password text, alias: pass
-  // Provides: 
+  // Provides:
   // - success: {ok:true,user:,login:}
   // - failure: {ok:false,why:,nick:}
   function cmd_login(args,done){
@@ -432,12 +432,12 @@ module.exports = function user(options) {
         {},
         cleanargs,
         {
-          id$     : uuid(),
-          nick    : user.nick,
-          user    : user.id,
-          when    : new Date().toISOString(),
-          active  : true,
-          why     : why
+          id$           : uuid(),
+          nick          : user.nick,
+          user          : user.id,
+          dateLoggedIn  : new Date().toISOString(),
+          active        : true,
+          why           : why
         },
         "role,cmd,password"))
 
@@ -457,7 +457,7 @@ module.exports = function user(options) {
   // Confirm an existing user - using confirm code sent to user
   // - nick, email: to resolve user
   // - code: confirmcode
-  // Provides: 
+  // Provides:
   // - success: {ok:true,user:}
   // - failure: {ok:false,why:,nick:}
   function cmd_confirm(args,done){
@@ -490,7 +490,7 @@ module.exports = function user(options) {
 
   // Authorize an existing user - resolve using token
   // - token:    login token
-  // Provides: 
+  // Provides:
   // - success: {ok:true,user:,login:}
   // - failure: {ok:false,why:,token:}
   function cmd_auth(args,done){
@@ -519,7 +519,7 @@ module.exports = function user(options) {
 
   // Logout an existing user - resolve using token, idempotent
   // - token:    login token
-  // Provides: 
+  // Provides:
   // - success: {ok:true,user:,login:}
   function cmd_logout(args,done){
     var q = {id:args.token}
@@ -554,11 +554,11 @@ module.exports = function user(options) {
     var user = args.user
 
     resetent.make$({
-      id$:    uuid(),
-      nick:   user.nick,
-      user:   user.id,
-      when:   new Date().toISOString(),
-      active: true
+      id$       : uuid(),
+      nick      : user.nick,
+      user      : user.id,
+      dateReset : new Date().toISOString(),
+      active    : true
 
     }).save$( function( err, reset ) {
       if( err ) return done(err);
@@ -616,7 +616,7 @@ module.exports = function user(options) {
         return done(null,{ok:false,token:args.token,why:'reset-not-active'})
       }
 
-      if( new Date() < new Date(reset.when)+ options.resetperiod ) {
+      if( new Date() < new Date(reset.dateReset)+ options.resetperiod ) {
         return done(null,{ok:false,token:args.token,why:'reset-stale'})
       }
 
