@@ -1,0 +1,613 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Seneca-user by rjrodger</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Seneca-user</h1>
+        <p>seneca-user</p>
+
+        <p class="view"><a href="https://github.com/rjrodger/seneca-user">View the Project on GitHub <small>rjrodger/seneca-user</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/rjrodger/seneca-user/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/rjrodger/seneca-user/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/rjrodger/seneca-user">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="seneca-user" class="anchor" href="#seneca-user"><span class="octicon octicon-link"></span></a>seneca-user</h1>
+
+<h2>
+<a name="a-user-management-plugin-for-the-seneca-toolkit" class="anchor" href="#a-user-management-plugin-for-the-seneca-toolkit"><span class="octicon octicon-link"></span></a>A user management plugin for the <a href="http://senecajs.org">Seneca</a> toolkit</h2>
+
+<p>This module is a plugin for the Seneca framework. It provides business logic for user management, such as:</p>
+
+<ul>
+<li>login</li>
+<li>logout</li>
+<li>registration</li>
+<li>password handling, incl. resets</li>
+</ul><p>There are two core concepts: user and login. A <em>user</em>, storing the user account details and encrypted passwords, 
+and a <em>login</em>, representing an instance of a user that has been authenticated. A user can have multiple logins.</p>
+
+<p>This module does not make any assumptions about the context it runs in. 
+Use the <a href="http://github.com/rjrodger/seneca-auth">seneca-auth</a> plugin to handle web and social media authentication.</p>
+
+<p>For a working example, see the <a href="https://github.com/rjrodger/seneca-examples/tree/master/user-accounts">Seneca user accounts example</a>.</p>
+
+<h2>
+<a name="support" class="anchor" href="#support"><span class="octicon octicon-link"></span></a>Support</h2>
+
+<p>If you're using this module, feel free to contact me on Twitter if you
+have any questions! :) <a href="http://twitter.com/rjrodger">@rjrodger</a></p>
+
+<p>Current Version: 0.2.7</p>
+
+<p>Tested on: Node 0.10.24, Seneca 0.5.15</p>
+
+<p><a href="https://travis-ci.org/rjrodger/seneca-user"><img src="https://travis-ci.org/rjrodger/seneca-user.png?branch=master" alt="Build Status"></a></p>
+
+<h2>
+<a name="quick-example" class="anchor" href="#quick-example"><span class="octicon octicon-link"></span></a>Quick example</h2>
+
+<div class="highlight highlight-JavaScript"><pre><span class="kd">var</span> <span class="nx">seneca</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'seneca'</span><span class="p">)()</span>
+<span class="nx">seneca</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'user'</span><span class="p">)</span>
+
+<span class="nx">seneca</span><span class="p">.</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+
+  <span class="kd">var</span> <span class="nx">userpin</span> <span class="o">=</span> <span class="nx">seneca</span><span class="p">.</span><span class="nx">pin</span><span class="p">({</span><span class="nx">role</span><span class="o">:</span><span class="s1">'user'</span><span class="p">,</span><span class="nx">cmd</span><span class="o">:</span><span class="s1">'*'</span><span class="p">})</span>
+
+  <span class="nx">userpin</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span> <span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s2">"Flann O'Brien"</span><span class="p">,</span><span class="nx">email</span><span class="o">:</span><span class="s1">'nincompoop@deselby.com'</span><span class="p">,</span><span class="nx">password</span><span class="o">:</span><span class="s1">'blackair'</span><span class="p">},</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">out</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="nx">userpin</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span><span class="nx">email</span><span class="o">:</span><span class="s1">'nincompoop@deselby.com'</span><span class="p">,</span><span class="nx">password</span><span class="o">:</span><span class="s1">'bicycle'</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">out</span><span class="p">){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'login success: '</span><span class="o">+</span><span class="nx">out</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span>
+
+      <span class="nx">userpin</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span><span class="nx">email</span><span class="o">:</span><span class="s1">'nincompoop@deselby.com'</span><span class="p">,</span><span class="nx">password</span><span class="o">:</span><span class="s1">'blackair'</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">out</span><span class="p">){</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'login success: '</span><span class="o">+</span><span class="nx">out</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'login instance: '</span><span class="o">+</span><span class="nx">out</span><span class="p">.</span><span class="nx">login</span><span class="p">)</span>
+      <span class="p">})</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+</pre></div>
+
+<p>This example, uses a <em>pin</em> for convenience: <code>userpin.register( ... )</code> is the same as 
+<code>seneca.act({role:'user',cmd:'register', ... )</code>.</p>
+
+<p>In the example code, a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
+password. The successful login provides a login instance. The <em>login.id</em> property can be used to authenticate this login. For example,
+the <a href="http://github.com/rjrodger/seneca-auth">seneca-auth</a> plugin uses this token as a HTTP authentication cookie.</p>
+
+<p>To run this example (and the other code in this README), try:</p>
+
+<div class="highlight highlight-sh"><pre>node <span class="nb">test</span>/readme.js
+</pre></div>
+
+<h2>
+<a name="deeper-example" class="anchor" href="#deeper-example"><span class="octicon octicon-link"></span></a>Deeper example</h2>
+
+<p>Take a look at the <a href="http://github.com/rjrodger/seneca-examples">user accounts example</a>.</p>
+
+<h2>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<div class="highlight highlight-sh"><pre>npm install seneca
+npm install seneca-user
+</pre></div>
+
+<p>You'll need the <a href="http://github.com/rjrodger/seneca">seneca</a> module to use this module - it's just a plugin.</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>To load the plugin:</p>
+
+<div class="highlight highlight-JavaScript"><pre><span class="nx">seneca</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'user'</span><span class="p">,</span> <span class="p">{</span> <span class="p">...</span> <span class="nx">options</span> <span class="p">...</span> <span class="p">})</span>
+</pre></div>
+
+<p>The user and login data is persisted using Seneca entities. These have
+names <em>sys/user</em> and <em>sys/login</em>.</p>
+
+<p>Passwords are not stored in plaintext, but using an ~10k round salted SHA512 hash. In
+the context of password reset functionality, this means you can
+generate new passwords, but cannot recover old ones. 
+<a href="http://www.codinghorror.com/blog/2007/09/youre-probably-storing-passwords-incorrectly.html">This is what you want</a>.</p>
+
+<p>There are separate actions to encrypt and verify passwords, so you can do things your own way if you like.</p>
+
+<p>To support different use cases, users can be identified by either a
+<em>nick</em> or their email address. The <em>nick</em> property is the traditional
+'username', but does not need to be used in this fashion (hence the name 'nick').</p>
+
+<p>All actions defined by this plugin return meta data objects containing the results of the action. The meta data object
+contains an <em>ok</em> field that is either true or false, indicating the success or failure of the action. For example, a login attempt with an invalid password will result in an <code>{ok:false,...}</code>. When relevant, a <em>why</em> property is also provided, with a code that indicates the reason for the result. For example: {...,why:'user-not-found'}.</p>
+
+<h2>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h2>
+
+<ul>
+<li>
+<em>rounds</em>: number of SHA512 rounds to use for password encryption, default: 11111</li>
+<li>
+<em>autopass</em>: automatically generate an (unrecoverable) password if none is supplied - mostly good for testing, default: true</li>
+<li>
+<em>mustrepeat</em>: you must provide a <em>repeat</em> argument (a repeat of the password) when setting a password</li>
+<li>
+<em>resetperiod</em>: duration in millis that a password reset token is valid, default: 24 hours</li>
+</ul><p>To set options, do so when you load the plugin:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">seneca</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">'user'</span><span class="p">,{</span> <span class="nx">resetperiod</span><span class="o">:</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">1000</span> <span class="p">})</span>
+</pre></div>
+
+<h2>
+<a name="entities" class="anchor" href="#entities"><span class="octicon octicon-link"></span></a>Entities</h2>
+
+<h3>
+<a name="user" class="anchor" href="#user"><span class="octicon octicon-link"></span></a>User</h3>
+
+<p>The user entity has a default type of <em>-/sys/user</em> and standard properties:</p>
+
+<ul>
+<li>
+<em>nick</em>: Username, mostly. If not provided, will be set to email value.</li>
+<li>
+<em>email</em>: Email address. At least one of nick or email is required.</li>
+<li>
+<em>name</em>: Name of user. Just a text field. <a href="http://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/">Cultural imperialism damages your conversions, ya know...</a>!</li>
+<li>
+<em>active</em>: if true, user can log in, if false, user can't. Default: true.</li>
+<li>
+<em>when</em>: creation time, ISO String, like 2013-03-21T17:32:24.039Z</li>
+<li>
+<em>salt</em>: salt for encrypted password</li>
+<li>
+<em>pass</em>: encrypted password</li>
+</ul><p>You can add your own properties, but be careful not to use the standard property names.</p>
+
+<h3>
+<a name="login" class="anchor" href="#login"><span class="octicon octicon-link"></span></a>Login</h3>
+
+<p>The login entity has a default type of <em>-/sys/login</em> and standard properties:</p>
+
+<ul>
+<li>
+<em>id</em>: authentication token, UUID</li>
+<li>
+<em>nick</em>: copied from user</li>
+<li>
+<em>user</em>: user.id string</li>
+<li>
+<em>when</em>: creation time, ISO String, like 2013-03-21T17:32:24.039Z</li>
+<li>
+<em>active</em>: if true, login against this token will succeed, otherwise not</li>
+</ul><p>You can add your own properties, but be careful not to use the standard property names.</p>
+
+<h3>
+<a name="reset" class="anchor" href="#reset"><span class="octicon octicon-link"></span></a>Reset</h3>
+
+<p>The reset entity has a default type of <em>-/sys/reset</em> and standard properties:</p>
+
+<ul>
+<li>
+<em>id</em>: authentication token, UUID</li>
+<li>
+<em>nick</em>: copied from user</li>
+<li>
+<em>user</em>: user.id string</li>
+<li>
+<em>when</em>: creation time, ISO String, like 2013-03-21T17:32:24.039Z</li>
+<li>
+<em>active</em>: if true, reset against this token will succeed, otherwise not</li>
+</ul><p>You can add your own properties, but be careful not to use the standard property names.</p>
+
+<h2>
+<a name="actions" class="anchor" href="#actions"><span class="octicon octicon-link"></span></a>Actions</h2>
+
+<p>All actions provide results via the standard callback format: <code>function(error,data){ ... }</code>.</p>
+
+<p>To customize the behavior of the plugin, override these actions, and provide your own business logic. You call call <em>this.prior</em>
+inside each custom action to perform the default behaviour - see the [Customization] section below.</p>
+
+<h3>
+<a name="roleuser-cmdlogin" class="anchor" href="#roleuser-cmdlogin"><span class="octicon octicon-link"></span></a>role:user, cmd:login</h3>
+
+<p>Login an existing user. Creates a new sys_login entry.</p>
+
+<h4>
+<a name="arguments" class="anchor" href="#arguments"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>
+<em>nick</em>: required if no email, identifies user, alias: username</li>
+<li>
+<em>email</em>: required if no nick, identifies user</li>
+<li>
+<em>password</em>: password as entered by user, optional if using <em>auto</em>
+</li>
+<li>
+<em>auto</em>: automatic login without password, default: <em>false</em>. Use this to generate login tokens.</li>
+<li>
+<em>user</em>: specify user using a sys/user entity - for convenience use inside your own actions, when you already have a user entity loaded</li>
+</ul><h4>
+<a name="provides" class="anchor" href="#provides"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if login succeeded, false if not</li>
+<li>
+<em>login</em>: login entity, id is the login token, used as cookie</li>
+<li>
+<em>user</em>: user entity</li>
+<li>
+<em>why</em>: indicates reason login failed or succeeded, refer to <a href="https://github.com/rjrodger/seneca-user/blob/master/lib/user.js">source</a> for codes.</li>
+</ul><h3>
+<a name="roleuser-cmdlogout" class="anchor" href="#roleuser-cmdlogout"><span class="octicon octicon-link"></span></a>role:user, cmd:logout</h3>
+
+<p>Logout a user. Update <em>sys/login</em> entry to <em>active:false</em>. Adds <em>ended</em> field with ISOString date time.  </p>
+
+<h4>
+<a name="arguments-1" class="anchor" href="#arguments-1"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>
+<em>token</em>: existing login token, maybe from a cookie</li>
+</ul><h4>
+<a name="provides-1" class="anchor" href="#provides-1"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Same object format as login command result: {ok:true|false,user:,login:}</p>
+
+<h3>
+<a name="roleuser-cmdregister" class="anchor" href="#roleuser-cmdregister"><span class="octicon octicon-link"></span></a>role:user, cmd:register</h3>
+
+<p>Register a new user. You'll probably call this after a user fills out
+a regstration form. Any additional action arguments are saved as user
+properties. The nick and email fields will be checked for
+uniqueness. The new user is not logged in, use the login action for
+that.</p>
+
+<h4>
+<a name="arguments-2" class="anchor" href="#arguments-2"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>
+<em>nick</em>: Username, mostly. If not provided, will be set to args.username value, if defined, otherwise args.email value.</li>
+<li>
+<em>email</em>: Email address. At least one of nick or email is required.</li>
+<li>
+<em>username</em>: a convenience - just an alias for nick.</li>
+<li>
+<em>password</em>: Plaintext password, supplied by user - will be stored encrypted and unrecoverable.</li>
+<li>
+<em>repeat</em>: Password, repeated. Optional - if provided, must match password.</li>
+<li>
+<em>name</em>: Name of user. Just a text field.</li>
+<li>
+<em>active</em>: if true, user can log in, if false, user can't. Default: true.</li>
+</ul><h4>
+<a name="provides-2" class="anchor" href="#provides-2"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if registration succeeded, false if not</li>
+<li>
+<em>user</em>: new user entity</li>
+<li>
+<em>why</em>: indicates reason registration failed, refer to <a href="https://github.com/rjrodger/seneca-user/blob/master/lib/user.js">source</a> for codes.</li>
+</ul><h3>
+<a name="roleuser-cmdauth" class="anchor" href="#roleuser-cmdauth"><span class="octicon octicon-link"></span></a>role:user, cmd:auth</h3>
+
+<p>Authenticate a login token, returning the associated <em>sys/login</em> and <em>sys/user</em> if
+the token is valid and active. Use this, for example, when handling
+HTTP requests with an authentication cookie, to get the user.</p>
+
+<h4>
+<a name="arguments-3" class="anchor" href="#arguments-3"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>
+<em>token</em>: existing login token, maybe from a cookie</li>
+</ul><h4>
+<a name="provides-3" class="anchor" href="#provides-3"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Same object format as login command result: {ok:true|false,user:,login:}</p>
+
+<h3>
+<a name="roleuser-cmdcreate_reset" class="anchor" href="#roleuser-cmdcreate_reset"><span class="octicon octicon-link"></span></a>role:user, cmd:create_reset</h3>
+
+<p>Create a reset token, valid for a 24 hours (use the <em>resetperiod</em> options to alter the validity period). This action
+creates an entry in the <em>sys/reset</em> collection.</p>
+
+<h4>
+<a name="arguments-4" class="anchor" href="#arguments-4"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>
+<em>nick</em>: required if no email, identifies user, alias: username</li>
+<li>
+<em>email</em>: required if no nick, identifies user</li>
+<li>
+<em>user</em>: specify user using a sys/user entity - for convenience use inside your own actions, when you already have a user entity loaded</li>
+</ul><h4>
+<a name="provides-4" class="anchor" href="#provides-4"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if update succeeded, false if not</li>
+<li>
+<em>user</em>: <em>sys/user</em> entity</li>
+<li>
+<em>reset</em>: <em>sys/reset</em> entity</li>
+</ul><h3>
+<a name="roleuser-cmdload_reset" class="anchor" href="#roleuser-cmdload_reset"><span class="octicon octicon-link"></span></a>role:user, cmd:load_reset</h3>
+
+<p>Load a <em>sys/reset</em> entity using a reset token. Use this to load the details of a reset request, possible to confirm with user.</p>
+
+<h4>
+<a name="arguments-5" class="anchor" href="#arguments-5"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>
+<em>token</em>: reset token</li>
+</ul><h4>
+<a name="provides-5" class="anchor" href="#provides-5"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if reset found, false if not</li>
+<li>
+<em>user</em>: <em>sys/user</em> entity</li>
+<li>
+<em>reset</em>: <em>sys/reset</em> entity</li>
+<li>
+<em>why</em>: reason for failure</li>
+</ul><h3>
+<a name="roleuser-cmdexecute_reset" class="anchor" href="#roleuser-cmdexecute_reset"><span class="octicon octicon-link"></span></a>role:user, cmd:execute_reset</h3>
+
+<p>Execute a password reset action. The user identified by the reset token is allowed to change their password. THe reset must be active, and the validity period must not be expired. On successful reset, the <em>sys/reset</em> is deactivated and cannot be reused.</p>
+
+<h4>
+<a name="arguments-6" class="anchor" href="#arguments-6"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>
+<em>token</em>: reset token</li>
+<li>
+<em>password</em>: new password</li>
+<li>
+<em>repeat</em>: optional, repeat of new password</li>
+</ul><h4>
+<a name="provides-6" class="anchor" href="#provides-6"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if reset found, false if not</li>
+<li>
+<em>user</em>: <em>sys/user</em> entity</li>
+<li>
+<em>reset</em>: <em>sys/reset</em> entity</li>
+<li>
+<em>why</em>: reason for failure</li>
+</ul><h3>
+<a name="roleuser-cmdencrypt_password" class="anchor" href="#roleuser-cmdencrypt_password"><span class="octicon octicon-link"></span></a>role:user, cmd:encrypt_password</h3>
+
+<p>Encrypts a plaintext password, providing the salt and ciphertext. The encyption is <em>options.rounds</em> (default:11111) rounds of SHA512.</p>
+
+<h4>
+<a name="arguments-7" class="anchor" href="#arguments-7"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>
+<em>password</em>: plaintext password.</li>
+<li>
+<em>repeat</em>: optional, repeat of password</li>
+</ul><h4>
+<a name="provides-7" class="anchor" href="#provides-7"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if succeeded</li>
+<li>
+<em>salt</em>: the salt string</li>
+<li>
+<em>pass</em>: the ciphertext string</li>
+<li>
+<em>why</em>: reason for failure</li>
+</ul><h3>
+<a name="roleuser-cmdverify_password" class="anchor" href="#roleuser-cmdverify_password"><span class="octicon octicon-link"></span></a>role:user, cmd:verify_password</h3>
+
+<p>Verifies that a password matches a given salt and ciphertext.</p>
+
+<h4>
+<a name="arguments-8" class="anchor" href="#arguments-8"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>
+<em>salt</em>: the salt string to use, find this in user.salt</li>
+<li>
+<em>pass</em>: the pass string to use, find this in user.pass</li>
+<li>
+<em>proposed</em>: the proposed plaintext password to verify</li>
+</ul><h4>
+<a name="provides-8" class="anchor" href="#provides-8"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if password matches</li>
+</ul><h3>
+<a name="roleuser-cmdupdate" class="anchor" href="#roleuser-cmdupdate"><span class="octicon octicon-link"></span></a>role:user, cmd:update</h3>
+
+<p>Updates a user.</p>
+
+<h4>
+<a name="arguments-9" class="anchor" href="#arguments-9"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>nick: the nick of the user to be updated</li>
+<li>orig_nick: if nick will be changed on this update then orig_nick will be used to identify the user</li>
+<li>email: the email of the user to be updated</li>
+<li>orig_email: if email will be changed on this update then orig_email will be used to identify the user</li>
+<li>
+At least one of these arguments must be present.</li>
+</ul><h4>
+<a name="provides-9" class="anchor" href="#provides-9"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if operation is OK</li>
+</ul><h3>
+<a name="roleuser-cmddelete" class="anchor" href="#roleuser-cmddelete"><span class="octicon octicon-link"></span></a>role:user, cmd:delete</h3>
+
+<p>Deletes an user and all relationed records.</p>
+
+<h4>
+<a name="arguments-10" class="anchor" href="#arguments-10"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>nick: the nick of the user to be updated</li>
+</ul><h4>
+<a name="provides-10" class="anchor" href="#provides-10"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if operation is OK</li>
+</ul><h3>
+<a name="roleuser-cmdenable" class="anchor" href="#roleuser-cmdenable"><span class="octicon octicon-link"></span></a>role:user, cmd:enable</h3>
+
+<p>Enables an user.</p>
+
+<h4>
+<a name="arguments-11" class="anchor" href="#arguments-11"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>nick: the nick of the user to be updated</li>
+<li>email: the email of the user to be updated</li>
+</ul><p>At least one of these arguments must be present</p>
+
+<h4>
+<a name="provides-11" class="anchor" href="#provides-11"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if operation is OK</li>
+</ul><h3>
+<a name="roleuser-cmddisable" class="anchor" href="#roleuser-cmddisable"><span class="octicon octicon-link"></span></a>role:user, cmd:disable</h3>
+
+<p>Disables an user.</p>
+
+<h4>
+<a name="arguments-12" class="anchor" href="#arguments-12"><span class="octicon octicon-link"></span></a>Arguments:</h4>
+
+<ul>
+<li>nick: the nick of the user to be updated</li>
+<li>email: the email of the user to be updated</li>
+</ul><p>At least one of these arguments must be present</p>
+
+<h4>
+<a name="provides-12" class="anchor" href="#provides-12"><span class="octicon octicon-link"></span></a>Provides:</h4>
+
+<p>Object with properties:</p>
+
+<ul>
+<li>
+<em>ok</em>: true if operation is OK</li>
+</ul><h2>
+<a name="logging" class="anchor" href="#logging"><span class="octicon octicon-link"></span></a>Logging</h2>
+
+<p>To see what this plugin is doing, try:</p>
+
+<div class="highlight highlight-sh"><pre>node your-app.js --seneca.log<span class="o">=</span>plugin:user
+</pre></div>
+
+<p>This will print action logs and plugin logs for the user plugin. To skip the action logs, use:</p>
+
+<div class="highlight highlight-sh"><pre>node your-app.js --seneca.log<span class="o">=</span><span class="nb">type</span>:plugin,plugin:user
+</pre></div>
+
+<p>You can also set up the logging programmatically:</p>
+
+<pre><code>var seneca = require('seneca')({
+  log:{
+    map:[
+      {plugin:'user',handler:'print'}
+    ]
+  }
+})
+</code></pre>
+
+<p>For more on logging, see the <a href="http://senecajs.org/logging-example.html">seneca logging example</a>.</p>
+
+<h3>
+<a name="customization" class="anchor" href="#customization"><span class="octicon octicon-link"></span></a>Customization</h3>
+
+<p>As with all seneca plugins, you can customize behavior simply by overwriting actions.</p>
+
+<p>For example, to add some custom fields when registering a user:</p>
+
+<div class="highlight highlight-javascript"><pre>    <span class="c1">// override by using the same action pattern</span>
+    <span class="nx">seneca</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span><span class="nx">role</span><span class="o">:</span><span class="s1">'user'</span><span class="p">,</span><span class="nx">cmd</span><span class="o">:</span><span class="s1">'register'</span><span class="p">},</span><span class="kd">function</span><span class="p">(</span><span class="nx">args</span><span class="p">,</span><span class="nx">done</span><span class="p">){</span>
+
+      <span class="c1">// assign user to one of 10 random "teams"</span>
+      <span class="nx">args</span><span class="p">.</span><span class="nx">team</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="p">)</span>
+
+      <span class="c1">// this calls the original action, as provided by the user plugin</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">(</span><span class="nx">args</span><span class="p">,</span><span class="nx">done</span><span class="p">)</span>
+    <span class="p">})</span>
+
+
+    <span class="nx">userpin</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span> <span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s2">"Brian O'Nolan"</span><span class="p">,</span><span class="nx">email</span><span class="o">:</span><span class="s1">'brian@swim-two-birds.com'</span><span class="p">,</span><span class="nx">password</span><span class="o">:</span><span class="s1">'na-gCopaleen'</span><span class="p">},</span> 
+    <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">out</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'user has team: '</span><span class="o">+</span><span class="nx">out</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">team</span><span class="p">)</span>
+    <span class="p">})</span>
+</pre></div>
+
+<h2>
+<a name="test" class="anchor" href="#test"><span class="octicon octicon-link"></span></a>Test</h2>
+
+<div class="highlight highlight-sh"><pre><span class="nb">cd test</span>
+mocha user.test.js --seneca.log.print
+</pre></div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/rjrodger">rjrodger</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
