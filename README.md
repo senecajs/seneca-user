@@ -128,6 +128,11 @@ seneca.use('user',{ resetperiod: 3600*1000 })
 ```
 
 
+## Annotated Source Code
+
+The full source code of this plugin is [annotated](http://rjrodger.github.io/seneca-user/user.html).
+
+
 
 ## Entities
 

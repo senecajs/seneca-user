@@ -12,7 +12,9 @@ var uuid = require('node-uuid')
 // See the seneca-auth plugin for an example of an API that uses this plugin
 
 function conditionalExtend(user, args) {
-  var extra = _.omit(args,['role','cmd','nick','email','name','active','username','password','salt','pass','id','confirmed','confirmcode'])
+  var extra = _.omit(args,[
+    'role','cmd','nick','email','name','active','username','password','salt','pass','id','confirmed','confirmcode'
+  ])
   _.map(extra,function(val,key){
     if( !key.match(/\$/) ) {
       user[key]=val
@@ -21,10 +23,9 @@ function conditionalExtend(user, args) {
 }
 module.exports = function user(options) {
   var seneca = this
-  var plugin = "user"
-
 
   options = seneca.util.deepextend({
+    plugin:'user',
     rounds:11111,
     autopass:true,    // generate a password if none provided
     mustrepeat:false, // password repeat arg needed
@@ -46,15 +47,30 @@ module.exports = function user(options) {
   },options)
 
 
+  var plugin = options.plugin
+
+
   var userent  = seneca.make('sys/user')
   var loginent = seneca.make('sys/login')
   var resetent = seneca.make('sys/reset')
 
 
-  // actions provided
-  seneca.add( {role:plugin, cmd:'encrypt_password'},
-              {password:'string$',repeat:'string$'},
-              cmd_encrypt_password )
+  // # Action patterns.
+  // These define the pattern interface for this plugin.
+  ;
+
+
+  // ### Encrypt a password string
+  // Pattern: _**role**:user, **cmd**:encrypt_password_ 
+  seneca.add({
+    role: plugin, 
+    cmd:  'encrypt_password',
+
+    password: {type:'string$'},
+    repeat:   {type:'string$'},
+  }, cmd_encrypt_password )
+
+
 
   seneca.add( {role:plugin, cmd:'verify_password'},
               {proposed:'required$,string$',pass:'required$,string$',salt:'required$,string$'},
