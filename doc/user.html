@@ -48,8 +48,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>WARNING: this plugin is for <em>internal</em> use, DO NOT expose via an API
-See the seneca-auth plugin for an example of an API that uses this plugin</p>
+              <p>WARNING: this plugin is for <em>internal</em> use, DO NOT expose via an API.
+See the seneca-auth plugin for an example of an API that uses this plugin.</p>
 
             </div>
             
@@ -64,16 +64,30 @@ See the seneca-auth plugin for an example of an API that uses this plugin</p>
   })
 }
 module.exports = <span class="function"><span class="keyword">function</span> <span class="title">user</span><span class="params">(options)</span> {</span>
-  <span class="keyword">var</span> seneca = <span class="keyword">this</span>
+  <span class="keyword">var</span> seneca = <span class="keyword">this</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h1>Plugin options.</h1>
+<p>These are the defaults. You can override using the <em>options</em> argument.<br>Example: <code>seneca.use(&quot;user&quot;,{mustrepeat:true})</code>.</p>
 
-  options = seneca.util.deepextend({
-    plugin:<span class="string">'user'</span>,
-    rounds:<span class="number">11111</span>,
-    autopass:<span class="literal">true</span>,    <span class="comment">// generate a password if none provided</span>
-    mustrepeat:<span class="literal">false</span>, <span class="comment">// password repeat arg needed</span>
-    resetperiod:(<span class="number">24</span>*<span class="number">60</span>*<span class="number">60</span>*<span class="number">1000</span>), <span class="comment">// must reset within this time period, default: 24 hours</span>
-    confirm:<span class="literal">false</span>,
-    oldsha:<span class="literal">true</span>,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  options = seneca.util.deepextend({
+    role:        <span class="string">'user'</span>,
+    rounds:      <span class="number">11111</span>,
+    autopass:    <span class="literal">true</span>,    <span class="comment">// generate a password if none provided</span>
+    mustrepeat:  <span class="literal">false</span>, <span class="comment">// password repeat arg needed</span>
+    resetperiod: (<span class="number">24</span>*<span class="number">60</span>*<span class="number">60</span>*<span class="number">1000</span>), <span class="comment">// must reset within this time period, default: 24 hours</span>
+    confirm:     <span class="literal">false</span>,
+    oldsha:      <span class="literal">true</span>,
     user:{
       fields:[
         {name:<span class="string">'pass'</span>,hide:<span class="literal">true</span>},
@@ -86,31 +100,7 @@ module.exports = <span class="function"><span class="keyword">function</span> <s
     reset:{
       fields:[]
     },
-  },options)
-
-
-  <span class="keyword">var</span> plugin = options.plugin
-
-
-  <span class="keyword">var</span> userent  = seneca.make(<span class="string">'sys/user'</span>)
-  <span class="keyword">var</span> loginent = seneca.make(<span class="string">'sys/login'</span>)
-  <span class="keyword">var</span> resetent = seneca.make(<span class="string">'sys/reset'</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <h1>Action patterns.</h1>
-<p>These define the pattern interface for this plugin.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  ;</pre></div></div>
+  },options)</pre></div></div>
             
         </li>
         
@@ -118,82 +108,16 @@ module.exports = <span class="function"><span class="keyword">function</span> <s
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h3>Encrypt a password string</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:encrypt_password</em> </p>
+              <p>You can change the <em>role</em> value for the plugin patterns.
+Use this when you want to load multiple versions of the plugin
+and expose them via different patterns.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add({
-    role: plugin, 
-    cmd:  <span class="string">'encrypt_password'</span>,
-
-    password: {type:<span class="string">'string$'</span>},
-    repeat:   {type:<span class="string">'string$'</span>},
-  }, cmd_encrypt_password )
-
-
-
-  seneca.add( {role:plugin, cmd:<span class="string">'verify_password'</span>},
-              {proposed:<span class="string">'required$,string$'</span>,pass:<span class="string">'required$,string$'</span>,salt:<span class="string">'required$,string$'</span>},
-              cmd_verify_password )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'change_password'</span>},
-              {nick:<span class="string">'string$'</span>,email:<span class="string">'string$'</span>,username:<span class="string">'string$'</span>,atleastone$:[<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'user'</span>,<span class="string">'username'</span>],
-               password:<span class="string">'required$,string$'</span>,repeat:<span class="string">'string$'</span>},
-              resolve_user(cmd_change_password,<span class="literal">true</span>) )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'register'</span>},
-              {nick:<span class="string">'string$'</span>,email:<span class="string">'string$'</span>,username:<span class="string">'string$'</span>,atleastone$:[<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'username'</span>],
-               name:<span class="string">'string$'</span>,active:<span class="string">'boolean$'</span>,password:<span class="string">'string$'</span>,repeat:<span class="string">'string$'</span>,confirm:<span class="string">'boolean$'</span> },
-              cmd_register )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'login'</span>},
-              {nick:<span class="string">'string$'</span>,email:<span class="string">'string$'</span>,user:<span class="string">'object$'</span>,username:<span class="string">'string$'</span>,atleastone$:[<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'user'</span>,<span class="string">'username'</span>],
-               password:<span class="string">'string$'</span>,auto:<span class="string">'boolean$'</span>
-              },
-              resolve_user(cmd_login,<span class="literal">false</span>) )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'confirm'</span>},
-              {code:<span class="string">'string$,required$'</span>},
-              cmd_confirm )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'auth'</span>},
-              {token:<span class="string">'required$,string$'</span> },
-              cmd_auth )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'logout'</span>},
-              {token:<span class="string">'required$,string$'</span>},
-              cmd_logout )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'clean'</span>},
-              {user:<span class="string">'required$,object$'</span>},
-              cmd_clean )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'create_reset'</span>},
-              {nick:<span class="string">'string$'</span>,email:<span class="string">'string$'</span>,user:<span class="string">'object$'</span>,username:<span class="string">'string$'</span>,atleastone$:[<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'user'</span>,<span class="string">'username'</span>] },
-              resolve_user(cmd_create_reset,<span class="literal">false</span>) )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'load_reset'</span>},
-              {token:<span class="string">'required$,string$'</span>},
-              cmd_load_reset )
-
-  seneca.add( {role:plugin, cmd:<span class="string">'execute_reset'</span>},
-              {token:<span class="string">'required$,string$'</span>,password:<span class="string">'required$,string$'</span>},
-              cmd_execute_reset )
-
-
-
-  seneca.add( {role:plugin, cmd:<span class="string">'update'</span>},
-              cmd_update )
-  seneca.add( {role:plugin, cmd:<span class="string">'enable'</span>},
-              cmd_enable )
-  seneca.add( {role:plugin, cmd:<span class="string">'disable'</span>},
-              cmd_disable )
-  seneca.add( {role:plugin, cmd:<span class="string">'delete'</span>},
-              cmd_delete )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> role = options.role</pre></div></div>
             
         </li>
         
@@ -204,15 +128,443 @@ module.exports = <span class="function"><span class="keyword">function</span> <s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
+              <p>There are the data entities that the plugin uses
+<em>userent</em>: standard user entity sys/user - user details are stored here
+<em>loginent</em>: standard login entity sys/login - valid logins are stored here
+<em>resetent</em>: standard user entity sys/user - reset tokens are stored here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> userent  = seneca.make(<span class="string">'sys/user'</span>)
+  <span class="keyword">var</span> loginent = seneca.make(<span class="string">'sys/login'</span>)
+  <span class="keyword">var</span> resetent = seneca.make(<span class="string">'sys/reset'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h1>Action patterns</h1>
+<p>These define the pattern interface for this plugin.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  ;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h3>Encrypt a plain text password string</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:encrypt_password</em>  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role, 
+    cmd:  <span class="string">'encrypt_password'</span>,
+
+    password: {type:<span class="string">'string$'</span>}, <span class="comment">// password plain text string</span>
+    repeat:   {type:<span class="string">'string$'</span>}, <span class="comment">// password plain text string, repeated</span>
+  }, cmd_encrypt_password )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h3>Verify a password string</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:verify_password</em>
+Has the user entered the correct password?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role, 
+    cmd:  <span class="string">'verify_password'</span>,
+
+    proposed: {required$:<span class="literal">true</span>,string$:<span class="literal">true</span>},
+    pass:     {required$:<span class="literal">true</span>,string$:<span class="literal">true</span>},
+    salt:     {required$:<span class="literal">true</span>,string$:<span class="literal">true</span>}
+  }, cmd_verify_password )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h3>Change password</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:change_password</em>  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role, 
+    cmd:  <span class="string">'change_password'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>identify user, various options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    atleastone$:[<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'user'</span>,<span class="string">'username'</span>],
+    nick:     {string$:<span class="literal">true</span>},
+    email:    {string$:<span class="literal">true</span>},
+    username: {string$:<span class="literal">true</span>},
+    user:     {object$:<span class="literal">true</span>},
+
+    password: {string$:<span class="literal">true</span>,required$:<span class="literal">true</span>}, <span class="comment">// new password plain text string</span>
+    repeat:   {string$:<span class="literal">true</span>}                 <span class="comment">// new password plain text string, repeated</span>
+  }, resolve_user(cmd_change_password,<span class="literal">true</span>))</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h3>Register a new user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:register</em>  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role, 
+    cmd:  <span class="string">'register'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>identify user, various options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    atleastone$: [<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'username'</span>],
+    nick:        {string$:<span class="literal">true</span>},
+    email:       {string$:<span class="literal">true</span>},
+    username:    {string$:<span class="literal">true</span>},
+
+    password:    {string$:<span class="literal">true</span>},  <span class="comment">// password plain text string</span>
+    repeat:      {string$:<span class="literal">true</span>},  <span class="comment">// password plain text string, repeated</span>
+
+    name:        {string$:<span class="literal">true</span>},  <span class="comment">// full name, as one string</span>
+    active:      {boolean$:<span class="literal">true</span>}, <span class="comment">// is user active?</span>
+
+    confirm:     {boolean$:<span class="literal">true</span>}, <span class="comment">// is user confirmed?</span>
+  }, cmd_register )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h3>Login a user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:login</em><br>Creates an entry in <em>sys/login</em> and generates a login token</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role:role, 
+    cmd:<span class="string">'login'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>identify user, various options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    atleastone$:[<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'user'</span>,<span class="string">'username'</span>],
+    nick:     {string$:<span class="literal">true</span>},
+    email:    {string$:<span class="literal">true</span>},
+    username: {string$:<span class="literal">true</span>},
+    user:     {object$:<span class="literal">true</span>},
+
+    password: {string$:<span class="literal">true</span>}, <span class="comment">// password plain text</span>
+    auto:     {boolean$:<span class="literal">true</span>} <span class="comment">// login without password</span>
+
+  }, resolve_user(cmd_login,<span class="literal">false</span>) )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <h3>Confirm user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:confirm</em><br>Use confirmation code, provided to user by email (say), to confirm registration.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role, 
+    cmd:  <span class="string">'confirm'</span>,
+    
+    code:{string$:<span class="literal">true</span>,required$:<span class="literal">true</span>} <span class="comment">// confirmation code</span>
+  }, cmd_confirm )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h3>Authorize user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:auth</em><br>Validates that the token exists and is active</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role, 
+    cmd:  <span class="string">'auth'</span>,
+
+    token:{required$:<span class="literal">true</span>,string$:<span class="literal">true</span>} <span class="comment">// login token</span>
+  }, cmd_auth )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <h3>Logout user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:logout</em><br>Mark token record in <em>sys/login</em> as inactive</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role, 
+    cmd:  <span class="string">'logout'</span>,
+
+    token:{required$:<span class="literal">true</span>,string$:<span class="literal">true</span>} <span class="comment">// login token</span>
+  }, cmd_logout )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h3>Clean user data</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:clean</em><br>Remove sensitive data fields such as password hash.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role, 
+    cmd:  <span class="string">'clean'</span>,
+
+    user:{required$:<span class="literal">true</span>,entity$:<span class="string">'sys/user'</span>}, <span class="comment">// sys/user entity</span>
+  }, cmd_clean )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h3>Create a password reset entry</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:create_reset</em><br>Create an entry in <em>sys/reset</em> that provides a reset token</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'create_reset'</span>},
+              resolve_user(cmd_create_reset,<span class="literal">false</span>) )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h3>Load a password reset entry</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:load_reset</em><br>Load a <em>sys/reset</em> entry by reset token</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'load_reset'</span>},
+              cmd_load_reset )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h3>Execute a password reset</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:execute_reset</em><br>Execute a <em>sys/reset</em> entry by reset token, providing the new password.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'execute_reset'</span>},
+              cmd_execute_reset )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <h3>Update user details</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:update</em>  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'update'</span>},
+              cmd_update )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h3>Enable user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:</em><br>TODO: rename to activate for consistency</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'enable'</span>},
+              cmd_enable )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h3>Disable user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:</em><br>TODO: rename to deactivate for consistency</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'disable'</span>},
+              cmd_disable )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <h3>Delete user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:</em><br>TODO: rename to remove for consistency</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'delete'</span>},
+              cmd_delete )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
               <p>DEPRECATED</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add({role:plugin, cmd:<span class="string">'entity'</span>},<span class="keyword">function</span>(args,done){
+            <div class="content"><div class='highlight'><pre>  seneca.add({role:role, cmd:<span class="string">'entity'</span>},<span class="keyword">function</span>(args,done){
     <span class="keyword">var</span> kind = args.kind || <span class="string">'user'</span>
     <span class="keyword">var</span> ent = ( <span class="string">'user'</span> == kind ? userent : loginent ).make$()
     done(<span class="literal">null</span>, ent )
-  })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Action Implementations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  ;
 
 
   <span class="function"><span class="keyword">function</span> <span class="title">resolve_user</span><span class="params">( cmd, fail )</span> {</span>
@@ -231,11 +583,11 @@ module.exports = <span class="function"><span class="keyword">function</span> <s
         </li>
         
         
-        <li id="section-6">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>email wins</p>
 
@@ -309,11 +661,11 @@ module.exports = <span class="function"><span class="keyword">function</span> <s
         </li>
         
         
-        <li id="section-7">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>don&#39;t chew up the CPU</p>
 
@@ -334,11 +686,11 @@ module.exports = <span class="function"><span class="keyword">function</span> <s
         </li>
         
         
-        <li id="section-8">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Encrypt password using a salt and multiple SHA512 rounds
 Override for password strength checking
@@ -382,11 +734,11 @@ use why if password too weak</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Verify proposed password is correct, redoing SHA512 rounds
 - proposed: trial password string
@@ -403,11 +755,11 @@ Provides: {ok:}</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>for backwards compatibility with &lt;= 0.2.3</p>
 
@@ -429,11 +781,11 @@ Provides: {ok:}</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Change password using user&#39;s nick or email
 - nick, email: to resolve user
@@ -449,7 +801,7 @@ Provides: {ok:,user:}</p>
     <span class="keyword">var</span> user = args.user
 
     seneca.act(
-      { role:plugin, cmd:<span class="string">'encrypt_password'</span>, whence:<span class="string">'change/user='</span>+user.id+<span class="string">','</span>+user.nick,
+      { role:role, cmd:<span class="string">'encrypt_password'</span>, whence:<span class="string">'change/user='</span>+user.id+<span class="string">','</span>+user.nick,
         password: args.password, repeat: args.repeat },
       <span class="keyword">function</span>( err, out ){
         <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
@@ -469,11 +821,11 @@ Provides: {ok:,user:}</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Register a new user
 - nick:     username, data store should ensure unique, alias: username, email used if not present
@@ -516,11 +868,11 @@ Provides:
         </li>
         
         
-        <li id="section-13">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>unsafe nick unique check, data store should also enforce !!</p>
 
@@ -541,11 +893,11 @@ Provides:
         </li>
         
         
-        <li id="section-14">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>unsafe email unique check, data store should also enforce !!</p>
 
@@ -564,7 +916,7 @@ Provides:
     }
 
     <span class="function"><span class="keyword">function</span> <span class="title">saveuser</span><span class="params">()</span> {</span>
-      seneca.act({ role:plugin, cmd:<span class="string">'encrypt_password'</span>, whence:<span class="string">'register/user='</span>+user.nick,
+      seneca.act({ role:role, cmd:<span class="string">'encrypt_password'</span>, whence:<span class="string">'register/user='</span>+user.nick,
                    password: args.password, repeat: args.repeat },<span class="keyword">function</span>( err, out ){
                      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
                      <span class="keyword">if</span>( !out.ok ) <span class="keyword">return</span> done(<span class="literal">null</span>,out);
@@ -585,11 +937,11 @@ Provides:
         </li>
         
         
-        <li id="section-15">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Login an existing user - generates a login token. User must be active
 - nick, email: to resolve user
@@ -613,7 +965,7 @@ Provides:
       <span class="keyword">return</span> make_login( user, <span class="string">'auto'</span> );
     }
     <span class="keyword">else</span> {
-      seneca.act({role:plugin,cmd:<span class="string">'verify_password'</span>,proposed:args.password,pass:user.pass,salt:user.salt}, <span class="keyword">function</span>(err,out){
+      seneca.act({role:role,cmd:<span class="string">'verify_password'</span>,proposed:args.password,pass:user.pass,salt:user.salt}, <span class="keyword">function</span>(err,out){
         <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
         <span class="keyword">if</span>( !out.ok ) {
           seneca.log.debug(<span class="string">'login/fail'</span>,why=<span class="string">'invalid-password'</span>,user)
@@ -654,11 +1006,11 @@ Provides:
         </li>
         
         
-        <li id="section-16">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Confirm an existing user - using confirm code sent to user
 - nick, email: to resolve user
@@ -698,11 +1050,11 @@ Provides:
         </li>
         
         
-        <li id="section-17">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Authorize an existing user - resolve using token
 - token:    login token
@@ -737,11 +1089,11 @@ Provides:
         </li>
         
         
-        <li id="section-18">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>Logout an existing user - resolve using token, idempotent
 - token:    login token
@@ -776,11 +1128,11 @@ Provides:
         </li>
         
         
-        <li id="section-19">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Create a password reset token
 - nick, email: to resolve user
@@ -809,11 +1161,11 @@ Provides: {ok:,reset:,user:}</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Load a password reset token
 - token: reset token string
@@ -846,11 +1198,11 @@ Provides: {ok:,reset:,user:}</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Execute a password change using a reset token
 - token: reset token string
@@ -879,7 +1231,7 @@ Provides: {ok:,reset:,user:}</p>
         <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,token:args.token,why:<span class="string">'reset-stale'</span>})
       }
 
-      seneca.act({ role:plugin,cmd:<span class="string">'change_password'</span>,user:reset.user,
+      seneca.act({ role:role,cmd:<span class="string">'change_password'</span>,user:reset.user,
                    password:args.password,repeat:args.repeat },
                  <span class="keyword">function</span>( err, out ) {
                    <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
@@ -923,11 +1275,11 @@ Provides: {ok:,reset:,user:}</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>delete from login</p>
 
@@ -940,11 +1292,11 @@ Provides: {ok:,reset:,user:}</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>delete now from resetent</p>
 
@@ -990,11 +1342,11 @@ Provides: {ok:,reset:,user:}</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>FIX: needs to a proper action call</p>
 
@@ -1020,11 +1372,11 @@ Provides: {ok:,reset:,user:}</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>unsafe nick unique check, data store should also enforce !!</p>
 
@@ -1051,11 +1403,11 @@ Provides: {ok:,reset:,user:}</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>unsafe email unique check, data store should also enforce !!</p>
 
@@ -1140,11 +1492,11 @@ Provides: {ok:,reset:,user:}</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>DEPRECATED - do this in seneca-auth</p>
 
@@ -1161,7 +1513,7 @@ Provides: {ok:,reset:,user:}</p>
 
 
 
-  seneca.add({init:plugin},<span class="keyword">function</span>(args,done){
+  seneca.add({init:role},<span class="keyword">function</span>(args,done){
     <span class="keyword">this</span>.act(<span class="string">'role:util, cmd:define_sys_entity'</span>, {list:[
       { entity:userent.entity$, fields:options.user.fields},
       { entity:loginent.entity$,fields:options.login.fields},
@@ -1171,7 +1523,7 @@ Provides: {ok:,reset:,user:}</p>
 
 
   <span class="keyword">return</span> {
-    name:plugin
+    name:role
   }
 }</pre></div></div>
             

@@ -1,7 +1,7 @@
 {
   "name": "seneca-user",
   "description": "User management plugin for the seneca module.",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "keywords": [
     "seneca",
     "user",
@@ -23,7 +23,7 @@
     "node-uuid": "~1.4.1"
   },
   "peerDependencies": {
-    "seneca": "~0.5.16"
+    "seneca": ">=0.5.16"
   },
   "devDependencies": {
     "gex": "~0.1.3",
