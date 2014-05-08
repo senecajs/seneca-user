@@ -808,12 +808,12 @@ module.exports = function user(options) {
       // delete from login
       var login = loginent.make$()
       login.remove$(q, function(err, data){
-        if( err ) return done(err,{ok:false})
+        if( err ) return seneca.log.warn(err)
 
         // delete now from resetent
         var reset = resetent.make$()
         reset.remove$(q, function(err, data){
-          if( err ) return done(err,{ok:false})
+          if( err ) return seneca.log.warn(err)
 
           user.remove$(q, function(err, data){
             if( err ) return done(err,{ok:false})
