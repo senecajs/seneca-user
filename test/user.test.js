@@ -106,25 +106,28 @@ describe('user', function () {
       assert.isNull(err)
       assert.ok(out.ok)
 
-      userpin.login({}, function (err, out) {
-        assert.isNotNull(err)
-        assert.equal('seneca/invalid-act-args', err.seneca.code)
+      try {
+        userpin.login({})
+        assert.fail()
+      }
+      catch(e) {
+        assert.equal('invalid-act-args',e.seneca.code)
+      }
 
-        userpin.login({nick: 'not-here'}, function (err, out) {
+      userpin.login({nick: 'not-here'}, function (err, out) {
+        assert.isNull(err)
+        assert.ok(!out.ok)
+        assert.equal('user-not-found', out.why)
+        
+        userpin.login({nick: 'n2', password: 'b'}, function (err, out) {
           assert.isNull(err)
           assert.ok(!out.ok)
-          assert.equal('user-not-found', out.why)
-
-          userpin.login({nick: 'n2', password: 'b'}, function (err, out) {
+          assert.equal('invalid-password', out.why)
+          
+          userpin.login({nick: 'n2', password: 'a'}, function (err, out) {
             assert.isNull(err)
-            assert.ok(!out.ok)
-            assert.equal('invalid-password', out.why)
-
-            userpin.login({nick: 'n2', password: 'a'}, function (err, out) {
-              assert.isNull(err)
-              assert.ok(out.ok)
-              assert.equal('password', out.why)
-            })
+            assert.ok(out.ok)
+            assert.equal('password', out.why)
           })
         })
       })
