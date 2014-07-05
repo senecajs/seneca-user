@@ -57,11 +57,13 @@ module.exports = function user(options) {
   var role = options.role
 
 
+  // FIX: can't creat here - need to be in context
+
   // There are the data entities that the plugin uses
   // _userent_: standard user entity sys/user - user details are stored here
   // _loginent_: standard login entity sys/login - valid logins are stored here
   // _resetent_: standard user entity sys/user - reset tokens are stored here
-  var userent  = seneca.make('sys/user')
+  // var userent  = seneca.make('sys/user')
   var loginent = seneca.make('sys/login')
   var resetent = seneca.make('sys/reset')
 
@@ -274,6 +276,7 @@ module.exports = function user(options) {
   function resolve_user( cmd, fail ) {
     return function( args, done ) {
       var seneca = this
+      var userent  = seneca.make('sys/user')
 
       if( args.user && args.user.entity$ ) {
         return cmd.call( seneca, args, done )
@@ -472,7 +475,9 @@ module.exports = function user(options) {
   // - success: {ok:true,user:}
   // - failure: {ok:false,why:,nick:}
   function cmd_register(args,done){
-    var user = userent.make$()
+    var seneca  = this
+    var userent = seneca.make('sys/user')
+    var user    = userent.make$()
 
     user.nick     = args.nick || args.username || args.email
     user.email    = args.email
@@ -607,6 +612,7 @@ module.exports = function user(options) {
   // - failure: {ok:false,why:,nick:}
   function cmd_confirm(args,done){
     var seneca = this, user = args.user, why;
+    var userent  = seneca.make('sys/user')
 
     userent.load$({confirmcode:args.code}, function(err,user){
       if( err ) return done(err);
@@ -639,6 +645,9 @@ module.exports = function user(options) {
   // - success: {ok:true,user:,login:}
   // - failure: {ok:false,why:,token:}
   function cmd_auth(args,done){
+    var seneca  = this
+    var userent = seneca.make('sys/user')
+
     var q = {id:args.token}
 
     loginent.load$(q, function( err, login ) {
@@ -667,6 +676,9 @@ module.exports = function user(options) {
   // Provides: 
   // - success: {ok:true,user:,login:}
   function cmd_logout(args,done){
+    var seneca  = this
+    var userent = seneca.make('sys/user')
+
     var q = {id:args.token}
 
     loginent.load$(q, function( err, login ){
@@ -718,6 +730,9 @@ module.exports = function user(options) {
   // - token: reset token string
   // Provides: {ok:,reset:,user:}
   function cmd_load_reset( args, done ){
+    var seneca  = this
+    var userent = seneca.make('sys/user')
+
     var q = {id:args.token}
 
     resetent.load$(q, function( err, reset ) {
@@ -786,6 +801,9 @@ module.exports = function user(options) {
 
 
   function cmd_delete(args,done){
+    var seneca  = this
+    var userent = seneca.make('sys/user')
+
     var user = userent.make$()
 
     var q = {}
@@ -825,6 +843,9 @@ module.exports = function user(options) {
   }
 
   function cmd_update(args,done){
+    var seneca  = this
+    var userent = seneca.make('sys/user')
+
     var user = userent.make$()
 
     var q = {}
@@ -928,14 +949,17 @@ module.exports = function user(options) {
   }
 
   function cmd_disable(args, done){
-    cmd_change_active(args, false, done)
+    cmd_change_active.call(this,args, false, done)
   }
 
   function cmd_enable(args, done){
-    cmd_change_active(args, true, done)
+    cmd_change_active.call(this,args, true, done)
   }
 
   function cmd_change_active(args, active, done){
+    var seneca  = this
+    var userent = seneca.make('sys/user')
+
     var user = userent.make$()
 
     var q = {}
@@ -975,6 +999,9 @@ module.exports = function user(options) {
 
 
   seneca.add({init:role},function(args,done){
+    var seneca  = this
+    var userent = seneca.make('sys/user')
+
     this.act('role:util, cmd:define_sys_entity', {list:[
       { entity:userent.entity$, fields:options.user.fields},
       { entity:loginent.entity$,fields:options.login.fields},
