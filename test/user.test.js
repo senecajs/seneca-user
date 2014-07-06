@@ -106,14 +106,6 @@ describe('user', function () {
       assert.isNull(err)
       assert.ok(out.ok)
 
-      try {
-        userpin.login({})
-        assert.fail()
-      }
-      catch(e) {
-        assert.equal('invalid-act-args',e.seneca.code)
-      }
-
       userpin.login({nick: 'not-here'}, function (err, out) {
         assert.isNull(err)
         assert.ok(!out.ok)
