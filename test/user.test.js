@@ -244,4 +244,34 @@ describe('user', function () {
       })
     })
   })
+
+  it('execute-reset', function(done) {
+    userpin.register({
+      nick: 'res',
+      password: 'a',
+      repeat: 'a'
+    }, function (err, out) {
+      assert.isNull(err)
+      assert.ok(out.ok)
+
+      userpin.create_reset({
+        user: out.user
+      }, function (err, out) {
+        assert.isNull(err)
+        assert.ok(out.ok)
+
+        userpin.execute_reset({
+          token: out.reset.id,
+          password: 'b',
+          repeat: 'b'
+        }, function (err, out) {
+          assert.isNull(err)
+          assert.ok(out.ok)
+
+          done()
+        })
+      })
+    })
+
+  });
 })

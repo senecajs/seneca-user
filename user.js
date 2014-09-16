@@ -766,6 +766,7 @@ module.exports = function user(options) {
   function cmd_execute_reset( args, done ){
     var seneca = this
     var resetent = seneca.make('sys/reset')
+    var userent = seneca.make('sys/user')
 
     var q = {id:args.token}
 
@@ -784,22 +785,25 @@ module.exports = function user(options) {
         return done(null,{ok:false,token:args.token,why:'reset-stale'})
       }
 
-      seneca.act({ role:role,cmd:'change_password',user:reset.user,
-                   password:args.password,repeat:args.repeat },
-                 function( err, out ) {
-                   if( err ) return done(err);
-
-                   out.reset = reset
-                   if( !out.ok ) return done(null,out)
-
-                   reset.active = false
-                   reset.save$( function( err, reset ) {
+      userent.load$({id: reset.user}, function( err, user ) {
+        if( err ) return done(err);
+        seneca.act({ role:role,cmd:'change_password',user:user,
+                     password:args.password,repeat:args.repeat },
+                   function( err, out ) {
                      if( err ) return done(err);
 
-                     seneca.log.debug('reset',reset.id,user.id,user.nick,user,reset)
-                     done(null,{user:user,reset:reset,ok:true})
+                     out.reset = reset
+                     if( !out.ok ) return done(null,out)
+
+                     reset.active = false
+                     reset.save$( function( err, reset ) {
+                       if( err ) return done(err);
+
+                       seneca.log.debug('reset',reset.id,user.id,user.nick,user,reset)
+                       done(null,{user:user,reset:reset,ok:true})
+                     })
                    })
-                 })
+      })
     })
   }
 
