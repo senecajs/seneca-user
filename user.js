@@ -36,6 +36,7 @@ module.exports = function user(options) {
     resetperiod: (24*60*60*1000), // must reset within this time period, default: 24 hours
     confirm:     false,
     oldsha:      true,
+    enablepbk:   false,
     user:{
       fields:[
         {name:'pass',hide:true},
@@ -391,9 +392,20 @@ module.exports = function user(options) {
 
 
     var salt = uuid().substring(0,8)
-    hasher( args.password + salt, options.rounds, function(pass){
-      done(null,{ok:true,pass:pass,salt:salt})
-    })
+    if(options.enablepbk)
+    {
+
+      crypto.pbkdf2Sync(args.password || '', salt,  options.rounds,256, function (err,pass) {
+        if(err) done(err,null);
+        done(null, {ok: true, pass: pass, salt: salt});
+      });
+
+    }
+    else {
+      hasher(args.password + salt, options.rounds, function (pass) {
+        done(null, {ok: true, pass: pass, salt: salt})
+      })
+    }
   }
   cmd_encrypt_password.descdata = function(args){return hide(args,{password:1,repeat:1})}
 
@@ -405,20 +417,41 @@ module.exports = function user(options) {
   // - salt:     password salt
   // Provides: {ok:}
   function cmd_verify_password( args, done ){
-    hasher( args.proposed + args.salt, options.rounds, function(pass){
-      var ok = (pass===args.pass)
+    if(options.enablepbk)
+    {
+      crypto.pbkdf2Sync(args.password, salt,  options.rounds,256, function (err,pass) {
+        if(err) done(err,null);
+        var ok = (pass === args.pass)
 
-      // for backwards compatibility with <= 0.2.3
-      if( !ok && options.oldsha ) {
-        var shasum = crypto.createHash('sha1')
-        shasum.update( args.proposed + args.salt )
-        pass = shasum.digest('hex')
+        // for backwards compatibility with <= 0.2.3
+        if (!ok && options.oldsha) {
+          var shasum = crypto.createHash('sha1')
+          shasum.update(args.proposed + args.salt)
+          pass = shasum.digest('hex')
 
-        ok = (pass===args.pass)
-        return done(null,{ok:ok});
-      }
-      else return done(null,{ok:ok});
-    })
+          ok = (pass === args.pass)
+          return done(null, {ok: ok});
+        }
+        else return done(null, {ok: ok});
+      });
+
+    }
+    else {
+      hasher(args.proposed + args.salt, options.rounds, function (pass) {
+        var ok = (pass === args.pass)
+
+        // for backwards compatibility with <= 0.2.3
+        if (!ok && options.oldsha) {
+          var shasum = crypto.createHash('sha1')
+          shasum.update(args.proposed + args.salt)
+          pass = shasum.digest('hex')
+
+          ok = (pass === args.pass)
+          return done(null, {ok: ok});
+        }
+        else return done(null, {ok: ok});
+      })
+    }
   }
   cmd_verify_password.descdata = function(args){return hide(args,{proposed:1})}
 
