@@ -182,7 +182,7 @@ You can add your own properties, but be careful not to use the standard property
 
 All actions provide results via the standard callback format: <code>function(error,data){ ... }</code>.
 
-To customize the behavior of the plugin, override these actions, and provide your own business logic. You call call _this.prior_
+To customize the behavior of the plugin, override these actions, and provide your own business logic. You can call _this.prior_
 inside each custom action to perform the default behaviour - see the [Customization] section below.
 
 
@@ -482,7 +482,7 @@ For example, to add some custom fields when registering a user:
       args.team = Math.floor( 10 * Math.random() )
     
       // this calls the original action, as provided by the user plugin
-      this.parent(args,done)
+      this.prior(args,done)
     })
     
     
