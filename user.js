@@ -1007,21 +1007,6 @@ module.exports = function user(options) {
   }
 
 
-
-  seneca.add({init:role},function(args,done){
-    var seneca  = this
-    var userent = seneca.make('sys/user')
-    var loginent = seneca.make('sys/login')
-    var resetent = seneca.make('sys/reset')
-
-    this.act('role:util, cmd:define_sys_entity', {list:[
-      { entity:userent.entity$, fields:options.user.fields},
-      { entity:loginent.entity$,fields:options.login.fields},
-      { entity:resetent.entity$,fields:options.reset.fields}
-    ]},done)
-  })
-
-
   return {
     name:role
   }
