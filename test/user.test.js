@@ -25,7 +25,7 @@ function cberr(win) {
 
 
 var si = seneca()
-si.use('..')
+si.use('../user')
 
 var userpin = si.pin({role: 'user', cmd: '*'})
 var userent = si.make('sys', 'user')
@@ -33,7 +33,7 @@ var userent = si.make('sys', 'user')
 
 describe('user', function () {
 
-  it('happy', function () {
+  it('happy', function (done) {
     async.series({
       prep: function (cb) {
         userent.load$({nick: 'nick1'}, cberr(function (user) {
@@ -62,11 +62,11 @@ describe('user', function () {
           var token = out.login.token
         }))
       }
-    })
+    }, function(err, result){ done() })
   })
 
 
-  it('nick-uniq', function () {
+  it('nick-uniq', function (done) {
     userpin.register({
       nick: 'aaa',
     }, function (err, out) {
@@ -79,12 +79,13 @@ describe('user', function () {
         assert.isNull(err)
         assert.ok(!out.ok)
         assert.equal('nick-exists', out.why)
+        done()
       })
     })
   })
 
 
-  it('password-mismatch', function () {
+  it('password-mismatch', function (done) {
     userpin.register({
       nick: 'npm',
       password: 'a',
@@ -93,11 +94,12 @@ describe('user', function () {
       assert.isNull(err)
       assert.ok(!out.ok)
       assert.equal('password_mismatch', out.why)
+      done()
     })
   })
 
 
-  it('login-logic', function () {
+  it('login-logic', function (done) {
     userpin.register({
       nick: 'n2',
       password: 'a',
@@ -106,32 +108,28 @@ describe('user', function () {
       assert.isNull(err)
       assert.ok(out.ok)
 
-      userpin.login({}, function (err, out) {
-        assert.isNotNull(err)
-        assert.equal('seneca/invalid-act-args', err.seneca.code)
+      userpin.login({nick: 'not-here'}, function (err, out) {
+        assert.isNull(err)
+        assert.ok(!out.ok)
+        assert.equal('user-not-found', out.why)
 
-        userpin.login({nick: 'not-here'}, function (err, out) {
+        userpin.login({nick: 'n2', password: 'b'}, function (err, out) {
           assert.isNull(err)
           assert.ok(!out.ok)
-          assert.equal('user-not-found', out.why)
+          assert.equal('invalid-password', out.why)
 
-          userpin.login({nick: 'n2', password: 'b'}, function (err, out) {
+          userpin.login({nick: 'n2', password: 'a'}, function (err, out) {
             assert.isNull(err)
-            assert.ok(!out.ok)
-            assert.equal('invalid-password', out.why)
-
-            userpin.login({nick: 'n2', password: 'a'}, function (err, out) {
-              assert.isNull(err)
-              assert.ok(out.ok)
-              assert.equal('password', out.why)
-            })
+            assert.ok(out.ok)
+            assert.equal('password', out.why)
+            done()
           })
         })
       })
     })
   })
 
-  it('update', function () {
+  it('update', function (done) {
     userpin.register({
       nick: 'u1',
       email:'a',
@@ -162,6 +160,7 @@ describe('user', function () {
             userpin.update({email: 'b', orig_nick: 'u1'}, function (err, out) {
               assert.isNull(err)
               assert.notOk(out.ok)
+              done()
             })
           })
         })
@@ -169,7 +168,7 @@ describe('user', function () {
     })
   })
 
-  it('delete', function () {
+  it('delete', function (done) {
     userpin.register({
       nick: 'd1',
       email:'d1',
@@ -190,12 +189,13 @@ describe('user', function () {
         }, function (err, out) {
           assert.isNull(err)
           assert.ok(out.ok)
+          done()
         })
       })
     })
   })
 
-  it('enable-disable-logic', function () {
+  it('enable-disable-logic', function (done) {
     userpin.register({
       nick: 'en',
       password: 'a',
@@ -234,6 +234,7 @@ describe('user', function () {
                     assert.isNull(err)
                     assert.notOk(out.ok)
                     assert.equal('cannot-identify-user', out.why)
+                    done()
                   })
                 })
               })
@@ -243,4 +244,34 @@ describe('user', function () {
       })
     })
   })
+
+  it('execute-reset', function(done) {
+    userpin.register({
+      nick: 'res',
+      password: 'a',
+      repeat: 'a'
+    }, function (err, out) {
+      assert.isNull(err)
+      assert.ok(out.ok)
+
+      userpin.create_reset({
+        user: out.user
+      }, function (err, out) {
+        assert.isNull(err)
+        assert.ok(out.ok)
+
+        userpin.execute_reset({
+          token: out.reset.id,
+          password: 'b',
+          repeat: 'b'
+        }, function (err, out) {
+          assert.isNull(err)
+          assert.ok(out.ok)
+
+          done()
+        })
+      })
+    })
+
+  });
 })

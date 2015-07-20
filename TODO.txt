@@ -1,3 +1,3 @@
 - user id token like facebook/twitter instead of using nick as unique id
-- password log hidding - fix
+- password log hiding - fix
 

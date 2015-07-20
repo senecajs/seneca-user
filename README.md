@@ -23,10 +23,11 @@ For a working example, see the <a href="https://github.com/rjrodger/seneca-examp
 If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.2.7
+Current Version: 0.2.10
 
-Tested on: Node 0.10.6, 0.8.7, Seneca 0.5.12
+Tested on: Node 0.10.29, Seneca 0.5.18
 
+[![Build Status](https://travis-ci.org/rjrodger/seneca-user.png?branch=master)](https://travis-ci.org/rjrodger/seneca-user)
 
 
 
@@ -127,6 +128,11 @@ seneca.use('user',{ resetperiod: 3600*1000 })
 ```
 
 
+## Annotated Source Code
+
+The full source code of this plugin is [annotated](http://rjrodger.github.io/seneca-user/user.html).
+
+
 
 ## Entities
 
@@ -176,7 +182,7 @@ You can add your own properties, but be careful not to use the standard property
 
 All actions provide results via the standard callback format: <code>function(error,data){ ... }</code>.
 
-To customize the behavior of the plugin, override these actions, and provide your own business logic. You call call _this.prior_
+To customize the behavior of the plugin, override these actions, and provide your own business logic. You can call _this.prior_
 inside each custom action to perform the default behaviour - see the [Customization] section below.
 
 
@@ -476,7 +482,7 @@ For example, to add some custom fields when registering a user:
       args.team = Math.floor( 10 * Math.random() )
     
       // this calls the original action, as provided by the user plugin
-      this.parent(args,done)
+      this.prior(args,done)
     })
     
     
