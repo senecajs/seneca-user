@@ -100,7 +100,7 @@ module.exports = function user(options) {
     nick:     {string$:true},
     email:    {string$:true},
     username: {string$:true},
-    user:     {object$:true},
+    user:     {type$:['object','string']},
 
     password: {string$:true,required$:true}, // new password plain text string
     repeat:   {string$:true}                 // new password plain text string, repeated
@@ -684,7 +684,7 @@ module.exports = function user(options) {
       if( err ) return done(err);
 
       if( !login ) {
-        return {ok:true}
+        return (null, {ok:true})
       }
 
       login.active = false
