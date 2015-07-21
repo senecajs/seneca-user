@@ -25,6 +25,10 @@ function conditionalExtend(user, args) {
 module.exports = function user(options) {
   var seneca = this
 
+  var user_coll = 'sys/user'
+  var login_coll = 'sys/login'
+  var reset_coll = 'sys/reset'
+
   // # Plugin options.
   // These are the defaults. You can override using the _options_ argument.
   // Example: `seneca.use("user",{mustrepeat:true})`.
@@ -60,7 +64,7 @@ module.exports = function user(options) {
 
   // # Action patterns
   // These define the pattern interface for this plugin.
-  ;
+    ;
 
 
   // ### Encrypt a plain text password string
@@ -195,8 +199,21 @@ module.exports = function user(options) {
     role: role,
     cmd:  'clean',
 
-    user:{required$:true,entity$:'sys/user'}, // sys/user entity
+    user:{required$:true,entity$:user_coll}, // sys/user entity
   }, cmd_clean )
+
+
+  // ### Lod user based on a query. Required by external seneca plugins such as seneca-auth
+  // Pattern: _**role**:user, **cmd**:load_user_
+  // Returns an entity based on a query
+  seneca.add(
+    {
+      role:role,
+      cmd:'load_user',
+      q:{object$:true,required$:true}
+    },
+    cmd_load_user
+  )
 
 
 
@@ -204,48 +221,48 @@ module.exports = function user(options) {
   // Pattern: _**role**:user, **cmd**:create_reset_
   // Create an entry in _sys/reset_ that provides a reset token
   seneca.add( {role:role, cmd:'create_reset'},
-              resolve_user(cmd_create_reset,false) )
+    resolve_user(cmd_create_reset,false) )
 
 
   // ### Load a password reset entry
   // Pattern: _**role**:user, **cmd**:load_reset_
   // Load a _sys/reset_ entry by reset token
   seneca.add( {role:role, cmd:'load_reset'},
-              cmd_load_reset )
+    cmd_load_reset )
 
 
   // ### Execute a password reset
   // Pattern: _**role**:user, **cmd**:execute_reset_
   // Execute a _sys/reset_ entry by reset token, providing the new password.
   seneca.add( {role:role, cmd:'execute_reset'},
-              cmd_execute_reset )
+    cmd_execute_reset )
 
 
   // ### Update user details
   // Pattern: _**role**:user, **cmd**:update_
   seneca.add( {role:role, cmd:'update'},
-              cmd_update )
+    cmd_update )
 
 
   // ### Enable user
   // Pattern: _**role**:user, **cmd**:_
   // TODO: rename to activate for consistency
   seneca.add( {role:role, cmd:'enable'},
-              cmd_enable )
+    cmd_enable )
 
 
   // ### Disable user
   // Pattern: _**role**:user, **cmd**:_
   // TODO: rename to deactivate for consistency
   seneca.add( {role:role, cmd:'disable'},
-              cmd_disable )
+    cmd_disable )
 
 
   // ### Delete user
   // Pattern: _**role**:user, **cmd**:_
   // TODO: rename to remove for consistency
   seneca.add( {role:role, cmd:'delete'},
-              cmd_delete )
+    cmd_delete )
 
 
 
@@ -253,7 +270,7 @@ module.exports = function user(options) {
   // DEPRECATED
   seneca.add({role:role, cmd:'entity'},function(args,done){
     var seneca = this
-    var loginent = seneca.make('sys/login')
+    var loginent = seneca.make(login_coll)
 
     var kind = args.kind || 'user'
     var ent = ( 'user' == kind ? userent : loginent ).make$()
@@ -261,15 +278,17 @@ module.exports = function user(options) {
   })
 
 
+  function cmd_load_user( args, cb ) {
+    seneca.make(user_coll).load$(args.q, cb)
+  }
 
   // Action Implementations
   ;
 
-
   function resolve_user( cmd, fail ) {
     return function( args, done ) {
       var seneca = this
-      var userent  = seneca.make('sys/user')
+      var userent  = seneca.make(user_coll)
 
       if( args.user && args.user.entity$ ) {
         return cmd.call( seneca, args, done )
@@ -469,7 +488,7 @@ module.exports = function user(options) {
   // - failure: {ok:false,why:,nick:}
   function cmd_register(args,done){
     var seneca  = this
-    var userent = seneca.make('sys/user')
+    var userent = seneca.make(user_coll)
     var user    = userent.make$()
 
     user.nick     = args.nick || args.username || args.email
@@ -519,20 +538,20 @@ module.exports = function user(options) {
 
     function saveuser() {
       seneca.act({ role:role, cmd:'encrypt_password', whence:'register/user='+user.nick,
-                   password: args.password, repeat: args.repeat },function( err, out ){
-                     if( err ) return done(err);
-                     if( !out.ok ) return done(null,out);
+        password: args.password, repeat: args.repeat },function( err, out ){
+        if( err ) return done(err);
+        if( !out.ok ) return done(null,out);
 
-                     user.salt = out.salt
-                     user.pass = out.pass
+        user.salt = out.salt
+        user.pass = out.pass
 
-                     user.save$( function( err, user ){
-                       if( err ) return done(err)
+        user.save$( function( err, user ){
+          if( err ) return done(err)
 
-                       seneca.log.debug('register',user.nick,user.email,user)
-                       done(null,{ok:true,user:user})
-                     })
-                   })
+          seneca.log.debug('register',user.nick,user.email,user)
+          done(null,{ok:true,user:user})
+        })
+      })
     }
   }
 
@@ -547,7 +566,7 @@ module.exports = function user(options) {
   // - failure: {ok:false,why:,nick:}
   function cmd_login(args,done){
     var seneca = this, user = args.user, why;
-    var loginent = seneca.make('sys/login')
+    var loginent = seneca.make(login_coll)
 
 
     if( !user.active ) {
@@ -588,12 +607,12 @@ module.exports = function user(options) {
 
       login.token = login.id$, // DEPRECATED
 
-      login.save$( function( err, login ){
-        if( err ) return done(err);
+        login.save$( function( err, login ){
+          if( err ) return done(err);
 
-        seneca.log.debug('login/ok',why,user,login)
-        done(null,{ok:true,user:user,login:login,why:why})
-      })
+          seneca.log.debug('login/ok',why,user,login)
+          done(null,{ok:true,user:user,login:login,why:why})
+        })
     }
   }
 
@@ -607,7 +626,7 @@ module.exports = function user(options) {
   // - failure: {ok:false,why:,nick:}
   function cmd_confirm(args,done){
     var seneca = this, user = args.user, why;
-    var userent  = seneca.make('sys/user')
+    var userent  = seneca.make(user_coll)
 
     userent.load$({confirmcode:args.code}, function(err,user){
       if( err ) return done(err);
@@ -641,8 +660,8 @@ module.exports = function user(options) {
   // - failure: {ok:false,why:,token:}
   function cmd_auth(args,done){
     var seneca  = this
-    var userent = seneca.make('sys/user')
-    var loginent = seneca.make('sys/login')
+    var userent = seneca.make(user_coll)
+    var loginent = seneca.make(login_coll)
 
 
     var q = {id:args.token}
@@ -674,8 +693,8 @@ module.exports = function user(options) {
   // - success: {ok:true,user:,login:}
   function cmd_logout(args,done){
     var seneca  = this
-    var userent = seneca.make('sys/user')
-    var loginent = seneca.make('sys/login')
+    var userent = seneca.make(user_coll)
+    var loginent = seneca.make(login_coll)
 
 
     var q = {id:args.token}
@@ -684,7 +703,7 @@ module.exports = function user(options) {
       if( err ) return done(err);
 
       if( !login ) {
-        return (null, {ok:true})
+        return done(null, {ok:true})
       }
 
       login.active = false
@@ -709,7 +728,7 @@ module.exports = function user(options) {
   function cmd_create_reset( args, done ){
     var seneca = this
     var user = args.user
-    var resetent = seneca.make('sys/reset')
+    var resetent = seneca.make(reset_coll)
 
     resetent.make$({
       id$:    uuid(),
@@ -719,10 +738,10 @@ module.exports = function user(options) {
       active: true
 
     }).save$( function( err, reset ) {
-      if( err ) return done(err);
+        if( err ) return done(err);
 
-      done(null,{reset:reset,user:user,ok:true})
-    })
+        done(null,{reset:reset,user:user,ok:true})
+      })
   }
 
 
@@ -732,8 +751,8 @@ module.exports = function user(options) {
   // Provides: {ok:,reset:,user:}
   function cmd_load_reset( args, done ){
     var seneca  = this
-    var userent = seneca.make('sys/user')
-    var resetent = seneca.make('sys/reset')
+    var userent = seneca.make(user_coll)
+    var resetent = seneca.make(reset_coll)
 
     var q = {id:args.token}
 
@@ -765,8 +784,8 @@ module.exports = function user(options) {
   // Provides: {ok:,reset:,user:}
   function cmd_execute_reset( args, done ){
     var seneca = this
-    var resetent = seneca.make('sys/reset')
-    var userent = seneca.make('sys/user')
+    var resetent = seneca.make(reset_coll)
+    var userent = seneca.make(user_coll)
 
     var q = {id:args.token}
 
@@ -788,21 +807,21 @@ module.exports = function user(options) {
       userent.load$({id: reset.user}, function( err, user ) {
         if( err ) return done(err);
         seneca.act({ role:role,cmd:'change_password',user:user,
-                     password:args.password,repeat:args.repeat },
-                   function( err, out ) {
-                     if( err ) return done(err);
+            password:args.password,repeat:args.repeat },
+          function( err, out ) {
+            if( err ) return done(err);
 
-                     out.reset = reset
-                     if( !out.ok ) return done(null,out)
+            out.reset = reset
+            if( !out.ok ) return done(null,out)
 
-                     reset.active = false
-                     reset.save$( function( err, reset ) {
-                       if( err ) return done(err);
+            reset.active = false
+            reset.save$( function( err, reset ) {
+              if( err ) return done(err);
 
-                       seneca.log.debug('reset',reset.id,user.id,user.nick,user,reset)
-                       done(null,{user:user,reset:reset,ok:true})
-                     })
-                   })
+              seneca.log.debug('reset',reset.id,user.id,user.nick,user,reset)
+              done(null,{user:user,reset:reset,ok:true})
+            })
+          })
       })
     })
   }
@@ -810,9 +829,9 @@ module.exports = function user(options) {
 
   function cmd_delete(args,done){
     var seneca  = this
-    var userent = seneca.make('sys/user')
-    var loginent = seneca.make('sys/login')
-    var resetent = seneca.make('sys/reset')
+    var userent = seneca.make(user_coll)
+    var loginent = seneca.make(login_coll)
+    var resetent = seneca.make(reset_coll)
 
     var user = userent.make$()
 
@@ -854,7 +873,7 @@ module.exports = function user(options) {
 
   function cmd_update(args,done){
     var seneca  = this
-    var userent = seneca.make('sys/user')
+    var userent = seneca.make(user_coll)
 
     var user = userent.make$()
 
@@ -968,7 +987,7 @@ module.exports = function user(options) {
 
   function cmd_change_active(args, active, done){
     var seneca  = this
-    var userent = seneca.make('sys/user')
+    var userent = seneca.make(user_coll)
 
     var user = userent.make$()
 
@@ -1010,9 +1029,9 @@ module.exports = function user(options) {
 
   seneca.add({init:role},function(args,done){
     var seneca  = this
-    var userent = seneca.make('sys/user')
-    var loginent = seneca.make('sys/login')
-    var resetent = seneca.make('sys/reset')
+    var userent = seneca.make(user_coll)
+    var loginent = seneca.make(login_coll)
+    var resetent = seneca.make(reset_coll)
 
     this.act('role:util, cmd:define_sys_entity', {list:[
       { entity:userent.entity$, fields:options.user.fields},
