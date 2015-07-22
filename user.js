@@ -25,9 +25,9 @@ function conditionalExtend(user, args) {
 module.exports = function user(options) {
   var seneca = this
 
-  var user_coll = 'sys/user'
-  var login_coll = 'sys/login'
-  var reset_coll = 'sys/reset'
+  var user_canon = 'sys/user'
+  var login_canon = 'sys/login'
+  var reset_canon = 'sys/reset'
 
   // # Plugin options.
   // These are the defaults. You can override using the _options_ argument.
@@ -199,7 +199,7 @@ module.exports = function user(options) {
     role: role,
     cmd:  'clean',
 
-    user:{required$:true,entity$:user_coll}, // sys/user entity
+    user:{required$:true,entity$:user_canon}, // sys/user entity
   }, cmd_clean )
 
 
@@ -209,8 +209,7 @@ module.exports = function user(options) {
   seneca.add(
     {
       role:role,
-      cmd:'load_user',
-      q:{object$:true,required$:true}
+      get:'user'
     },
     cmd_load_user
   )
@@ -270,7 +269,7 @@ module.exports = function user(options) {
   // DEPRECATED
   seneca.add({role:role, cmd:'entity'},function(args,done){
     var seneca = this
-    var loginent = seneca.make(login_coll)
+    var loginent = seneca.make(login_canon)
 
     var kind = args.kind || 'user'
     var ent = ( 'user' == kind ? userent : loginent ).make$()
@@ -278,8 +277,8 @@ module.exports = function user(options) {
   })
 
 
-  function cmd_load_user( args, cb ) {
-    seneca.make(user_coll).load$(args.q, cb)
+  function cmd_load_user( args, done ) {
+    seneca.make(user_canon).load$(_.omit( args, ['role','get'] ), done)
   }
 
   // Action Implementations
@@ -288,7 +287,7 @@ module.exports = function user(options) {
   function resolve_user( cmd, fail ) {
     return function( args, done ) {
       var seneca = this
-      var userent  = seneca.make(user_coll)
+      var userent  = seneca.make(user_canon)
 
       if( args.user && args.user.entity$ ) {
         return cmd.call( seneca, args, done )
@@ -488,7 +487,7 @@ module.exports = function user(options) {
   // - failure: {ok:false,why:,nick:}
   function cmd_register(args,done){
     var seneca  = this
-    var userent = seneca.make(user_coll)
+    var userent = seneca.make(user_canon)
     var user    = userent.make$()
 
     user.nick     = args.nick || args.username || args.email
@@ -566,7 +565,7 @@ module.exports = function user(options) {
   // - failure: {ok:false,why:,nick:}
   function cmd_login(args,done){
     var seneca = this, user = args.user, why;
-    var loginent = seneca.make(login_coll)
+    var loginent = seneca.make(login_canon)
 
 
     if( !user.active ) {
@@ -626,7 +625,7 @@ module.exports = function user(options) {
   // - failure: {ok:false,why:,nick:}
   function cmd_confirm(args,done){
     var seneca = this, user = args.user, why;
-    var userent  = seneca.make(user_coll)
+    var userent  = seneca.make(user_canon)
 
     userent.load$({confirmcode:args.code}, function(err,user){
       if( err ) return done(err);
@@ -660,8 +659,8 @@ module.exports = function user(options) {
   // - failure: {ok:false,why:,token:}
   function cmd_auth(args,done){
     var seneca  = this
-    var userent = seneca.make(user_coll)
-    var loginent = seneca.make(login_coll)
+    var userent = seneca.make(user_canon)
+    var loginent = seneca.make(login_canon)
 
 
     var q = {id:args.token}
@@ -693,8 +692,8 @@ module.exports = function user(options) {
   // - success: {ok:true,user:,login:}
   function cmd_logout(args,done){
     var seneca  = this
-    var userent = seneca.make(user_coll)
-    var loginent = seneca.make(login_coll)
+    var userent = seneca.make(user_canon)
+    var loginent = seneca.make(login_canon)
 
 
     var q = {id:args.token}
@@ -728,7 +727,7 @@ module.exports = function user(options) {
   function cmd_create_reset( args, done ){
     var seneca = this
     var user = args.user
-    var resetent = seneca.make(reset_coll)
+    var resetent = seneca.make(reset_canon)
 
     resetent.make$({
       id$:    uuid(),
@@ -751,8 +750,8 @@ module.exports = function user(options) {
   // Provides: {ok:,reset:,user:}
   function cmd_load_reset( args, done ){
     var seneca  = this
-    var userent = seneca.make(user_coll)
-    var resetent = seneca.make(reset_coll)
+    var userent = seneca.make(user_canon)
+    var resetent = seneca.make(reset_canon)
 
     var q = {id:args.token}
 
@@ -784,8 +783,8 @@ module.exports = function user(options) {
   // Provides: {ok:,reset:,user:}
   function cmd_execute_reset( args, done ){
     var seneca = this
-    var resetent = seneca.make(reset_coll)
-    var userent = seneca.make(user_coll)
+    var resetent = seneca.make(reset_canon)
+    var userent = seneca.make(user_canon)
 
     var q = {id:args.token}
 
@@ -829,9 +828,9 @@ module.exports = function user(options) {
 
   function cmd_delete(args,done){
     var seneca  = this
-    var userent = seneca.make(user_coll)
-    var loginent = seneca.make(login_coll)
-    var resetent = seneca.make(reset_coll)
+    var userent = seneca.make(user_canon)
+    var loginent = seneca.make(login_canon)
+    var resetent = seneca.make(reset_canon)
 
     var user = userent.make$()
 
@@ -873,7 +872,7 @@ module.exports = function user(options) {
 
   function cmd_update(args,done){
     var seneca  = this
-    var userent = seneca.make(user_coll)
+    var userent = seneca.make(user_canon)
 
     var user = userent.make$()
 
@@ -987,7 +986,7 @@ module.exports = function user(options) {
 
   function cmd_change_active(args, active, done){
     var seneca  = this
-    var userent = seneca.make(user_coll)
+    var userent = seneca.make(user_canon)
 
     var user = userent.make$()
 
@@ -1029,9 +1028,9 @@ module.exports = function user(options) {
 
   seneca.add({init:role},function(args,done){
     var seneca  = this
-    var userent = seneca.make(user_coll)
-    var loginent = seneca.make(login_coll)
-    var resetent = seneca.make(reset_coll)
+    var userent = seneca.make(user_canon)
+    var loginent = seneca.make(login_canon)
+    var resetent = seneca.make(reset_canon)
 
     this.act('role:util, cmd:define_sys_entity', {list:[
       { entity:userent.entity$, fields:options.user.fields},

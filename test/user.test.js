@@ -168,6 +168,24 @@ describe('user', function () {
     })
   })
 
+  it('load_user', function (done) {
+    userpin.register({
+      nick: 'x1',
+      email:'x1',
+      password: 'x1',
+      repeat: 'x1'
+    }, function (err, out) {
+      assert.isNull(err)
+      assert.ok(out.ok)
+
+      si.act({role: 'user', get: 'user', email: 'x1'}, function (err, out) {
+        assert.isNull(err)
+        assert.equal('x1', out.nick)
+        done()
+      })
+    })
+  })
+
   it('delete', function (done) {
     userpin.register({
       nick: 'd1',
