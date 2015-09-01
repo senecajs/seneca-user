@@ -1,33 +1,46 @@
 {
   "name": "seneca-user",
   "description": "User management plugin for the seneca module.",
-  "version": "0.2.7",
+  "version": "0.2.10",
   "keywords": [
     "seneca",
     "user",
     "plugin"
   ],
-  "author": "Richard Rodger",
+  "author": {
+    "name": "Richard Rodger",
+    "email": "richard@ricebridge.com",
+    "url": "http://richardrodger.com/"
+  },
   "license": "MIT",
-  "main": "lib/user.js",
+  "main": "user.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha test/*.test.js"
+    "test": "lab"
   },
   "files": [
     "LICENSE.txt",
     "README.md",
-    "lib"
+    "user.js"
+  ],
+  "contributors": [
+    {
+      "name": "Mircea Alexandru",
+      "email": "mircea.alexandru@gmail.com",
+      "url": "https://github.com/mirceaalexandru"
+    }
   ],
   "dependencies": {
-    "underscore": "~1.5.1",
+    "underscore": "~1.6.0",
     "node-uuid": "~1.4.1"
   },
+  "peerDependencies": {
+    "seneca": "*"
+  },
   "devDependencies": {
-    "gex": "~0.1.1",
-    "chai": "~1.7.2",
-    "async": "~0.2.9",
-    "seneca": "~0.5.12",
-    "mocha": "~1.13.0"
+    "chai": "~1.9.1",
+    "lab": "^5.13.0",
+    "lodash": "^3.10.0",
+    "seneca": "^0.6.0"
   },
   "repository": {
     "type": "git",
