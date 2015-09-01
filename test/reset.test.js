@@ -61,7 +61,7 @@ suite('seneca-user reset suite tests ', function () {
       assert.isNull(err)
       assert.ok(data.ok)
       assert(data.reset.id)
-      resetId = data.reset.id
+      resetId = data.reset.token
       done(err)
     })
   })
