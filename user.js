@@ -263,6 +263,8 @@ module.exports = function user(options) {
   seneca.add( {role:role, cmd:'delete'},
     cmd_delete )
 
+  seneca.add( {role:role, hook:'generate_reset_token'},
+    generate_reset_token )
 
 
 
@@ -451,26 +453,34 @@ module.exports = function user(options) {
   // - password: new password
   // - repeat: password repeat, optional
   // Provides: {ok:,user:}
-  function cmd_change_password( args, done ){
+  function cmd_change_password( args, done ) {
     var seneca = this
     var user = args.user
 
     seneca.act(
-      { role:role, cmd:'encrypt_password', whence:'change/user='+user.id+','+user.nick,
+      { role: role, cmd: 'encrypt_password', whence: 'change/user=' + user.id + ',' + user.nick,
         password: args.password, repeat: args.repeat },
-      function( err, out ){
-        if( err ) return done(err);
-        if( !out.ok ) return done(null,out);
+      function( err, out ) {
+        if( err ) {
+          return done( err );
+        }
+        if( !out.ok ) {
+          return done( null, out );
+        }
 
         user.salt = out.salt
         user.pass = out.pass
-        user.save$(function(err,user){
-          if( err ) return done(err);
+        user.save$( function( err, user ) {
+          if( err ) {
+            return done( err );
+          }
 
-          done(null,{ok:true,user:user})
-        })
-      })
+          user = user.data$(false)
+          done( null, {ok: true, user: user} )
+        } )
+      } )
   }
+
   cmd_change_password.descdata = function(args){return hide(args,{password:1,repeat:1})}
 
 
@@ -722,61 +732,77 @@ module.exports = function user(options) {
   }
 
 
+  function generate_reset_token ( args, done ) {
+    return done ( null, { token: uuid() } )
+  }
 
   // Create a password reset token
   // - nick, email: to resolve user
   // - user:     user entity
   // Provides: {ok:,reset:,user:}
-  function cmd_create_reset( args, done ){
+  function cmd_create_reset( args, done ) {
     var seneca = this
     var user = args.user
-    var resetent = seneca.make(reset_canon)
+    var resetent = seneca.make( reset_canon )
 
-    resetent.make$({
-      id$:    uuid(),
-      nick:   user.nick,
-      user:   user.id,
-      when:   new Date().toISOString(),
-      active: true
+    seneca.act( "role:'user',hook:'generate_reset_token'", function( err, data ) {
+      if( err ) {
+        return done( null, {ok: false, why: err} )
+      }
 
-    }).save$( function( err, reset ) {
-        if( err ) return done(err);
+      var token = data.token
 
-        done(null,{reset:reset,user:user,ok:true})
-      })
+      resetent.make$( {
+        token: token,
+        nick: user.nick,
+        user: user.id,
+        when: new Date().toISOString(),
+        active: true
+      } ).save$( function( err, reset ) {
+          if( err ) {
+            return done( null, {ok: false, why: err} )
+          }
+
+          done( null, {reset: reset.data$( false ), user: user.data$( false ), ok: true} )
+        } )
+    } )
   }
-
 
 
   // Load a password reset token
   // - token: reset token string
   // Provides: {ok:,reset:,user:}
-  function cmd_load_reset( args, done ){
-    var seneca  = this
-    var userent = seneca.make(user_canon)
-    var resetent = seneca.make(reset_canon)
+  function cmd_load_reset( args, done ) {
+    var seneca = this
+    var userent = seneca.make( user_canon )
+    var resetent = seneca.make( reset_canon )
 
-    var q = {id:args.token}
+    var q = { token: args.token }
 
-    resetent.load$(q, function( err, reset ) {
-      if( err ) return done(err);
-
-      if( !reset ) {
-        return done(null,{ok:false,token:args.token,why:'reset-not-found'})
+    resetent.load$( q, function( err, reset ) {
+      if( err ) {
+        return done( null, {ok: false, why: err} );
       }
 
-      userent.load$( {id:reset.user}, function( err, user ) {
-        if( err ) return done(err);
+      if( !reset ) {
+        return done( null, {ok: false, token: args.token, why: 'reset-not-found'} )
+      }
+      reset = reset.data$( false )
 
-        if( !user ) {
-          return done(null,{ok:false,token:args.token,user:reset.user,why:'user-not-found'})
+      userent.load$( {id: reset.user}, function( err, user ) {
+        if( err ) {
+          return done( null, {ok: false, why: err} );
         }
 
-        done(null,{user:user,reset:reset,ok:true})
-      })
-    })
-  }
+        if( !user ) {
+          return done( null, {ok: false, token: args.token, user: reset.user, why: 'user-not-found'} )
+        }
+        user = user.data$( false )
 
+        done( null, {user: user, reset: reset, ok: true} )
+      } )
+    } )
+  }
 
 
   // Execute a password change using a reset token
@@ -784,48 +810,65 @@ module.exports = function user(options) {
   // - password: new password
   // - repeat: password repeat, optional
   // Provides: {ok:,reset:,user:}
-  function cmd_execute_reset( args, done ){
+  function cmd_execute_reset( args, done ) {
     var seneca = this
-    var resetent = seneca.make(reset_canon)
-    var userent = seneca.make(user_canon)
+    var resetent = seneca.make( reset_canon )
+    var userent = seneca.make( user_canon )
 
-    var q = {id:args.token}
+    var q = { token: args.token }
 
-    resetent.load$(q, function( err, reset ) {
-      if( err ) return done(err);
+    resetent.load$( q, function( err, reset ) {
+      if( err ) {
+        return done( err );
+      }
 
       if( !reset ) {
-        return done(null,{ok:false,token:args.token,why:'reset-not-found'})
+        return done( null, {ok: false, token: args.token, why: 'reset-not-found'} )
       }
 
       if( !reset.active ) {
-        return done(null,{ok:false,token:args.token,why:'reset-not-active'})
+        return done( null, {ok: false, token: args.token, why: 'reset-not-active'} )
       }
 
-      if( new Date() < new Date(reset.when)+ options.resetperiod ) {
-        return done(null,{ok:false,token:args.token,why:'reset-stale'})
+      if( new Date() < new Date( reset.when ) + options.resetperiod ) {
+        return done( null, {ok: false, token: args.token, why: 'reset-stale'} )
       }
 
-      userent.load$({id: reset.user}, function( err, user ) {
-        if( err ) return done(err);
-        seneca.act({ role:role,cmd:'change_password',user:user,
-            password:args.password,repeat:args.repeat },
+      userent.load$( { id: reset.user }, function( err, user ) {
+        if( err ) {
+          return done( null, {ok: false, token: args.token, why: err} );
+        }
+
+        if( !user ) {
+          return done( null, {ok: false, why: 'user-not-found'} )
+        }
+
+        seneca.act( { role: role, cmd: 'change_password', user: user,
+            password: args.password, repeat: args.repeat },
           function( err, out ) {
-            if( err ) return done(err);
+            if( err ) {
+              return done( err );
+            }
 
-            out.reset = reset
-            if( !out.ok ) return done(null,out)
+            if( !out.ok ) {
+              return done( null, out )
+            }
 
             reset.active = false
-            reset.save$( function( err, reset ) {
-              if( err ) return done(err);
 
-              seneca.log.debug('reset',reset.id,user.id,user.nick,user,reset)
-              done(null,{user:user,reset:reset,ok:true})
-            })
-          })
-      })
-    })
+            reset.save$( function( err, reset ) {
+              if( err ) {
+                return done( null, {ok: false, why: err} );
+              }
+
+              reset = reset.data$( false )
+
+              seneca.log.debug( 'reset', reset.id, user.id, user.nick, user, reset )
+              done( null, {user: user, reset: reset, ok: true} )
+            } )
+          } )
+      } )
+    } )
   }
 
 
