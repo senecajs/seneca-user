@@ -862,6 +862,7 @@ module.exports = function user(options) {
               }
 
               reset = reset.data$( false )
+              user = user.data$(false)
 
               seneca.log.debug( 'reset', reset.id, user.id, user.nick, user, reset )
               done( null, {user: user, reset: reset, ok: true} )
@@ -916,40 +917,40 @@ module.exports = function user(options) {
     })
   }
 
-  function cmd_update(args,done){
-    var seneca  = this
-    var userent = seneca.make(user_canon)
+  function cmd_update( args, done ) {
+    var seneca = this
+    var userent = seneca.make( user_canon )
 
     var user = userent.make$()
 
     var q = {}
 
     args.orig_nick = args.orig_nick || args.nick
-    if( args.orig_nick ) {
+    if ( args.orig_nick ) {
       q.nick = args.orig_nick
     }
     else {
       q.email = args.orig_email || args.email
     }
 
-    user.load$(q,function(err,user){
+    user.load$( q, function ( err, user ) {
 
-      if( err ) return done(err,{ok:false})
-      if( !user ) return done(null,{ok:false,exists:false})
+      if ( err ) return done( err, {ok: false, why: err} )
+      if ( !user ) return done( null, {ok: false, exists: false} )
 
-      var pwd   = args.password || ''
-      var pwd2  = args.repeat || ''
+      var pwd = args.password || ''
+      var pwd2 = args.repeat || ''
 
-      if( pwd ) {
-        if( pwd === pwd2 && 1 < pwd.length) {
+      if ( pwd ) {
+        if ( pwd === pwd2 && 1 < pwd.length ) {
           // FIX: needs to a proper action call
-          cmd_change_password({nick:args.orig_nick,password:pwd},function(err,userpwd){
-            if( err ) return done(err);
+          cmd_change_password( {nick: args.orig_nick, password: pwd}, function ( err, userpwd ) {
+            if ( err ) return done( err, {ok: false, why: err} );
             user = userpwd
-          })
+          } )
         }
         else {
-          return done({err:'user/password_mismatch'})
+          return done( null, {ok: false, why: 'user/password_mismatch'} )
         }
       }
 
@@ -957,69 +958,73 @@ module.exports = function user(options) {
       delete args.orig_email
 
       return checknick(
-        function(){ checkemail(
-          function() { updateuser(user) })});
+        function () {
+          checkemail(
+            function () {
+              updateuser( user )
+            } )
+        } );
 
       // unsafe nick unique check, data store should also enforce !!
-      function checknick(next) {
-        if( args.nick ) {
-          userent.list$({nick:args.nick},function(err,users){
-            if( err ) return done(err,{ok:false,user:user})
-            for(var i = 0; i < users.length; i++) {
+      function checknick( next ) {
+        if ( args.nick ) {
+          userent.list$( {nick: args.nick}, function ( err, users ) {
+            if ( err ) return done( err, {ok: false, user: user} )
+            for ( var i = 0; i < users.length; i++ ) {
               var each = users[i]
-              if (each.id !== user.id){
-                return done(null,{ok:false,why:'nick-exists',nick:args.nick})
+              if ( each.id !== user.id ) {
+                return done( null, {ok: false, why: 'nick-exists', nick: args.nick} )
               }
             }
 
             next()
-          })
+          } )
           return
         }
         next()
       }
 
       // unsafe email unique check, data store should also enforce !!
-      function checkemail(next) {
-        if( args.email ) {
-          userent.list$({email:args.email},function(err,users){
-            if( err ) return done(err,{ok:false,user:user})
-            for(var i = 0; i < users.length; i++) {
+      function checkemail( next ) {
+        if ( args.email ) {
+          userent.list$( {email: args.email}, function ( err, users ) {
+            if ( err ) return done( err, {ok: false, user: user} )
+            for ( var i = 0; i < users.length; i++ ) {
               var each = users[i]
-              if (each.id !== user.id){
-                return done(null,{ok:false,why:'email-exists',nick:args.nick})
+              if ( each.id !== user.id ) {
+                return done( null, {ok: false, why: 'email-exists', nick: args.nick} )
               }
             }
 
             next()
-          })
+          } )
           return
         }
         next()
       }
 
-      function updateuser(pwdupdate) {
-        user.nick  = args.nick  || pwdupdate.nick
-        user.name  = args.name  || pwdupdate.name
+      function updateuser( pwdupdate ) {
+        user.nick = args.nick || pwdupdate.nick
+        user.name = args.name || pwdupdate.name
         user.email = args.email || pwdupdate.email
 
         user.salt = pwdupdate.salt
         user.pass = pwdupdate.pass
 
-        if( '' == user.nick ) {
-          done({err:'empty_nick'})
+        if ( '' == user.nick ) {
+          done( null, {ok: false, why: 'empty_nick'} )
         }
-        else if( '' == user.email ) {
-          done({err:'empty_email'})
+        else if ( '' == user.email ) {
+          done( null, {ok: false, why: 'empty_email'} )
         }
         else {
-          conditionalExtend(user, args)
-          user.save$(function(err,user){
-            done(err,{ok:!err,user:user})
-          })
+          conditionalExtend( user, args )
+          user.save$( function ( err, user ) {
+            done( err, {ok: !err, user: user.data$(false)} )
+          } )
         }
       }
-    })
+    } )
   }
 
   function cmd_disable(args, done){
