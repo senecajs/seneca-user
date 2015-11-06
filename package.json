@@ -30,7 +30,7 @@
     }
   ],
   "dependencies": {
-    "underscore": "~1.6.0",
+    "underscore": "~1.8.0",
     "node-uuid": "~1.4.1"
   },
   "peerDependencies": {
@@ -40,7 +40,7 @@
     "chai": "~1.9.1",
     "lab": "^5.13.0",
     "lodash": "^3.10.0",
-    "seneca": "^0.6.0"
+    "seneca": "~0.7.0"
   },
   "repository": {
     "type": "git",
