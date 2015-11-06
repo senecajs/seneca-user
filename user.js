@@ -801,7 +801,7 @@ module.exports = function user(options) {
     var resetent = seneca.make( reset_canon )
     var userent = seneca.make( user_canon )
 
-    var q = { token: args.token }
+    var q = { id: args.token }
 
     resetent.load$( q, function( err, reset ) {
       if( err ) {
