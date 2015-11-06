@@ -263,11 +263,6 @@ module.exports = function user(options) {
   seneca.add( {role:role, cmd:'delete'},
     cmd_delete )
 
-  seneca.add( {role:role, hook:'generate_reset_token'},
-    generate_reset_token )
-
-
-
   // DEPRECATED
   seneca.add({role:role, cmd:'entity'},function(args,done){
     var seneca = this
@@ -732,10 +727,6 @@ module.exports = function user(options) {
   }
 
 
-  function generate_reset_token ( args, done ) {
-    return done ( null, { token: uuid() } )
-  }
-
   // Create a password reset token
   // - nick, email: to resolve user
   // - user:     user entity
@@ -745,27 +736,22 @@ module.exports = function user(options) {
     var user = args.user
     var resetent = seneca.make( reset_canon )
 
-    seneca.act( "role:'user',hook:'generate_reset_token'", function( err, data ) {
-      if( err ) {
-        return done( null, {ok: false, why: err} )
-      }
+    var token = uuid()
 
-      var token = data.token
+    resetent.make$( {
+      id$:    token,
+      token:  token,
+      nick:   user.nick,
+      user:   user.id,
+      when:   new Date().toISOString(),
+      active: true
+    } ).save$( function ( err, reset ) {
+        if ( err ) {
+          return done( null, {ok: false, why: err} )
+        }
 
-      resetent.make$( {
-        token: token,
-        nick: user.nick,
-        user: user.id,
-        when: new Date().toISOString(),
-        active: true
-      } ).save$( function( err, reset ) {
-          if( err ) {
-            return done( null, {ok: false, why: err} )
-          }
-
-          done( null, {reset: reset.data$( false ), user: user.data$( false ), ok: true} )
-        } )
-    } )
+        done( null, {reset: reset.data$( false ), user: user.data$( false ), ok: true} )
+      } )
   }
 
 
