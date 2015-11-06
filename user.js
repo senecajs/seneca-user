@@ -552,14 +552,22 @@ module.exports = function user(options) {
         user.salt = out.salt
         user.pass = out.pass
 
-        user.save$( function( err, user ){
-          if( err ) return done(err)
+        // before saving user some cleanup should be done
+        cleanUser(user, function (err, user){
+          user.save$( function( err, user ){
+            if( err ) return done(err)
 
-          seneca.log.debug('register',user.nick,user.email,user)
-          done(null,{ok:true,user:user})
+            seneca.log.debug('register',user.nick,user.email,user)
+            done(null,{ok:true,user:user})
+          })
         })
       })
     }
+  }
+
+  function cleanUser(user, done){
+    delete user.repeat
+    done(null, user)
   }
 
 
