@@ -21,7 +21,9 @@ module.exports = function user (options) {
   // # Plugin options.
   // These are the defaults. You can override using the _options_ argument.
   // Example: `seneca.use("user",{mustrepeat:true})`.
-  options = seneca.util.deepextend(require('./default-options.json'), options)
+  var default_options = require('./default-options.json')
+
+  options = seneca.util.deepextend(default_options, options)
 
   // You can change the _role_ value for the plugin patterns.
   // Use this when you want to load multiple versions of the plugin
@@ -170,7 +172,8 @@ module.exports = function user (options) {
   }, cmd_clean)
 
 
-  // ### Lod user based on a query. Required by external seneca plugins such as seneca-auth
+  // ### Load user based on a query.
+  // Required by external seneca plugins such as seneca-auth
   // Pattern: _**role**:user, **cmd**:load_user_
   // Returns an entity based on a query
   seneca.add(
@@ -209,36 +212,39 @@ module.exports = function user (options) {
     cmd_update)
 
 
-  // DEPRECATED
+  // ### Enable User - DEPRECATED
+  // Replaced with **activate** command
   seneca.add({role: role, cmd: 'enable'},// keep this for backward compatibility
     cmd_enable)
 
-  // ### Enable user
-  // Pattern: _**role**:user, **cmd**:_
+  // ### Activate user
+  // Pattern: _**role**:user, **cmd**:activate_
   seneca.add({role: role, cmd: 'activate'},
     cmd_enable)
 
 
-  // DEPRECATED
+  // ### Disable User - DEPRECATED
+  // Replaced with **deactivate** command
   seneca.add({role: role, cmd: 'disable'},// keep this for backward compatibility
     cmd_disable)
 
-  // ### Disable user
-  // Pattern: _**role**:user, **cmd**:_
-  seneca.add({role: role, cmd: 'deactivate'},// keep this for backward compatibility
+  // ### Deactivate user
+  // Pattern: _**role**:user, **cmd**:deactivate_
+  seneca.add({role: role, cmd: 'deactivate'},
     cmd_disable)
 
 
-  // DEPRECATED
+  // ### Delete User - DEPRECATED
+  // Replaced with **remove** command
   seneca.add({role: role, cmd: 'delete'},// keep this for backward compatibility
     cmd_delete)
 
-  // ### Delete user
-  // Pattern: _**role**:user, **cmd**:_
+  // ### Remove user
+  // Pattern: _**role**:user, **cmd**:remove_
   seneca.add({role: role, cmd: 'remove'},
     cmd_delete)
 
-  // DEPRECATED
+  // ### DEPRECATED
   seneca.add({role: role, cmd: 'entity'}, function (args, done) {
     var seneca = this
     var loginent = seneca.make(login_canon)
@@ -248,6 +254,7 @@ module.exports = function user (options) {
     done(null, ent)
   })
 
+  // Action Implementations
 
   function cmd_load_user (args, done) {
     seneca.make(user_canon).load$(_.omit(args, ['role', 'get']), function (err, user) {
@@ -255,8 +262,6 @@ module.exports = function user (options) {
       return done(null, {ok: true, user: user})
     })
   }
-
-  // Action Implementations
 
   function resolve_user (cmd, fail) {
     return function (args, done) {
