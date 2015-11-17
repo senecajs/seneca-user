@@ -7,6 +7,12 @@ var crypto = require('crypto')
 var _ = require('lodash')
 var uuid = require('node-uuid')
 
+var error = require('eraro')(
+  {
+    package: 'seneca-user'
+  }
+)
+
 
 // WARNING: this plugin is for *internal* use, DO NOT expose via an API.
 // See the seneca-auth plugin for an example of an API that uses this plugin.
@@ -316,7 +322,7 @@ module.exports = function user (options) {
           if (err) return done(err)
           if (!user) {
             if (fail) {
-              return seneca.fail({code: 'user/not-found', q: q})
+              return done(error(seneca.fail('user/not-found', q)))
             }
             else return done(null, {ok: false, why: 'user-not-found', nick: q.nick, email: q.email})
           }
@@ -368,6 +374,15 @@ module.exports = function user (options) {
   // Provides: {pass:,salt:,ok:,why:}
   // use why if password too weak
   function cmd_encrypt_password (args, done) {
+    var salt = args.salt || uuid().substring(0, 8)
+    var password = args.password
+
+    hasher(password + salt, options.rounds, function (pass) {
+      done(null, {ok: true, pass: pass, salt: salt})
+    })
+  }
+
+  function prepare_password_data (args, done) {
     var password = void 0 === args.password ? args.pass : args.password
     var repeat = args.repeat
 
@@ -375,12 +390,12 @@ module.exports = function user (options) {
       if (options.autopass) {
         password = uuid()
       }
-      else return seneca.fail({code: 'user/no-password', whence: args.whence}, done)
+      else return done(null, {ok: false, code: 'user/no-password', whence: args.whence})
     }
 
     if (_.isUndefined(repeat)) {
       if (options.mustrepeat) {
-        return seneca.fail({code: 'user/no-password-repeat', whence: args.whence}, done)
+        return done(null, {ok: false, code: 'user/no-password-repeat', whence: args.whence})
       }
       else repeat = password
     }
@@ -389,12 +404,10 @@ module.exports = function user (options) {
       return done(null, {ok: false, why: 'password_mismatch', whence: args.whence})
     }
 
-
     var salt = uuid().substring(0, 8)
-    hasher(args.password + salt, options.rounds, function (pass) {
-      done(null, {ok: true, pass: pass, salt: salt})
-    })
+    return done(null, {ok: true, password: password, salt: salt})
   }
+
 
   cmd_encrypt_password.descdata = function (args) {
     return hide(args, {password: 1, repeat: 1})
@@ -407,20 +420,33 @@ module.exports = function user (options) {
   // - salt:     password salt
   // Provides: {ok:}
   function cmd_verify_password (args, done) {
-    hasher(args.proposed + args.salt, options.rounds, function (pass) {
-      var ok = (pass === args.pass)
+    seneca.act(
+      { role: role, cmd: 'encrypt_password', whence: 'verify_password/user=' + user.id + ',' + user.nick,
+        password: args.proposed, salt: args.salt },
+      function (err, out) {
+        if (err) {
+          return done(err)
+        }
+        if (!out.ok) {
+          return done(err, out)
+        }
 
-      // for backwards compatibility with <= 0.2.3
-      if (!ok && options.oldsha) {
-        var shasum = crypto.createHash('sha1')
-        shasum.update(args.proposed + args.salt)
-        pass = shasum.digest('hex')
+        var pass = out.pass
 
-        ok = (pass === args.pass)
-        return done(null, {ok: ok})
+        var ok = (pass === args.pass)
+
+        // for backwards compatibility with <= 0.2.3
+        if (!ok && options.oldsha) {
+          var shasum = crypto.createHash('sha1')
+          shasum.update(args.proposed + args.salt)
+          pass = shasum.digest('hex')
+
+          ok = (pass === args.pass)
+          return done(null, {ok: ok})
+        }
+        else return done(null, {ok: ok})
       }
-      else return done(null, {ok: ok})
-    })
+    )
   }
 
   cmd_verify_password.descdata = function (args) {
@@ -440,7 +466,7 @@ module.exports = function user (options) {
 
     seneca.act(
       { role: role, cmd: 'encrypt_password', whence: 'change/user=' + user.id + ',' + user.nick,
-        password: args.password, repeat: args.repeat },
+        password: args.password, repeat: args.repeat, salt: args.salt },
       function (err, out) {
         if (err) {
           return done(err)
@@ -533,41 +559,52 @@ module.exports = function user (options) {
     }
 
     function saveuser () {
-      seneca.act(
-        {
-          role: role,
-          cmd: 'encrypt_password',
-          whence: 'register/user=' + user.nick,
-          password: args.password,
-          repeat: args.repeat
-        }, function (err, out) {
-          if (err) {
-            return done(err)
-          }
-          if (!out.ok) {
-            return done(null, out)
-          }
+      prepare_password_data(args, function (err, data) {
+        if (err) {
+          return done(err)
+        }
 
-          user.salt = out.salt
-          user.pass = out.pass
+        if (!data.ok) {
+          return done(null, data)
+        }
 
-          // before saving user some cleanup should be done
-          cleanUser(user, function (err, user) {
+        seneca.act(
+          {
+            role: role,
+            cmd: 'encrypt_password',
+            whence: 'register/user=' + user.nick,
+            password: data.password,
+            repeat: data.repeat,
+            salt: data.salt
+          }, function (err, out) {
             if (err) {
               return done(err)
             }
+            if (!out.ok) {
+              return done(null, out)
+            }
 
-            user.save$(function (err, user) {
+            user.salt = out.salt
+            user.pass = out.pass
+
+            // before saving user some cleanup should be done
+            cleanUser(user, function (err, user) {
               if (err) {
                 return done(err)
               }
 
-              seneca.log.debug('register', user.nick, user.email, user)
-              done(null, {ok: true, user: user})
+              user.save$(function (err, user) {
+                if (err) {
+                  return done(err)
+                }
+
+                seneca.log.debug('register', user.nick, user.email, user)
+                done(null, {ok: true, user: user})
+              })
             })
-          })
-        }
-      )
+          }
+        )
+      })
     }
   }
 
@@ -851,7 +888,7 @@ module.exports = function user (options) {
         }
 
         seneca.act({ role: role, cmd: 'change_password', user: user,
-            password: args.password, repeat: args.repeat },
+            password: args.password, repeat: args.repeat, salt: args.salt },
           function (err, out) {
             if (err) {
               return done(err)
