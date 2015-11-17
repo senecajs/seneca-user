@@ -37,7 +37,13 @@
 <span class="hljs-keyword">var</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>)
 
 <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>)
-<span class="hljs-keyword">var</span> uuid = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-uuid'</span>)</pre></div></div>
+<span class="hljs-keyword">var</span> uuid = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-uuid'</span>)
+
+<span class="hljs-keyword">var</span> error = <span class="hljs-built_in">require</span>(<span class="hljs-string">'eraro'</span>)(
+  {
+    package: <span class="hljs-string">'seneca-user'</span>
+  }
+)</pre></div></div>
             
         </li>
         
@@ -691,7 +697,7 @@ Execute a <em>sys/reset</em> entry by reset token, providing the new password.</
           <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
           <span class="hljs-keyword">if</span> (!user) {
             <span class="hljs-keyword">if</span> (fail) {
-              <span class="hljs-keyword">return</span> seneca.fail({code: <span class="hljs-string">'user/not-found'</span>, q: q})
+              <span class="hljs-keyword">return</span> done(error(seneca.fail(<span class="hljs-string">'user/not-found'</span>, q)))
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'user-not-found'</span>, nick: q.nick, email: q.email})
           }
@@ -768,6 +774,15 @@ use why if password too weak</li>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_encrypt_password</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> salt = args.salt || uuid().substring(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>)
+    <span class="hljs-keyword">var</span> password = args.password
+
+    hasher(password + salt, options.rounds, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">pass</span>) </span>{
+      done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, pass: pass, salt: salt})
+    })
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepare_password_data</span> (<span class="hljs-params">args, done</span>) </span>{
     <span class="hljs-keyword">var</span> password = <span class="hljs-keyword">void</span> <span class="hljs-number">0</span> === args.password ? args.pass : args.password
     <span class="hljs-keyword">var</span> repeat = args.repeat
 
@@ -775,12 +790,12 @@ use why if password too weak</li>
       <span class="hljs-keyword">if</span> (options.autopass) {
         password = uuid()
       }
-      <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> seneca.fail({code: <span class="hljs-string">'user/no-password'</span>, whence: args.whence}, done)
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, code: <span class="hljs-string">'user/no-password'</span>, whence: args.whence})
     }
 
     <span class="hljs-keyword">if</span> (_.isUndefined(repeat)) {
       <span class="hljs-keyword">if</span> (options.mustrepeat) {
-        <span class="hljs-keyword">return</span> seneca.fail({code: <span class="hljs-string">'user/no-password-repeat'</span>, whence: args.whence}, done)
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, code: <span class="hljs-string">'user/no-password-repeat'</span>, whence: args.whence})
       }
       <span class="hljs-keyword">else</span> repeat = password
     }
@@ -789,12 +804,10 @@ use why if password too weak</li>
       <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'password_mismatch'</span>, whence: args.whence})
     }
 
-
-    <span class="hljs-keyword">var</span> salt = uuid().substring(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>)
-    hasher(args.password + salt, options.rounds, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">pass</span>) </span>{
-      done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, pass: pass, salt: salt})
-    })
+    <span class="hljs-keyword">var</span> salt = args.salt || uuid().substring(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>)
+    <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, password: password, salt: salt})
   }
+
 
   cmd_encrypt_password.descdata = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args</span>) </span>{
     <span class="hljs-keyword">return</span> hide(args, {password: <span class="hljs-number">1</span>, repeat: <span class="hljs-number">1</span>})
@@ -820,8 +833,20 @@ Provides: {ok:}</li>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_verify_password</span> (<span class="hljs-params">args, done</span>) </span>{
-    hasher(args.proposed + args.salt, options.rounds, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">pass</span>) </span>{
-      <span class="hljs-keyword">var</span> ok = (pass === args.pass)</pre></div></div>
+    seneca.act(
+      { role: role, cmd: <span class="hljs-string">'encrypt_password'</span>, whence: <span class="hljs-string">'verify_password/user='</span> + user.id + <span class="hljs-string">','</span> + user.nick,
+        password: args.proposed, salt: args.salt },
+      <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">return</span> done(err)
+        }
+        <span class="hljs-keyword">if</span> (!out.ok) {
+          <span class="hljs-keyword">return</span> done(err, out)
+        }
+
+        <span class="hljs-keyword">var</span> pass = out.pass
+
+        <span class="hljs-keyword">var</span> ok = (pass === args.pass)</pre></div></div>
             
         </li>
         
@@ -836,16 +861,17 @@ Provides: {ok:}</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (!ok &amp;&amp; options.oldsha) {
-        <span class="hljs-keyword">var</span> shasum = crypto.createHash(<span class="hljs-string">'sha1'</span>)
-        shasum.update(args.proposed + args.salt)
-        pass = shasum.digest(<span class="hljs-string">'hex'</span>)
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!ok &amp;&amp; options.oldsha) {
+          <span class="hljs-keyword">var</span> shasum = crypto.createHash(<span class="hljs-string">'sha1'</span>)
+          shasum.update(args.proposed + args.salt)
+          pass = shasum.digest(<span class="hljs-string">'hex'</span>)
 
-        ok = (pass === args.pass)
-        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: ok})
+          ok = (pass === args.pass)
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: ok})
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: ok})
       }
-      <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: ok})
-    })
+    )
   }
 
   cmd_verify_password.descdata = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args</span>) </span>{
@@ -878,7 +904,7 @@ Provides: {ok:,user:}</li>
 
     seneca.act(
       { role: role, cmd: <span class="hljs-string">'encrypt_password'</span>, whence: <span class="hljs-string">'change/user='</span> + user.id + <span class="hljs-string">','</span> + user.nick,
-        password: args.password, repeat: args.repeat },
+        password: args.password, repeat: args.repeat, salt: args.salt },
       <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
         <span class="hljs-keyword">if</span> (err) {
           <span class="hljs-keyword">return</span> done(err)
@@ -1008,23 +1034,33 @@ Provides:</li>
     }
 
     <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">saveuser</span> (<span class="hljs-params"></span>) </span>{
-      seneca.act(
-        {
-          role: role,
-          cmd: <span class="hljs-string">'encrypt_password'</span>,
-          whence: <span class="hljs-string">'register/user='</span> + user.nick,
-          password: args.password,
-          repeat: args.repeat
-        }, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
-          <span class="hljs-keyword">if</span> (err) {
-            <span class="hljs-keyword">return</span> done(err)
-          }
-          <span class="hljs-keyword">if</span> (!out.ok) {
-            <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, out)
-          }
+      prepare_password_data(args, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">return</span> done(err)
+        }
 
-          user.salt = out.salt
-          user.pass = out.pass</pre></div></div>
+        <span class="hljs-keyword">if</span> (!data.ok) {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, data)
+        }
+
+        seneca.act(
+          {
+            role: role,
+            cmd: <span class="hljs-string">'encrypt_password'</span>,
+            whence: <span class="hljs-string">'register/user='</span> + user.nick,
+            password: data.password,
+            repeat: data.repeat,
+            salt: data.salt
+          }, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) {
+              <span class="hljs-keyword">return</span> done(err)
+            }
+            <span class="hljs-keyword">if</span> (!out.ok) {
+              <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, out)
+            }
+
+            user.salt = out.salt
+            user.pass = out.pass</pre></div></div>
             
         </li>
         
@@ -1039,22 +1075,23 @@ Provides:</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          cleanUser(user, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
-            <span class="hljs-keyword">if</span> (err) {
-              <span class="hljs-keyword">return</span> done(err)
-            }
-
-            user.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+            <div class="content"><div class='highlight'><pre>            cleanUser(user, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
               <span class="hljs-keyword">if</span> (err) {
                 <span class="hljs-keyword">return</span> done(err)
               }
 
-              seneca.log.debug(<span class="hljs-string">'register'</span>, user.nick, user.email, user)
-              done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, user: user})
+              user.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+                <span class="hljs-keyword">if</span> (err) {
+                  <span class="hljs-keyword">return</span> done(err)
+                }
+
+                seneca.log.debug(<span class="hljs-string">'register'</span>, user.nick, user.email, user)
+                done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, user: user})
+              })
             })
-          })
-        }
-      )
+          }
+        )
+      })
     }
   }
 
@@ -1429,7 +1466,7 @@ Provides: {ok:,reset:,user:}</li>
         }
 
         seneca.act({ role: role, cmd: <span class="hljs-string">'change_password'</span>, user: user,
-            password: args.password, repeat: args.repeat },
+            password: args.password, repeat: args.repeat, salt: args.salt },
           <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
             <span class="hljs-keyword">if</span> (err) {
               <span class="hljs-keyword">return</span> done(err)
