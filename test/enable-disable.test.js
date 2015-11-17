@@ -19,6 +19,7 @@ var user1Data = {
   nick: 'nick1',
   email: 'nick1@example.com',
   password: 'test1test',
+  salt: 'something',
   active: true
 }
 
@@ -26,6 +27,7 @@ var user2Data = {
   nick: 'nick2',
   email: 'nick2@example.com',
   password: 'test2test',
+  salt: 'something',
   active: true
 }
 
@@ -40,7 +42,7 @@ suite('seneca-user activate/deactivate suite tests ', function () {
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user1Data), function (err, data) {
       assert.isNull(err)
-      assert(user1Data.nick, data.nick)
+      assert.equal(user1Data.nick, data.user.nick)
       done(err)
     })
   })
@@ -48,7 +50,7 @@ suite('seneca-user activate/deactivate suite tests ', function () {
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user2Data), function (err, data) {
       assert.isNull(err)
-      assert(user2Data.nick, data.nick)
+      assert.equal(user2Data.nick, data.user.nick)
       done(err)
     })
   })
@@ -73,7 +75,7 @@ suite('seneca-user activate/deactivate suite tests ', function () {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
       assert.isNull(err)
       assert.notOk(data.ok)
-      assert('not-active', data.why)
+      assert.equal('not-active', data.why)
       done(err)
     })
   })
@@ -83,6 +85,34 @@ suite('seneca-user activate/deactivate suite tests ', function () {
       assert.isNull(err)
       assert.ok(data.ok)
       done(err)
+    })
+  })
+
+  test('user/verify password user test', function (done) {
+    si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
+      assert.isNull(err)
+      assert.ok(data.ok)
+      assert(data.user)
+      assert(data.user.pass)
+      si.act({role: 'user', cmd: 'verify_password', proposed: user1Data.password, salt: user1Data.salt, pass: data.user.pass}, function (err, data) {
+        assert.isNull(err)
+        assert.ok(data.ok)
+        done(err)
+      })
+    })
+  })
+
+  test('user/incorrect verify password user test', function (done) {
+    si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
+      assert.isNull(err)
+      assert.ok(data.ok)
+      assert(data.user)
+      assert(data.user.pass)
+      si.act({role: 'user', cmd: 'verify_password', proposed: user1Data.password + '1', salt: user1Data.salt, pass: data.user.pass}, function (err, data) {
+        assert.isNull(err)
+        assert.notOk(data.ok)
+        done(err)
+      })
     })
   })
 
@@ -98,7 +128,7 @@ suite('seneca-user activate/deactivate suite tests ', function () {
     si.act({role: 'user', cmd: 'deactivate'}, function (err, data) {
       assert.isNull(err)
       assert.notOk(data.ok)
-      assert('cannot-identify-user', data.why)
+      assert.equal('cannot-identify-user', data.why)
       done(err)
     })
   })
@@ -107,7 +137,7 @@ suite('seneca-user activate/deactivate suite tests ', function () {
     si.act({role: 'user', cmd: 'activate'}, function (err, data) {
       assert.isNull(err)
       assert.notOk(data.ok)
-      assert('cannot-identify-user', data.why)
+      assert.equal('cannot-identify-user', data.why)
       done(err)
     })
   })

@@ -40,7 +40,7 @@ suite('seneca-user reset suite tests ', function () {
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user1Data), function (err, data) {
       assert.isNull(err)
-      assert(user1Data.nick, data.nick)
+      assert.equal(user1Data.nick, data.user.nick)
       done(err)
     })
   })
@@ -48,7 +48,7 @@ suite('seneca-user reset suite tests ', function () {
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user2Data), function (err, data) {
       assert.isNull(err)
-      assert(user2Data.nick, data.nick)
+      assert.equal(user2Data.nick, data.user.nick)
       done(err)
     })
   })

@@ -404,7 +404,7 @@ module.exports = function user (options) {
       return done(null, {ok: false, why: 'password_mismatch', whence: args.whence})
     }
 
-    var salt = uuid().substring(0, 8)
+    var salt = args.salt || uuid().substring(0, 8)
     return done(null, {ok: true, password: password, salt: salt})
   }
 
