@@ -1,5 +1,5 @@
 /* Copyright (c) 2010-2013 Richard Rodger */
-"use strict";
+'use strict'
 
 var seneca = require('seneca')
 
@@ -8,9 +8,9 @@ var _ = require('lodash')
 
 var Lab = require('lab')
 var lab = exports.lab = Lab.script()
-var suite = lab.suite;
-var test = lab.test;
-var before = lab.before;
+var suite = lab.suite
+var test = lab.test
+var before = lab.before
 
 var si = seneca()
 si.use('../user')
@@ -31,12 +31,13 @@ var user2Data = {
   active: true
 }
 
-var token
-
 suite('seneca-user register-login suite tests ', function () {
   before({}, function (done) {
     si.ready(function (err) {
-      if (err) return process.exit(!console.error(err));
+      if (err) {
+        return process.exit(!console.error(err))
+      }
+
       done()
     })
   })
@@ -44,7 +45,7 @@ suite('seneca-user register-login suite tests ', function () {
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user1Data), function (err, data) {
       assert.isNull(err)
-      assert(!data.user.repeat, "Repeat should not exists")
+      assert(!data.user.repeat, 'Repeat should not exists')
       assert(user1Data.nick, data.nick)
       done(err)
     })
@@ -65,10 +66,9 @@ suite('seneca-user register-login suite tests ', function () {
       assert.equal('password', data.why)
       assert(data.login)
       assert(data.user)
-      assert(!data.login.repeat, "Repeat should not exists")
-      assert(!data.user.repeat, "Repeat should not exists")
+      assert(!data.login.repeat, 'Repeat should not exists')
+      assert(!data.user.repeat, 'Repeat should not exists')
       assert(data.login.token)
-      token = data.login.token
       done(err)
     })
   })
@@ -108,5 +108,4 @@ suite('seneca-user register-login suite tests ', function () {
       done(err)
     })
   })
-
 })

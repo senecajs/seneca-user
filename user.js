@@ -1,5 +1,5 @@
 /* Copyright (c) 2012-2014 Richard Rodger, MIT License */
-"use strict";
+'use strict'
 
 
 var crypto = require('crypto')
@@ -30,7 +30,7 @@ module.exports = function user (options) {
 
   // # Action patterns
   // These define the pattern interface for this plugin.
-    ;
+
 
   function conditionalExtend (user, args) {
     var extra = _.omit(args, options.updateUser.omit)
@@ -244,7 +244,7 @@ module.exports = function user (options) {
     var loginent = seneca.make(login_canon)
 
     var kind = args.kind || 'user'
-    var ent = ( 'user' == kind ? userent : loginent ).make$()
+    var ent = ('user' === kind ? seneca.make(user_canon) : loginent).make$()
     done(null, ent)
   })
 
@@ -257,7 +257,6 @@ module.exports = function user (options) {
   }
 
   // Action Implementations
-  ;
 
   function resolve_user (cmd, fail) {
     return function (args, done) {
@@ -268,11 +267,11 @@ module.exports = function user (options) {
         return cmd.call(seneca, args, done)
       }
       else {
-        var q = {}, valid = false
+        var q = {}
+        var valid = false
 
 
         if (args.email && args.nick) {
-
           // email wins
           if (args.email !== args.nick) {
             q.email = args.email
@@ -309,10 +308,10 @@ module.exports = function user (options) {
         }
 
         userent.load$(q, function (err, user) {
-          if (err) return done(err);
+          if (err) return done(err)
           if (!user) {
             if (fail) {
-              return seneca.fail({code: 'user/not-found', q: q});
+              return seneca.fail({code: 'user/not-found', q: q})
             }
             else return done(null, {ok: false, why: 'user-not-found', nick: q.nick, email: q.email})
           }
@@ -335,7 +334,8 @@ module.exports = function user (options) {
 
 
   function hasher (src, rounds, done) {
-    var out = src, i = 0
+    var out = src
+    var i = 0
 
     // don't chew up the CPU
     function round () {
@@ -344,10 +344,10 @@ module.exports = function user (options) {
       shasum.update(out, 'utf8')
       out = shasum.digest('hex')
       if (rounds <= i) {
-        return done(out);
+        return done(out)
       }
-      if (0 == i % 88) {
-        return process.nextTick(round);
+      if (0 === i % 88) {
+        return process.nextTick(round)
       }
       round()
     }
@@ -363,19 +363,19 @@ module.exports = function user (options) {
   // Provides: {pass:,salt:,ok:,why:}
   // use why if password too weak
   function cmd_encrypt_password (args, done) {
-    var password = void 0 == args.password ? args.pass : args.password
+    var password = void 0 === args.password ? args.pass : args.password
     var repeat = args.repeat
 
     if (_.isUndefined(password)) {
       if (options.autopass) {
         password = uuid()
       }
-      else return seneca.fail({code: 'user/no-password', whence: args.whence}, done);
+      else return seneca.fail({code: 'user/no-password', whence: args.whence}, done)
     }
 
     if (_.isUndefined(repeat)) {
       if (options.mustrepeat) {
-        return seneca.fail({code: 'user/no-password-repeat', whence: args.whence}, done);
+        return seneca.fail({code: 'user/no-password-repeat', whence: args.whence}, done)
       }
       else repeat = password
     }
@@ -412,9 +412,9 @@ module.exports = function user (options) {
         pass = shasum.digest('hex')
 
         ok = (pass === args.pass)
-        return done(null, {ok: ok});
+        return done(null, {ok: ok})
       }
-      else return done(null, {ok: ok});
+      else return done(null, {ok: ok})
     })
   }
 
@@ -438,17 +438,17 @@ module.exports = function user (options) {
         password: args.password, repeat: args.repeat },
       function (err, out) {
         if (err) {
-          return done(err);
+          return done(err)
         }
         if (!out.ok) {
-          return done(null, out);
+          return done(null, out)
         }
 
         user.salt = out.salt
         user.pass = out.pass
         user.save$(function (err, user) {
           if (err) {
-            return done(err);
+            return done(err)
           }
 
           user = user.data$(false)
@@ -483,7 +483,7 @@ module.exports = function user (options) {
     user.nick = args.nick || args.username || args.email
     user.email = args.email
     user.name = args.name || ''
-    user.active = void 0 == args.active ? true : args.active
+    user.active = void 0 === args.active ? true : args.active
     user.when = new Date().toISOString()
 
     if (options.confirm) {
@@ -493,15 +493,13 @@ module.exports = function user (options) {
 
     conditionalExtend(user, args)
 
-    var exists = false
-
     return checknick(
       function () {
         checkemail(
           function () {
             saveuser()
           })
-      });
+      })
 
     // unsafe nick unique check, data store should also enforce !!
     function checknick (next) {
@@ -530,24 +528,41 @@ module.exports = function user (options) {
     }
 
     function saveuser () {
-      seneca.act({ role: role, cmd: 'encrypt_password', whence: 'register/user=' + user.nick,
-        password: args.password, repeat: args.repeat }, function (err, out) {
-        if (err) return done(err);
-        if (!out.ok) return done(null, out);
+      seneca.act(
+        {
+          role: role,
+          cmd: 'encrypt_password',
+          whence: 'register/user=' + user.nick,
+          password: args.password,
+          repeat: args.repeat
+        }, function (err, out) {
+          if (err) {
+            return done(err)
+          }
+          if (!out.ok) {
+            return done(null, out)
+          }
 
-        user.salt = out.salt
-        user.pass = out.pass
+          user.salt = out.salt
+          user.pass = out.pass
 
-        // before saving user some cleanup should be done
-        cleanUser(user, function (err, user) {
-          user.save$(function (err, user) {
-            if (err) return done(err)
+          // before saving user some cleanup should be done
+          cleanUser(user, function (err, user) {
+            if (err) {
+              return done(err)
+            }
 
-            seneca.log.debug('register', user.nick, user.email, user)
-            done(null, {ok: true, user: user})
+            user.save$(function (err, user) {
+              if (err) {
+                return done(err)
+              }
+
+              seneca.log.debug('register', user.nick, user.email, user)
+              done(null, {ok: true, user: user})
+            })
           })
-        })
-      })
+        }
+      )
     }
   }
 
@@ -565,7 +580,9 @@ module.exports = function user (options) {
   // - success: {ok:true,user:,login:}
   // - failure: {ok:false,why:,nick:}
   function cmd_login (args, done) {
-    var seneca = this, user = args.user, why;
+    var seneca = this
+    var user = args.user
+    var why
     var loginent = seneca.make(login_canon)
 
 
@@ -575,16 +592,16 @@ module.exports = function user (options) {
     }
 
     if (args.auto) {
-      return make_login(user, 'auto');
+      return make_login(user, 'auto')
     }
     else {
       seneca.act({role: role, cmd: 'verify_password', proposed: args.password, pass: user.pass, salt: user.salt}, function (err, out) {
-        if (err) return done(err);
+        if (err) return done(err)
         if (!out.ok) {
           seneca.log.debug('login/fail', why = 'invalid-password', user)
           return done(null, {ok: false, why: why})
         }
-        else return make_login(user, 'password');
+        else return make_login(user, 'password')
       })
     }
 
@@ -603,16 +620,16 @@ module.exports = function user (options) {
           active: true,
           why: why
         },
-        "role,cmd,password"))
+        'role,cmd,password'))
 
-      login.token = login.id$, // DEPRECATED
+      login.token = login.id$ // DEPRECATED
 
-        login.save$(function (err, login) {
-          if (err) return done(err);
+      login.save$(function (err, login) {
+        if (err) return done(err)
 
-          seneca.log.debug('login/ok', why, user, login)
-          done(null, {ok: true, user: user, login: login, why: why})
-        })
+        seneca.log.debug('login/ok', why, user, login)
+        done(null, {ok: true, user: user, login: login, why: why})
+      })
     }
   }
 
@@ -624,17 +641,18 @@ module.exports = function user (options) {
   // - success: {ok:true,user:}
   // - failure: {ok:false,why:,nick:}
   function cmd_confirm (args, done) {
-    var seneca = this, user = args.user, why;
+    var seneca = this
+    var why
     var userent = seneca.make(user_canon)
 
     userent.load$({confirmcode: args.code}, function (err, user) {
-      if (err) return done(err);
+      if (err) return done(err)
 
       if (user) {
         if (user.active) {
           user.confirmed = true
           user.save$(function (err, user) {
-            if (err) return done(err);
+            if (err) return done(err)
             done(null, {ok: true, user: user})
           })
         }
@@ -665,14 +683,14 @@ module.exports = function user (options) {
     var q = {id: args.token}
 
     loginent.load$(q, function (err, login) {
-      if (err) return done(err);
+      if (err) return done(err)
 
       if (!login) {
         return done(null, {ok: false, token: args.token, why: 'login-not-found'})
       }
 
       userent.load$({id: login.user}, function (err, user) {
-        if (err) return done(err);
+        if (err) return done(err)
 
         if (!user) {
           return done(null, {ok: false, token: args.token, user: login.user, why: 'user-not-found'})
@@ -697,7 +715,7 @@ module.exports = function user (options) {
     var q = {id: args.token}
 
     loginent.load$(q, function (err, login) {
-      if (err) return done(err);
+      if (err) return done(err)
 
       if (!login) {
         return done(null, {ok: true})
@@ -706,9 +724,15 @@ module.exports = function user (options) {
       login.active = false
       login.ended = new Date().getTime()
       login.save$(function (err, login) {
-        if (err) return done(err);
+        if (err) {
+          return done(err)
+        }
 
         userent.load$({id: login.user}, function (err, user) {
+          if (err) {
+            return done(err)
+          }
+
           seneca.log.debug('logout', user, login)
           done(null, {user: user, login: login, ok: true})
         })
@@ -728,20 +752,22 @@ module.exports = function user (options) {
 
     var token = uuid()
 
-    resetent.make$({
+    resetent
+    .make$({
       id$: token,
       token: token,
       nick: user.nick,
       user: user.id,
       when: new Date().toISOString(),
       active: true
-    }).save$(function (err, reset) {
-        if (err) {
-          return done(null, {ok: false, why: err})
-        }
+    })
+    .save$(function (err, reset) {
+      if (err) {
+        return done(null, {ok: false, why: err})
+      }
 
-        done(null, {reset: reset.data$(false), user: user.data$(false), ok: true})
-      })
+      done(null, {reset: reset.data$(false), user: user.data$(false), ok: true})
+    })
   }
 
 
@@ -757,7 +783,7 @@ module.exports = function user (options) {
 
     resetent.load$(q, function (err, reset) {
       if (err) {
-        return done(null, {ok: false, why: err});
+        return done(null, {ok: false, why: err})
       }
 
       if (!reset) {
@@ -767,7 +793,7 @@ module.exports = function user (options) {
 
       userent.load$({id: reset.user}, function (err, user) {
         if (err) {
-          return done(null, {ok: false, why: err});
+          return done(null, {ok: false, why: err})
         }
 
         if (!user) {
@@ -795,7 +821,7 @@ module.exports = function user (options) {
 
     resetent.load$(q, function (err, reset) {
       if (err) {
-        return done(err);
+        return done(err)
       }
 
       if (!reset) {
@@ -812,7 +838,7 @@ module.exports = function user (options) {
 
       userent.load$({ id: reset.user }, function (err, user) {
         if (err) {
-          return done(null, {ok: false, token: args.token, why: err});
+          return done(null, {ok: false, token: args.token, why: err})
         }
 
         if (!user) {
@@ -823,7 +849,7 @@ module.exports = function user (options) {
             password: args.password, repeat: args.repeat },
           function (err, out) {
             if (err) {
-              return done(err);
+              return done(err)
             }
 
             if (!out.ok) {
@@ -834,7 +860,7 @@ module.exports = function user (options) {
 
             reset.save$(function (err, reset) {
               if (err) {
-                return done(null, {ok: false, why: err});
+                return done(null, {ok: false, why: err})
               }
 
               reset = reset.data$(false)
@@ -870,7 +896,6 @@ module.exports = function user (options) {
     }
 
     user.load$(q, function (err, user) {
-
       if (err) return done(err, {ok: false})
       if (!user) return done(null, {ok: false, exists: false})
 
@@ -912,7 +937,6 @@ module.exports = function user (options) {
     }
 
     user.load$(q, function (err, user) {
-
       if (err) return done(err, {ok: false, why: err})
       if (!user) return done(null, {ok: false, exists: false})
 
@@ -923,7 +947,7 @@ module.exports = function user (options) {
         if (pwd === pwd2 && 1 < pwd.length) {
           // FIX: needs to a proper action call
           cmd_change_password({nick: args.orig_nick, password: pwd}, function (err, userpwd) {
-            if (err) return done(err, {ok: false, why: err});
+            if (err) return done(err, {ok: false, why: err})
             user = userpwd
           })
         }
@@ -941,7 +965,7 @@ module.exports = function user (options) {
             function () {
               updateuser(user)
             })
-        });
+        })
 
       // unsafe nick unique check, data store should also enforce !!
       function checknick (next) {
@@ -989,10 +1013,10 @@ module.exports = function user (options) {
         user.salt = pwdupdate.salt
         user.pass = pwdupdate.pass
 
-        if ('' == user.nick) {
+        if ('' === user.nick) {
           done(null, {ok: false, why: 'empty_nick'})
         }
-        else if ('' == user.email) {
+        else if ('' === user.email) {
           done(null, {ok: false, why: 'empty_email'})
         }
         else {
@@ -1061,11 +1085,13 @@ module.exports = function user (options) {
     var loginent = seneca.make(login_canon)
     var resetent = seneca.make(reset_canon)
 
-    this.act('role:util, cmd:define_sys_entity', {list: [
-      { entity: userent.entity$, fields: options.user.fields},
-      { entity: loginent.entity$, fields: options.login.fields},
-      { entity: resetent.entity$, fields: options.reset.fields}
-    ]}, done)
+    this.act('role:util, cmd:define_sys_entity', {
+      list: [
+        { entity: userent.entity$, fields: options.user.fields },
+        { entity: loginent.entity$, fields: options.login.fields },
+        { entity: resetent.entity$, fields: options.reset.fields }
+      ]
+    }, done)
   })
 
 
