@@ -20,27 +20,25 @@
   "files": [
     "LICENSE.txt",
     "README.md",
-    "user.js"
+    "user.js",
+    "default-options.json"
   ],
   "contributors": [
     {
       "name": "Mircea Alexandru",
       "email": "mircea.alexandru@gmail.com",
-      "url": "https://github.com/mirceaalexandru"
+      "url": "http://www.alexandrumircea.ro"
     }
   ],
   "dependencies": {
-    "underscore": "~1.8.0",
-    "node-uuid": "~1.4.1"
-  },
-  "peerDependencies": {
-    "seneca": "*"
+    "lodash": "3.10.1",
+    "node-uuid": "1.4.7"
   },
   "devDependencies": {
     "chai": "~1.9.1",
     "lab": "^5.13.0",
     "lodash": "^3.10.0",
-    "seneca": "~0.7.0"
+    "seneca": "0.7.2"
   },
   "repository": {
     "type": "git",

@@ -385,7 +385,7 @@ Object with properties:
 
    * _ok_: true if operation is OK
 
-### role:user, cmd:delete
+### role:user, cmd:remove
 
 Deletes an user and all relationed records.
 
@@ -400,7 +400,7 @@ Object with properties:
    * _ok_: true if operation is OK
 
 
-### role:user, cmd:enable
+### role:user, cmd:activate
 
 Enables an user.
 
@@ -417,7 +417,7 @@ Object with properties:
 
    * _ok_: true if operation is OK
 
-### role:user, cmd:disable
+### role:user, cmd:deactivate
 
 Disables an user.
 
