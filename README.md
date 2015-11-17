@@ -116,7 +116,7 @@ contains an _ok_ field that is either true or false, indicating the success or f
 
 ## Options
 
-   * _rounds_: number of SHA512 rounds to use for password encryption, default: 11111
+   * _**rounds**_: number of SHA512 rounds to use for password encryption, default: 11111
    * _autopass_: automatically generate an (unrecoverable) password if none is supplied - mostly good for testing, default: true
    * _mustrepeat_: you must provide a _repeat_ argument (a repeat of the password) when setting a password
    * _resetperiod_: duration in millis that a password reset token is valid, default: 24 hours
@@ -496,8 +496,7 @@ For example, to add some custom fields when registering a user:
 ## Test
 
 ```sh
-cd test
-mocha user.test.js --seneca.log.print
+npm test
 ```
 
 
