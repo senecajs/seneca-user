@@ -29,7 +29,7 @@ var user2Data = {
   active: true
 }
 
-suite('seneca-user enable/disable suite tests ', function () {
+suite('seneca-user activate/deactivate suite tests ', function () {
   before({}, function (done) {
     si.ready(function (err) {
       if (err) return process.exit(!console.error(err))
@@ -62,7 +62,7 @@ suite('seneca-user enable/disable suite tests ', function () {
   })
 
   test('user/disable user test', function (done) {
-    si.act({role: 'user', cmd: 'disable', nick: user1Data.nick}, function (err, data) {
+    si.act({role: 'user', cmd: 'deactivate', nick: user1Data.nick}, function (err, data) {
       assert.isNull(err)
       assert.ok(data.ok)
       done(err)
@@ -79,7 +79,7 @@ suite('seneca-user enable/disable suite tests ', function () {
   })
 
   test('user/enable user test', function (done) {
-    si.act({role: 'user', cmd: 'enable', nick: user1Data.nick}, function (err, data) {
+    si.act({role: 'user', cmd: 'activate', nick: user1Data.nick}, function (err, data) {
       assert.isNull(err)
       assert.ok(data.ok)
       done(err)
@@ -95,7 +95,7 @@ suite('seneca-user enable/disable suite tests ', function () {
   })
 
   test('user/disable unknown user test', function (done) {
-    si.act({role: 'user', cmd: 'disable'}, function (err, data) {
+    si.act({role: 'user', cmd: 'deactivate'}, function (err, data) {
       assert.isNull(err)
       assert.notOk(data.ok)
       assert('cannot-identify-user', data.why)
@@ -104,7 +104,7 @@ suite('seneca-user enable/disable suite tests ', function () {
   })
 
   test('user/enable unknown user test', function (done) {
-    si.act({role: 'user', cmd: 'enable'}, function (err, data) {
+    si.act({role: 'user', cmd: 'activate'}, function (err, data) {
       assert.isNull(err)
       assert.notOk(data.ok)
       assert('cannot-identify-user', data.why)
