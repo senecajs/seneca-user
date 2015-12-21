@@ -11,7 +11,8 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha test/*.test.js"
+    "test": "mocha test/*.test.js",
+    "coverage": "istanbul cover _mocha test/*.test.js && cat ./coverage/lcov.info | coveralls"
   },
   "files": [
     "LICENSE.txt",
@@ -29,9 +30,11 @@
     "seneca": "*"
   },
   "devDependencies": {
-    "gex": "~0.2.2",
-    "chai": "~3.4.1",
     "async": "~1.5.0",
+    "chai": "~3.4.1",
+    "coveralls": "^2.11.6",
+    "gex": "~0.2.2",
+    "istanbul": "^0.4.1",
     "mocha": "~2.3.4",
     "seneca": "~0.9.3"
   },
