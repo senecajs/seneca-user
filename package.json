@@ -11,26 +11,32 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha test/*.test.js"
+    "test": "mocha test/*.test.js",
+    "coverage": "istanbul cover _mocha test/*.test.js && cat ./coverage/lcov.info | coveralls"
   },
   "files": [
     "LICENSE.txt",
     "README.md",
     "user.js"
   ],
+  "engines": {
+    "node": ">=0.10.0"
+  },
   "dependencies": {
-    "underscore": "~1.6.0",
+    "underscore": "~1.8.3",
     "node-uuid": "~1.4.1"
   },
   "peerDependencies": {
     "seneca": "*"
   },
   "devDependencies": {
-    "gex": "~0.1.4",
-    "chai": "~1.9.1",
-    "async": "~0.9.0",
-    "mocha": "~1.20.1",
-    "seneca": "~0.5.17"
+    "async": "~1.5.0",
+    "chai": "~3.4.1",
+    "coveralls": "^2.11.6",
+    "gex": "~0.2.2",
+    "istanbul": "^0.4.1",
+    "mocha": "~2.3.4",
+    "seneca": "~0.9.3"
   },
   "repository": {
     "type": "git",
