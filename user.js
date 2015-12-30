@@ -389,8 +389,8 @@ module.exports = function user(options) {
       return done(null,{ok:false,why:'password_mismatch',whence:args.whence})
     }
 
-
-    var salt = uuid().substring(0,8)
+    // 128 bits of salt
+    var salt = crypto.randomBytes(16).toString('ascii')
     hasher( args.password + salt, options.rounds, function(pass){
       done(null,{ok:true,pass:pass,salt:salt})
     })
