@@ -2,12 +2,12 @@
 'use strict'
 
 
-var crypto = require('crypto')
+var Crypto = require('crypto')
 
 var _ = require('lodash')
-var uuid = require('node-uuid')
+var Uuid = require('node-uuid')
 
-var error = require('eraro')(
+var Eraro = require('eraro')(
   {
     package: 'seneca-user'
   }
@@ -322,7 +322,7 @@ module.exports = function user (options) {
           if (err) return done(err)
           if (!user) {
             if (fail) {
-              return done(error(seneca.fail('user/not-found', q)))
+              return done(Eraro(seneca.fail('user/not-found', q)))
             }
             else return done(null, {ok: false, why: 'user-not-found', nick: q.nick, email: q.email})
           }
@@ -351,7 +351,7 @@ module.exports = function user (options) {
     // don't chew up the CPU
     function round () {
       i++
-      var shasum = crypto.createHash('sha512')
+      var shasum = Crypto.createHash('sha512')
       shasum.update(out, 'utf8')
       out = shasum.digest('hex')
       if (rounds <= i) {
@@ -374,7 +374,8 @@ module.exports = function user (options) {
   // Provides: {pass:,salt:,ok:,why:}
   // use why if password too weak
   function cmd_encrypt_password (args, done) {
-    var salt = args.salt || uuid().substring(0, 8)
+    // 128 bits of salt
+    var salt = args.salt || create_salt()
     var password = args.password
 
     hasher(password + salt, options.rounds, function (pass) {
@@ -388,7 +389,7 @@ module.exports = function user (options) {
 
     if (_.isUndefined(password)) {
       if (options.autopass) {
-        password = uuid()
+        password = Uuid()
       }
       else return done(null, {ok: false, code: 'user/no-password', whence: args.whence})
     }
@@ -404,10 +405,13 @@ module.exports = function user (options) {
       return done(null, {ok: false, why: 'password_mismatch', whence: args.whence})
     }
 
-    var salt = args.salt || uuid().substring(0, 8)
-    return done(null, {ok: true, password: password, salt: salt})
+    seneca.act('role: ' + role + ', cmd: encrypt_password', {password: password, salt: args.salt}, done)
   }
 
+
+  function create_salt () {
+    return Crypto.randomBytes(16).toString('ascii')
+  }
 
   cmd_encrypt_password.descdata = function (args) {
     return hide(args, {password: 1, repeat: 1})
@@ -437,7 +441,7 @@ module.exports = function user (options) {
 
         // for backwards compatibility with <= 0.2.3
         if (!ok && options.oldsha) {
-          var shasum = crypto.createHash('sha1')
+          var shasum = Crypto.createHash('sha1')
           shasum.update(args.proposed + args.salt)
           pass = shasum.digest('hex')
 
@@ -519,7 +523,7 @@ module.exports = function user (options) {
 
     if (options.confirm) {
       user.confirmed = args.confirmed || false
-      user.confirmcode = uuid()
+      user.confirmcode = Uuid()
     }
 
     conditionalExtend(user, args)
@@ -568,42 +572,24 @@ module.exports = function user (options) {
           return done(null, data)
         }
 
-        seneca.act(
-          {
-            role: role,
-            cmd: 'encrypt_password',
-            whence: 'register/user=' + user.nick,
-            password: data.password,
-            repeat: data.repeat,
-            salt: data.salt
-          }, function (err, out) {
+        user.salt = data.salt
+        user.pass = data.pass
+
+        // before saving user some cleanup should be done
+        cleanUser(user, function (err, user) {
+          if (err) {
+            return done(err)
+          }
+
+          user.save$(function (err, user) {
             if (err) {
               return done(err)
             }
-            if (!out.ok) {
-              return done(null, out)
-            }
 
-            user.salt = out.salt
-            user.pass = out.pass
-
-            // before saving user some cleanup should be done
-            cleanUser(user, function (err, user) {
-              if (err) {
-                return done(err)
-              }
-
-              user.save$(function (err, user) {
-                if (err) {
-                  return done(err)
-                }
-
-                seneca.log.debug('register', user.nick, user.email, user)
-                done(null, {ok: true, user: user})
-              })
-            })
-          }
-        )
+            seneca.log.debug('register', user.nick, user.email, user)
+            done(null, {ok: true, user: user})
+          })
+        })
       })
     }
   }
@@ -655,7 +641,7 @@ module.exports = function user (options) {
         {},
         cleanargs,
         {
-          id$: uuid(),
+          id$: Uuid(),
           nick: user.nick,
           user: user.id,
           when: new Date().toISOString(),
@@ -792,7 +778,7 @@ module.exports = function user (options) {
     var user = args.user
     var resetent = seneca.make(reset_canon)
 
-    var token = uuid()
+    var token = Uuid()
 
     resetent
     .make$({

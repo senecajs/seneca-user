@@ -15,7 +15,7 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab test/*.test.js -r console -v -L -m 3000 -t 70 | coveralls",
+    "test": "lab test/*.test.js -r console -v -L -m 3000 -t 70",
     "annotate": "docco user.js -o doc"
   },
   "files": [
@@ -31,6 +31,9 @@
       "url": "http://www.alexandrumircea.ro"
     }
   ],
+  "engines": {
+    "node": ">=0.10.0"
+  },
   "dependencies": {
     "eraro": "0.4.1",
     "lodash": "3.10.1",

@@ -1,7 +1,7 @@
 /* Copyright (c) 2010-2013 Richard Rodger */
 'use strict'
 
-var seneca = require('seneca')
+var Seneca = require('seneca')
 
 var assert = require('chai').assert
 var _ = require('lodash')
@@ -12,7 +12,7 @@ var suite = lab.suite
 var test = lab.test
 var before = lab.before
 
-var si = seneca()
+var si = Seneca()
 si.use('../user')
 
 var user1Data = {

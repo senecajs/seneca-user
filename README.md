@@ -1,12 +1,16 @@
+![Seneca](http://senecajs.org/files/assets/seneca-logo.png)
+> A [Seneca.js](http://senecajs.org) User Management Plugin
+
 # seneca-user
-
-## A user management plugin for the [Seneca](http://senecajs.org) toolkit
-
 [![npm version][npm-badge]][npm-url]
 [![Build Status][travis-badge]][travis-url]
 [![Coverage Status][coveralls-badge]][coveralls-url]
 [![Dependency Status][david-badge]][david-url]
 [![Gitter chat][gitter-badge]][gitter-url]
+
+Lead Maintainers: [Mircea Alexandru](https://github.com/mirceaalexandru) and [Mihai Dima](https://github.com/mihaidma)
+
+## A user management plugin for the [Seneca](http://senecajs.org) toolkit
 
 This module is a plugin for the Seneca framework. It provides business logic for user management, such as:
 
@@ -21,18 +25,12 @@ and a _login_, representing an instance of a user that has been authenticated. A
 This module does not make any assumptions about the context it runs in. 
 Use the [seneca-auth](http://github.com/senecajs/seneca-auth) plugin to handle web and social media authentication.
 
-For a working example, see the <a href="https://github.com/rjrodger/seneca-examples/tree/master/user-accounts">Seneca user accounts example</a>.
-
+For a working example, see the [Seneca user accounts example](https://github.com/rjrodger/seneca-examples/tree/master/user-accounts)
 
 ## Support
 
 If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
-
-Current Version: 0.2.10
-
-Tested on: Node 0.10.29, Seneca 0.5.18
-
 
 ## Quick example
 
@@ -59,8 +57,8 @@ seneca.ready(function(){
 })
 ```
 
-This example, uses a _pin_ for convenience: <code>userpin.register( ... )</code> is the same as 
-<code>seneca.act({role:'user',cmd:'register', ... )</code>.
+This example, uses a _pin_ for convenience: `userpin.register( ... )` is the same as
+`seneca.act({role:'user',cmd:'register', ... )`.
 
 In the example code, a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
 password. The successful login provides a login instance. The _login.id_ property can be used to authenticate this login. For example,
@@ -75,9 +73,7 @@ node test/readme.js
 
 ## Deeper example
 
-Take a look at the <a href="http://github.com/rjrodger/seneca-examples">user accounts example</a>.
-
-
+Take a look at the [user accounts example](http://github.com/rjrodger/seneca-examples).
 
 ## Install
 
@@ -88,13 +84,11 @@ npm install seneca-user
 
 You'll need the [seneca](http://github.com/senecajs/seneca) module to use this module - it's just a plugin.
 
-
-
 ## Usage
 
 To load the plugin:
 
-```JavaScript
+```javascript
 seneca.use('user', { ... options ... })
 ```
 
@@ -115,8 +109,6 @@ _nick_ or their email address. The _nick_ property is the traditional
 All actions defined by this plugin return meta data objects containing the results of the action. The meta data object
 contains an _ok_ field that is either true or false, indicating the success or failure of the action. For example, a login attempt with an invalid password will result in an <code>{ok:false,...}</code>. When relevant, a _why_ property is also provided, with a code that indicates the reason for the result. For example: {...,why:'user-not-found'}.
 
-
-
 ## Options
 
    * _**rounds**_: number of SHA512 rounds to use for password encryption, default: 11111
@@ -129,13 +121,9 @@ To set options, do so when you load the plugin:
 ```javascript
 seneca.use('user',{ resetperiod: 3600*1000 })
 ```
-
-
 ## Annotated Source Code
 
 The full source code of this plugin is [annotated](http://senecajs.github.io/seneca-user/user.html).
-
-
 
 ## Entities
 
@@ -502,14 +490,13 @@ For example, to add some custom fields when registering a user:
 npm test
 ```
 
-
+[npm-badge]: https://badge.fury.io/js/seneca-user.svg
+[npm-url]: https://badge.fury.io/js/seneca-user
+[travis-badge]: https://api.travis-ci.org/senecajs/seneca-user.svg
+[travis-url]: https://travis-ci.org/senecajs/seneca-user
 [coveralls-badge]:https://coveralls.io/repos/senecajs/seneca-user/badge.svg?branch=master&service=github
 [coveralls-url]: https://coveralls.io/github/senecajs/seneca-user?branch=master
-[travis-badge]:https://travis-ci.org/senecajs/seneca-user.png?branch=master
-[travis-url]:https://travis-ci.org/senecajs/seneca-user
 [david-badge]: https://david-dm.org/senecajs/seneca-user.svg
 [david-url]: https://david-dm.org/senecajs/seneca-user
 [gitter-badge]: https://badges.gitter.im/senecajs/seneca.png
 [gitter-url]: https://gitter.im/senecajs/seneca
-[npm-badge]: https://badge.fury.io/js/seneca-user.svg
-[npm-url]: https://badge.fury.io/js/seneca-user

@@ -1,9 +1,9 @@
 /* Copyright (c) 2010-2013 Richard Rodger */
 'use strict'
 
-var seneca = require('seneca')
+var Seneca = require('seneca')
 
-var assert = require('chai').assert
+var Assert = require('chai').assert
 var _ = require('lodash')
 
 var Lab = require('lab')
@@ -12,7 +12,7 @@ var suite = lab.suite
 var test = lab.test
 var before = lab.before
 
-var si = seneca()
+var si = Seneca()
 si.use('../user')
 
 var user1Data = {
@@ -41,62 +41,62 @@ suite('seneca-user activate/deactivate suite tests ', function () {
 
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user1Data), function (err, data) {
-      assert.isNull(err)
-      assert.equal(user1Data.nick, data.user.nick)
+      Assert.isNull(err)
+      Assert.equal(user1Data.nick, data.user.nick)
       done(err)
     })
   })
 
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user2Data), function (err, data) {
-      assert.isNull(err)
-      assert.equal(user2Data.nick, data.user.nick)
+      Assert.isNull(err)
+      Assert.equal(user2Data.nick, data.user.nick)
       done(err)
     })
   })
 
   test('user/login user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      assert.isNull(err)
-      assert.ok(data.ok)
+      Assert.isNull(err)
+      Assert.ok(data.ok)
       done(err)
     })
   })
 
   test('user/disable user test', function (done) {
     si.act({role: 'user', cmd: 'deactivate', nick: user1Data.nick}, function (err, data) {
-      assert.isNull(err)
-      assert.ok(data.ok)
+      Assert.isNull(err)
+      Assert.ok(data.ok)
       done(err)
     })
   })
 
   test('user/login user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      assert.isNull(err)
-      assert.notOk(data.ok)
-      assert.equal('not-active', data.why)
+      Assert.isNull(err)
+      Assert.notOk(data.ok)
+      Assert.equal('not-active', data.why)
       done(err)
     })
   })
 
   test('user/enable user test', function (done) {
     si.act({role: 'user', cmd: 'activate', nick: user1Data.nick}, function (err, data) {
-      assert.isNull(err)
-      assert.ok(data.ok)
+      Assert.isNull(err)
+      Assert.ok(data.ok)
       done(err)
     })
   })
 
   test('user/verify password user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      assert.isNull(err)
-      assert.ok(data.ok)
-      assert(data.user)
-      assert(data.user.pass)
+      Assert.isNull(err)
+      Assert.ok(data.ok)
+      Assert(data.user)
+      Assert(data.user.pass)
       si.act({role: 'user', cmd: 'verify_password', proposed: user1Data.password, salt: user1Data.salt, pass: data.user.pass}, function (err, data) {
-        assert.isNull(err)
-        assert.ok(data.ok)
+        Assert.isNull(err)
+        Assert.ok(data.ok)
         done(err)
       })
     })
@@ -104,13 +104,13 @@ suite('seneca-user activate/deactivate suite tests ', function () {
 
   test('user/incorrect verify password user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      assert.isNull(err)
-      assert.ok(data.ok)
-      assert(data.user)
-      assert(data.user.pass)
+      Assert.isNull(err)
+      Assert.ok(data.ok)
+      Assert(data.user)
+      Assert(data.user.pass)
       si.act({role: 'user', cmd: 'verify_password', proposed: user1Data.password + '1', salt: user1Data.salt, pass: data.user.pass}, function (err, data) {
-        assert.isNull(err)
-        assert.notOk(data.ok)
+        Assert.isNull(err)
+        Assert.notOk(data.ok)
         done(err)
       })
     })
@@ -118,26 +118,26 @@ suite('seneca-user activate/deactivate suite tests ', function () {
 
   test('user/login user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      assert.isNull(err)
-      assert.ok(data.ok)
+      Assert.isNull(err)
+      Assert.ok(data.ok)
       done(err)
     })
   })
 
   test('user/disable unknown user test', function (done) {
     si.act({role: 'user', cmd: 'deactivate'}, function (err, data) {
-      assert.isNull(err)
-      assert.notOk(data.ok)
-      assert.equal('cannot-identify-user', data.why)
+      Assert.isNull(err)
+      Assert.notOk(data.ok)
+      Assert.equal('cannot-identify-user', data.why)
       done(err)
     })
   })
 
   test('user/enable unknown user test', function (done) {
     si.act({role: 'user', cmd: 'activate'}, function (err, data) {
-      assert.isNull(err)
-      assert.notOk(data.ok)
-      assert.equal('cannot-identify-user', data.why)
+      Assert.isNull(err)
+      Assert.notOk(data.ok)
+      Assert.equal('cannot-identify-user', data.why)
       done(err)
     })
   })
