@@ -30,14 +30,20 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="comment">/* Copyright (c) 2012-2014 Richard Rodger, MIT License */</span>
-<span class="string">"use strict"</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* Copyright (c) 2012-2014 Richard Rodger, MIT License */</span>
+<span class="hljs-pi">'use strict'</span>
 
 
-<span class="keyword">var</span> crypto = require(<span class="string">'crypto'</span>)
+<span class="hljs-keyword">var</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>)
 
-<span class="keyword">var</span> _    = require(<span class="string">'underscore'</span>)
-<span class="keyword">var</span> uuid = require(<span class="string">'node-uuid'</span>)</pre></div></div>
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>)
+<span class="hljs-keyword">var</span> uuid = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-uuid'</span>)
+
+<span class="hljs-keyword">var</span> error = <span class="hljs-built_in">require</span>(<span class="hljs-string">'eraro'</span>)(
+  {
+    package: <span class="hljs-string">'seneca-user'</span>
+  }
+)</pre></div></div>
             
         </li>
         
@@ -53,18 +59,13 @@ See the seneca-auth plugin for an example of an API that uses this plugin.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">conditionalExtend</span><span class="params">(user, args)</span> {</span>
-  <span class="keyword">var</span> extra = _.omit(args,[
-    <span class="string">'role'</span>,<span class="string">'cmd'</span>,<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'name'</span>,<span class="string">'active'</span>,<span class="string">'username'</span>,<span class="string">'password'</span>,<span class="string">'salt'</span>,<span class="string">'pass'</span>,<span class="string">'id'</span>,<span class="string">'confirmed'</span>,<span class="string">'confirmcode'</span>
-  ])
-  _.map(extra,<span class="keyword">function</span>(val,key){
-    <span class="keyword">if</span>( !key.match(<span class="regexp">/\$/</span>) ) {
-      user[key]=val
-    }
-  })
-}
-module.exports = <span class="function"><span class="keyword">function</span> <span class="title">user</span><span class="params">(options)</span> {</span>
-  <span class="keyword">var</span> seneca = <span class="keyword">this</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">user</span> (<span class="hljs-params">options</span>) </span>{
+  <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+
+  <span class="hljs-keyword">var</span> user_canon = <span class="hljs-string">'sys/user'</span>
+  <span class="hljs-keyword">var</span> login_canon = <span class="hljs-string">'sys/login'</span>
+  <span class="hljs-keyword">var</span> reset_canon = <span class="hljs-string">'sys/reset'</span></pre></div></div>
             
         </li>
         
@@ -72,35 +73,18 @@ module.exports = <span class="function"><span class="keyword">function</span> <s
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h1>Plugin options.</h1>
-<p>These are the defaults. You can override using the <em>options</em> argument.<br>Example: <code>seneca.use(&quot;user&quot;,{mustrepeat:true})</code>.</p>
+              <h1 id="plugin-options-">Plugin options.</h1>
+<p>These are the defaults. You can override using the <em>options</em> argument.
+Example: <code>seneca.use(&quot;user&quot;,{mustrepeat:true})</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  options = seneca.util.deepextend({
-    role:        <span class="string">'user'</span>,
-    rounds:      <span class="number">11111</span>,
-    autopass:    <span class="literal">true</span>,    <span class="comment">// generate a password if none provided</span>
-    mustrepeat:  <span class="literal">false</span>, <span class="comment">// password repeat arg needed</span>
-    resetperiod: (<span class="number">24</span>*<span class="number">60</span>*<span class="number">60</span>*<span class="number">1000</span>), <span class="comment">// must reset within this time period, default: 24 hours</span>
-    confirm:     <span class="literal">false</span>,
-    oldsha:      <span class="literal">true</span>,
-    user:{
-      fields:[
-        {name:<span class="string">'pass'</span>,hide:<span class="literal">true</span>},
-        {name:<span class="string">'salt'</span>,hide:<span class="literal">true</span>}
-      ]
-    },
-    login:{
-      fields:[]
-    },
-    reset:{
-      fields:[]
-    },
-  },options)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> default_options = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./default-options.json'</span>)
+
+  options = seneca.util.deepextend(default_options, options)</pre></div></div>
             
         </li>
         
@@ -117,7 +101,7 @@ and expose them via different patterns.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> role = options.role</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> role = options.role</pre></div></div>
             
         </li>
         
@@ -128,16 +112,21 @@ and expose them via different patterns.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>There are the data entities that the plugin uses
-<em>userent</em>: standard user entity sys/user - user details are stored here
-<em>loginent</em>: standard login entity sys/login - valid logins are stored here
-<em>resetent</em>: standard user entity sys/user - reset tokens are stored here</p>
+              <h1 id="action-patterns">Action patterns</h1>
+<p>These define the pattern interface for this plugin.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> userent  = seneca.make(<span class="string">'sys/user'</span>)
-  <span class="keyword">var</span> loginent = seneca.make(<span class="string">'sys/login'</span>)
-  <span class="keyword">var</span> resetent = seneca.make(<span class="string">'sys/reset'</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">conditionalExtend</span> (<span class="hljs-params">user, args</span>) </span>{
+    <span class="hljs-keyword">var</span> extra = _.omit(args, options.updateUser.omit)
+    _.map(extra, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val, key</span>) </span>{
+      <span class="hljs-keyword">if</span> (!key.match(<span class="hljs-regexp">/\$/</span>)) {
+        user[key] = val
+      }
+    })
+  }</pre></div></div>
             
         </li>
         
@@ -145,15 +134,21 @@ and expose them via different patterns.</p>
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h1>Action patterns</h1>
-<p>These define the pattern interface for this plugin.</p>
+              <h3 id="encrypt-a-plain-text-password-string">Encrypt a plain text password string</h3>
+<p>Pattern: _<strong>role</strong>:user, <strong>cmd</strong>:encrypt<em>password</em></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  ;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role,
+    cmd: <span class="hljs-string">'encrypt_password'</span>,
+
+    password: {type: <span class="hljs-string">'string$'</span>}, <span class="hljs-comment">// password plain text string</span>
+    repeat: {type: <span class="hljs-string">'string$'</span>} <span class="hljs-comment">// password plain text string, repeated</span>
+  }, cmd_encrypt_password)</pre></div></div>
             
         </li>
         
@@ -161,21 +156,23 @@ and expose them via different patterns.</p>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h3>Encrypt a plain text password string</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:encrypt_password</em>  </p>
+              <h3 id="verify-a-password-string">Verify a password string</h3>
+<p>Pattern: _<strong>role</strong>:user, <strong>cmd</strong>:verify<em>password</em>
+Has the user entered the correct password?</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  seneca.add({
-    role: role, 
-    cmd:  <span class="string">'encrypt_password'</span>,
+    role: role,
+    cmd: <span class="hljs-string">'verify_password'</span>,
 
-    password: {type:<span class="string">'string$'</span>}, <span class="comment">// password plain text string</span>
-    repeat:   {type:<span class="string">'string$'</span>}, <span class="comment">// password plain text string, repeated</span>
-  }, cmd_encrypt_password )</pre></div></div>
+    proposed: {required$: <span class="hljs-literal">true</span>, string$: <span class="hljs-literal">true</span>},
+    pass: {required$: <span class="hljs-literal">true</span>, string$: <span class="hljs-literal">true</span>},
+    salt: {required$: <span class="hljs-literal">true</span>, string$: <span class="hljs-literal">true</span>}
+  }, cmd_verify_password)</pre></div></div>
             
         </li>
         
@@ -183,23 +180,17 @@ and expose them via different patterns.</p>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h3>Verify a password string</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:verify_password</em>
-Has the user entered the correct password?</p>
+              <h3 id="change-password">Change password</h3>
+<p>Pattern: _<strong>role</strong>:user, <strong>cmd</strong>:change<em>password</em></p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  seneca.add({
-    role: role, 
-    cmd:  <span class="string">'verify_password'</span>,
-
-    proposed: {required$:<span class="literal">true</span>,string$:<span class="literal">true</span>},
-    pass:     {required$:<span class="literal">true</span>,string$:<span class="literal">true</span>},
-    salt:     {required$:<span class="literal">true</span>,string$:<span class="literal">true</span>}
-  }, cmd_verify_password )</pre></div></div>
+    role: role,
+    cmd: <span class="hljs-string">'change_password'</span>,</pre></div></div>
             
         </li>
         
@@ -207,17 +198,22 @@ Has the user entered the correct password?</p>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h3>Change password</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:change_password</em>  </p>
+              <p>identify user, various options</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add({
-    role: role, 
-    cmd:  <span class="string">'change_password'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    atleastone$: [<span class="hljs-string">'nick'</span>, <span class="hljs-string">'email'</span>, <span class="hljs-string">'user'</span>, <span class="hljs-string">'username'</span>],
+    nick: {string$: <span class="hljs-literal">true</span>},
+    email: {string$: <span class="hljs-literal">true</span>},
+    username: {string$: <span class="hljs-literal">true</span>},
+    user: {type$: [<span class="hljs-string">'object'</span>, <span class="hljs-string">'string'</span>]},
+
+    password: {string$: <span class="hljs-literal">true</span>, required$: <span class="hljs-literal">true</span>}, <span class="hljs-comment">// new password plain text string</span>
+    repeat: {string$: <span class="hljs-literal">true</span>}                 <span class="hljs-comment">// new password plain text string, repeated</span>
+  }, resolve_user(cmd_change_password, <span class="hljs-literal">true</span>))</pre></div></div>
             
         </li>
         
@@ -228,19 +224,14 @@ Has the user entered the correct password?</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>identify user, various options</p>
+              <h3 id="register-a-new-user">Register a new user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:register</em></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    atleastone$:[<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'user'</span>,<span class="string">'username'</span>],
-    nick:     {string$:<span class="literal">true</span>},
-    email:    {string$:<span class="literal">true</span>},
-    username: {string$:<span class="literal">true</span>},
-    user:     {object$:<span class="literal">true</span>},
-
-    password: {string$:<span class="literal">true</span>,required$:<span class="literal">true</span>}, <span class="comment">// new password plain text string</span>
-    repeat:   {string$:<span class="literal">true</span>}                 <span class="comment">// new password plain text string, repeated</span>
-  }, resolve_user(cmd_change_password,<span class="literal">true</span>))</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role,
+    cmd: <span class="hljs-string">'register'</span>,</pre></div></div>
             
         </li>
         
@@ -248,17 +239,26 @@ Has the user entered the correct password?</p>
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <h3>Register a new user</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:register</em>  </p>
+              <p>identify user, various options</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add({
-    role: role, 
-    cmd:  <span class="string">'register'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    atleastone$: [<span class="hljs-string">'nick'</span>, <span class="hljs-string">'email'</span>, <span class="hljs-string">'username'</span>],
+    nick: {string$: <span class="hljs-literal">true</span>},
+    email: {string$: <span class="hljs-literal">true</span>},
+    username: {string$: <span class="hljs-literal">true</span>},
+
+    password: {string$: <span class="hljs-literal">true</span>},  <span class="hljs-comment">// password plain text string</span>
+    repeat: {string$: <span class="hljs-literal">true</span>},  <span class="hljs-comment">// password plain text string, repeated</span>
+
+    name: {string$: <span class="hljs-literal">true</span>},  <span class="hljs-comment">// full name, as one string</span>
+    active: {boolean$: <span class="hljs-literal">true</span>}, <span class="hljs-comment">// is user active?</span>
+
+    confirm: {boolean$: <span class="hljs-literal">true</span>} <span class="hljs-comment">// is user confirmed?</span>
+  }, cmd_register)</pre></div></div>
             
         </li>
         
@@ -269,23 +269,15 @@ Has the user entered the correct password?</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>identify user, various options</p>
+              <h3 id="login-a-user">Login a user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:login</em>
+Creates an entry in <em>sys/login</em> and generates a login token</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    atleastone$: [<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'username'</span>],
-    nick:        {string$:<span class="literal">true</span>},
-    email:       {string$:<span class="literal">true</span>},
-    username:    {string$:<span class="literal">true</span>},
-
-    password:    {string$:<span class="literal">true</span>},  <span class="comment">// password plain text string</span>
-    repeat:      {string$:<span class="literal">true</span>},  <span class="comment">// password plain text string, repeated</span>
-
-    name:        {string$:<span class="literal">true</span>},  <span class="comment">// full name, as one string</span>
-    active:      {boolean$:<span class="literal">true</span>}, <span class="comment">// is user active?</span>
-
-    confirm:     {boolean$:<span class="literal">true</span>}, <span class="comment">// is user confirmed?</span>
-  }, cmd_register )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role,
+    cmd: <span class="hljs-string">'login'</span>,</pre></div></div>
             
         </li>
         
@@ -293,17 +285,23 @@ Has the user entered the correct password?</p>
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h3>Login a user</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:login</em><br>Creates an entry in <em>sys/login</em> and generates a login token</p>
+              <p>identify user, various options</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add({
-    role:role, 
-    cmd:<span class="string">'login'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    atleastone$: [<span class="hljs-string">'nick'</span>, <span class="hljs-string">'email'</span>, <span class="hljs-string">'user'</span>, <span class="hljs-string">'username'</span>],
+    nick: {string$: <span class="hljs-literal">true</span>},
+    email: {string$: <span class="hljs-literal">true</span>},
+    username: {string$: <span class="hljs-literal">true</span>},
+    user: {object$: <span class="hljs-literal">true</span>},
+
+    password: {string$: <span class="hljs-literal">true</span>}, <span class="hljs-comment">// password plain text</span>
+    auto: {boolean$: <span class="hljs-literal">true</span>} <span class="hljs-comment">// login without password</span>
+
+  }, resolve_user(cmd_login, <span class="hljs-literal">false</span>))</pre></div></div>
             
         </li>
         
@@ -314,20 +312,18 @@ Has the user entered the correct password?</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>identify user, various options</p>
+              <h3 id="confirm-user">Confirm user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:confirm</em>
+Use confirmation code, provided to user by email (say), to confirm registration.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    atleastone$:[<span class="string">'nick'</span>,<span class="string">'email'</span>,<span class="string">'user'</span>,<span class="string">'username'</span>],
-    nick:     {string$:<span class="literal">true</span>},
-    email:    {string$:<span class="literal">true</span>},
-    username: {string$:<span class="literal">true</span>},
-    user:     {object$:<span class="literal">true</span>},
+            <div class="content"><div class='highlight'><pre>  seneca.add({
+    role: role,
+    cmd: <span class="hljs-string">'confirm'</span>,
 
-    password: {string$:<span class="literal">true</span>}, <span class="comment">// password plain text</span>
-    auto:     {boolean$:<span class="literal">true</span>} <span class="comment">// login without password</span>
-
-  }, resolve_user(cmd_login,<span class="literal">false</span>) )</pre></div></div>
+    code: {string$: <span class="hljs-literal">true</span>, required$: <span class="hljs-literal">true</span>} <span class="hljs-comment">// confirmation code</span>
+  }, cmd_confirm)</pre></div></div>
             
         </li>
         
@@ -335,20 +331,21 @@ Has the user entered the correct password?</p>
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h3>Confirm user</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:confirm</em><br>Use confirmation code, provided to user by email (say), to confirm registration.</p>
+              <h3 id="authorize-user">Authorize user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:auth</em>
+Validates that the token exists and is active</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  seneca.add({
-    role: role, 
-    cmd:  <span class="string">'confirm'</span>,
-    
-    code:{string$:<span class="literal">true</span>,required$:<span class="literal">true</span>} <span class="comment">// confirmation code</span>
-  }, cmd_confirm )</pre></div></div>
+    role: role,
+    cmd: <span class="hljs-string">'auth'</span>,
+
+    token: {required$: <span class="hljs-literal">true</span>, string$: <span class="hljs-literal">true</span>} <span class="hljs-comment">// login token</span>
+  }, cmd_auth)</pre></div></div>
             
         </li>
         
@@ -356,20 +353,21 @@ Has the user entered the correct password?</p>
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <h3>Authorize user</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:auth</em><br>Validates that the token exists and is active</p>
+              <h3 id="logout-user">Logout user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:logout</em>
+Mark token record in <em>sys/login</em> as inactive</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  seneca.add({
-    role: role, 
-    cmd:  <span class="string">'auth'</span>,
+    role: role,
+    cmd: <span class="hljs-string">'logout'</span>,
 
-    token:{required$:<span class="literal">true</span>,string$:<span class="literal">true</span>} <span class="comment">// login token</span>
-  }, cmd_auth )</pre></div></div>
+    token: {required$: <span class="hljs-literal">true</span>, string$: <span class="hljs-literal">true</span>} <span class="hljs-comment">// login token</span>
+  }, cmd_logout)</pre></div></div>
             
         </li>
         
@@ -377,20 +375,21 @@ Has the user entered the correct password?</p>
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h3>Logout user</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:logout</em><br>Mark token record in <em>sys/login</em> as inactive</p>
+              <h3 id="clean-user-data">Clean user data</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:clean</em>
+Remove sensitive data fields such as password hash.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  seneca.add({
-    role: role, 
-    cmd:  <span class="string">'logout'</span>,
+    role: role,
+    cmd: <span class="hljs-string">'clean'</span>,
 
-    token:{required$:<span class="literal">true</span>,string$:<span class="literal">true</span>} <span class="comment">// login token</span>
-  }, cmd_logout )</pre></div></div>
+    user: {required$: <span class="hljs-literal">true</span>, entity$: user_canon} <span class="hljs-comment">// sys/user entity</span>
+  }, cmd_clean)</pre></div></div>
             
         </li>
         
@@ -398,20 +397,23 @@ Has the user entered the correct password?</p>
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h3>Clean user data</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:clean</em><br>Remove sensitive data fields such as password hash.</p>
+              <h3 id="load-user-based-on-a-query-">Load user based on a query.</h3>
+<p>Required by external seneca plugins such as seneca-auth
+Pattern: _<strong>role</strong>:user, <strong>cmd</strong>:load<em>user</em>
+Returns an entity based on a query</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add({
-    role: role, 
-    cmd:  <span class="string">'clean'</span>,
-
-    user:{required$:<span class="literal">true</span>,entity$:<span class="string">'sys/user'</span>}, <span class="comment">// sys/user entity</span>
-  }, cmd_clean )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add(
+    {
+      role: role,
+      get: <span class="hljs-string">'user'</span>
+    },
+    cmd_load_user
+  )</pre></div></div>
             
         </li>
         
@@ -419,16 +421,17 @@ Has the user entered the correct password?</p>
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h3>Create a password reset entry</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:create_reset</em><br>Create an entry in <em>sys/reset</em> that provides a reset token</p>
+              <h3 id="create-a-password-reset-entry">Create a password reset entry</h3>
+<p>Pattern: _<strong>role</strong>:user, <strong>cmd</strong>:create<em>reset</em>
+Create an entry in <em>sys/reset</em> that provides a reset token</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'create_reset'</span>},
-              resolve_user(cmd_create_reset,<span class="literal">false</span>) )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'create_reset'</span>},
+    resolve_user(cmd_create_reset, <span class="hljs-literal">false</span>))</pre></div></div>
             
         </li>
         
@@ -436,16 +439,17 @@ Has the user entered the correct password?</p>
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h3>Load a password reset entry</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:load_reset</em><br>Load a <em>sys/reset</em> entry by reset token</p>
+              <h3 id="load-a-password-reset-entry">Load a password reset entry</h3>
+<p>Pattern: _<strong>role</strong>:user, <strong>cmd</strong>:load<em>reset</em>
+Load a <em>sys/reset</em> entry by reset token</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'load_reset'</span>},
-              cmd_load_reset )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'load_reset'</span>},
+    cmd_load_reset)</pre></div></div>
             
         </li>
         
@@ -453,16 +457,17 @@ Has the user entered the correct password?</p>
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h3>Execute a password reset</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:execute_reset</em><br>Execute a <em>sys/reset</em> entry by reset token, providing the new password.</p>
+              <h3 id="execute-a-password-reset">Execute a password reset</h3>
+<p>Pattern: _<strong>role</strong>:user, <strong>cmd</strong>:execute<em>reset</em>
+Execute a <em>sys/reset</em> entry by reset token, providing the new password.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'execute_reset'</span>},
-              cmd_execute_reset )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'execute_reset'</span>},
+    cmd_execute_reset)</pre></div></div>
             
         </li>
         
@@ -470,16 +475,16 @@ Has the user entered the correct password?</p>
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <h3>Update user details</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:update</em>  </p>
+              <h3 id="update-user-details">Update user details</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:update</em></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'update'</span>},
-              cmd_update )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'update'</span>},
+    cmd_update)</pre></div></div>
             
         </li>
         
@@ -487,16 +492,16 @@ Has the user entered the correct password?</p>
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <h3>Enable user</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:</em><br>TODO: rename to activate for consistency</p>
+              <h3 id="enable-user-deprecated">Enable User - DEPRECATED</h3>
+<p>Replaced with <strong>activate</strong> command</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'enable'</span>},
-              cmd_enable )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'enable'</span>},<span class="hljs-comment">// keep this for backward compatibility</span>
+    cmd_enable)</pre></div></div>
             
         </li>
         
@@ -504,16 +509,16 @@ Has the user entered the correct password?</p>
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <h3>Disable user</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:</em><br>TODO: rename to deactivate for consistency</p>
+              <h3 id="activate-user">Activate user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:activate</em></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'disable'</span>},
-              cmd_disable )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'activate'</span>},
+    cmd_enable)</pre></div></div>
             
         </li>
         
@@ -521,16 +526,16 @@ Has the user entered the correct password?</p>
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <h3>Delete user</h3>
-<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:</em><br>TODO: rename to remove for consistency</p>
+              <h3 id="disable-user-deprecated">Disable User - DEPRECATED</h3>
+<p>Replaced with <strong>deactivate</strong> command</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add( {role:role, cmd:<span class="string">'delete'</span>},
-              cmd_delete )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'disable'</span>},<span class="hljs-comment">// keep this for backward compatibility</span>
+    cmd_disable)</pre></div></div>
             
         </li>
         
@@ -541,15 +546,13 @@ Has the user entered the correct password?</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>DEPRECATED</p>
+              <h3 id="deactivate-user">Deactivate user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:deactivate</em></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  seneca.add({role:role, cmd:<span class="string">'entity'</span>},<span class="keyword">function</span>(args,done){
-    <span class="keyword">var</span> kind = args.kind || <span class="string">'user'</span>
-    <span class="keyword">var</span> ent = ( <span class="string">'user'</span> == kind ? userent : loginent ).make$()
-    done(<span class="literal">null</span>, ent )
-  })</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'deactivate'</span>},
+    cmd_disable)</pre></div></div>
             
         </li>
         
@@ -560,25 +563,13 @@ Has the user entered the correct password?</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Action Implementations</p>
+              <h3 id="delete-user-deprecated">Delete User - DEPRECATED</h3>
+<p>Replaced with <strong>remove</strong> command</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  ;
-
-
-  <span class="function"><span class="keyword">function</span> <span class="title">resolve_user</span><span class="params">( cmd, fail )</span> {</span>
-    <span class="keyword">return</span> <span class="keyword">function</span>( args, done ) {
-      <span class="keyword">var</span> seneca = <span class="keyword">this</span>
-
-      <span class="keyword">if</span>( args.user &amp;&amp; args.user.entity$ ) {
-        <span class="keyword">return</span> cmd.call( seneca, args, done )
-      }
-      <span class="keyword">else</span> {
-        <span class="keyword">var</span> q = {}, valid = <span class="literal">false</span>
-
-
-        <span class="keyword">if</span>( args.email &amp;&amp; args.nick ) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'delete'</span>},<span class="hljs-comment">// keep this for backward compatibility</span>
+    cmd_delete)</pre></div></div>
             
         </li>
         
@@ -589,74 +580,13 @@ Has the user entered the correct password?</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>email wins</p>
+              <h3 id="remove-user">Remove user</h3>
+<p>Pattern: <em><strong>role</strong>:user, <strong>cmd</strong>:remove</em></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="keyword">if</span>( args.email !== args.nick ) {
-            q.email = args.email
-            valid = <span class="literal">true</span>
-          }
-          <span class="keyword">else</span> <span class="keyword">if</span>( ~args.email.indexOf(<span class="string">'@'</span>) ) {
-            q.email = args.email
-            valid = <span class="literal">true</span>
-          }
-          <span class="keyword">else</span> {
-            q.nick = args.nick
-            valid = <span class="literal">true</span>
-          }
-        }
-        <span class="keyword">else</span> <span class="keyword">if</span>( args.email ) {
-          q.email = args.email
-          valid = <span class="literal">true</span>
-        }
-        <span class="keyword">else</span> <span class="keyword">if</span>( args.nick ) {
-          q.nick = args.nick
-          valid = <span class="literal">true</span>
-        }
-        <span class="keyword">else</span> <span class="keyword">if</span>( args.username ) {
-          q.nick = args.username
-          valid = <span class="literal">true</span>
-        }
-        <span class="keyword">else</span> <span class="keyword">if</span>( args.user &amp;&amp; !args.user.entity$) {
-          q.id = args.user
-          valid = <span class="literal">true</span>
-        }
-
-        <span class="keyword">if</span>( !valid ) {
-          <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:<span class="string">'nick_or_email_missing'</span>})
-        }
-
-        userent.load$(q, <span class="keyword">function</span>( err, user ){
-          <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-          <span class="keyword">if</span>( !user ) {
-            <span class="keyword">if</span>( fail ) {
-              <span class="keyword">return</span> seneca.fail({code:<span class="string">'user/not-found'</span>,q:q});
-            }
-            <span class="keyword">else</span> <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:<span class="string">'user-not-found'</span>,nick:q.nick,email:q.email})
-          }
-          args.user = user
-
-          <span class="keyword">return</span> cmd.call( seneca, args, done )
-        })
-      }
-    }
-  }
-
-
-
-  <span class="function"><span class="keyword">function</span> <span class="title">hide</span><span class="params">(args,propnames)</span>{</span>
-    <span class="keyword">var</span> outargs = _.extend({},args)
-    <span class="keyword">for</span>( <span class="keyword">var</span> pn <span class="keyword">in</span> propnames ) {
-      outargs[pn] = <span class="string">'[HIDDEN]'</span>
-    }
-    <span class="keyword">return</span> outargs
-  }
-
-
-
-  <span class="function"><span class="keyword">function</span> <span class="title">hasher</span><span class="params">( src, rounds, done )</span> {</span>
-    <span class="keyword">var</span> out = src, i = <span class="number">0</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'remove'</span>},
+    cmd_delete)</pre></div></div>
             
         </li>
         
@@ -667,21 +597,18 @@ Has the user entered the correct password?</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>don&#39;t chew up the CPU</p>
+              <h3 id="deprecated">DEPRECATED</h3>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="function"><span class="keyword">function</span> <span class="title">round</span><span class="params">()</span> {</span>
-      i++
-      <span class="keyword">var</span> shasum = crypto.createHash(<span class="string">'sha512'</span>)
-      shasum.update( out, <span class="string">'utf8'</span> )
-      out = shasum.digest(<span class="string">'hex'</span>)
-      <span class="keyword">if</span>( rounds &lt;= i ) { <span class="keyword">return</span> done(out);}
-      <span class="keyword">if</span>( <span class="number">0</span> == i % <span class="number">88</span> ) { <span class="keyword">return</span> process.nextTick(round);}
-      round()
-    }
-    round()
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  seneca.add({role: role, cmd: <span class="hljs-string">'entity'</span>}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> loginent = seneca.make(login_canon)
+
+    <span class="hljs-keyword">var</span> kind = args.kind || <span class="hljs-string">'user'</span>
+    <span class="hljs-keyword">var</span> ent = (<span class="hljs-string">'user'</span> === kind ? seneca.make(user_canon) : loginent).make$()
+    done(<span class="hljs-literal">null</span>, ent)
+  })</pre></div></div>
             
         </li>
         
@@ -692,44 +619,32 @@ Has the user entered the correct password?</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>Encrypt password using a salt and multiple SHA512 rounds
-Override for password strength checking
-- password: password string
-- repeat: password repeat, optional
-Provides: {pass:,salt:,ok:,why:}
-use why if password too weak</p>
+              <p>Action Implementations</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_encrypt_password</span><span class="params">( args, done )</span>{</span>
-    <span class="keyword">var</span> password = <span class="keyword">void</span> <span class="number">0</span> == args.password ? args.pass : args.password
-    <span class="keyword">var</span> repeat   = args.repeat
-
-    <span class="keyword">if</span>( _.isUndefined( password ) ) {
-      <span class="keyword">if</span>( options.autopass ) {
-        password = uuid()
-      }
-      <span class="keyword">else</span> <span class="keyword">return</span> seneca.fail({code:<span class="string">'user/no-password'</span>,whence:args.whence},done);
-    }
-
-    <span class="keyword">if</span>( _.isUndefined( repeat ) ) {
-      <span class="keyword">if</span>( options.mustrepeat ) {
-        <span class="keyword">return</span> seneca.fail({code:<span class="string">'user/no-password-repeat'</span>,whence:args.whence},done);
-      }
-      <span class="keyword">else</span> repeat = password
-    }
-
-    <span class="keyword">if</span>( password !== repeat ) {
-      <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:<span class="string">'password_mismatch'</span>,whence:args.whence})
-    }
-
-
-    <span class="keyword">var</span> salt = uuid().substring(<span class="number">0</span>,<span class="number">8</span>)
-    hasher( args.password + salt, options.rounds, <span class="keyword">function</span>(pass){
-      done(<span class="literal">null</span>,{ok:<span class="literal">true</span>,pass:pass,salt:salt})
+            <div class="content"><div class='highlight'><pre>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_load_user</span> (<span class="hljs-params">args, done</span>) </span>{
+    seneca.make(user_canon).load$(_.omit(args, [<span class="hljs-string">'role'</span>, <span class="hljs-string">'get'</span>]), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
+      <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, user: user})
     })
   }
-  cmd_encrypt_password.descdata = <span class="keyword">function</span>(args){<span class="keyword">return</span> hide(args,{password:<span class="number">1</span>,repeat:<span class="number">1</span>})}</pre></div></div>
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolve_user</span> (<span class="hljs-params">cmd, fail</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args, done</span>) </span>{
+      <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+      <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+
+      <span class="hljs-keyword">if</span> (args.user &amp;&amp; args.user.entity$) {
+        <span class="hljs-keyword">return</span> cmd.call(seneca, args, done)
+      }
+      <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">var</span> q = {}
+        <span class="hljs-keyword">var</span> valid = <span class="hljs-literal">false</span>
+
+
+        <span class="hljs-keyword">if</span> (args.email &amp;&amp; args.nick) {</pre></div></div>
             
         </li>
         
@@ -740,17 +655,73 @@ use why if password too weak</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>Verify proposed password is correct, redoing SHA512 rounds
-- proposed: trial password string
-- pass:     password hash
-- salt:     password salt
-Provides: {ok:}</p>
+              <p>email wins</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_verify_password</span><span class="params">( args, done )</span>{</span>
-    hasher( args.proposed + args.salt, options.rounds, <span class="keyword">function</span>(pass){
-      <span class="keyword">var</span> ok = (pass===args.pass)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> (args.email !== args.nick) {
+            q.email = args.email
+            valid = <span class="hljs-literal">true</span>
+          }
+          <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (~args.email.indexOf(<span class="hljs-string">'@'</span>)) {
+            q.email = args.email
+            valid = <span class="hljs-literal">true</span>
+          }
+          <span class="hljs-keyword">else</span> {
+            q.nick = args.nick
+            valid = <span class="hljs-literal">true</span>
+          }
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (args.email) {
+          q.email = args.email
+          valid = <span class="hljs-literal">true</span>
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (args.nick) {
+          q.nick = args.nick
+          valid = <span class="hljs-literal">true</span>
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (args.username) {
+          q.nick = args.username
+          valid = <span class="hljs-literal">true</span>
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (args.user &amp;&amp; !args.user.entity$) {
+          q.id = args.user
+          valid = <span class="hljs-literal">true</span>
+        }
+
+        <span class="hljs-keyword">if</span> (!valid) {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'nick_or_email_missing'</span>})
+        }
+
+        userent.load$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+          <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
+          <span class="hljs-keyword">if</span> (!user) {
+            <span class="hljs-keyword">if</span> (fail) {
+              <span class="hljs-keyword">return</span> done(error(seneca.fail(<span class="hljs-string">'user/not-found'</span>, q)))
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'user-not-found'</span>, nick: q.nick, email: q.email})
+          }
+          args.user = user
+
+          <span class="hljs-keyword">return</span> cmd.call(seneca, args, done)
+        })
+      }
+    }
+  }
+
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hide</span> (<span class="hljs-params">args, propnames</span>) </span>{
+    <span class="hljs-keyword">var</span> outargs = _.extend({}, args)
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> pn <span class="hljs-keyword">in</span> propnames) {
+      outargs[pn] = <span class="hljs-string">'[HIDDEN]'</span>
+    }
+    <span class="hljs-keyword">return</span> outargs
+  }
+
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasher</span> (<span class="hljs-params">src, rounds, done</span>) </span>{
+    <span class="hljs-keyword">var</span> out = src
+    <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span></pre></div></div>
             
         </li>
         
@@ -761,22 +732,26 @@ Provides: {ok:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>for backwards compatibility with &lt;= 0.2.3</p>
+              <p>don’t chew up the CPU</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span>( !ok &amp;&amp; options.oldsha ) {
-        <span class="keyword">var</span> shasum = crypto.createHash(<span class="string">'sha1'</span>)
-        shasum.update( args.proposed + args.salt )
-        pass = shasum.digest(<span class="string">'hex'</span>)
-
-        ok = (pass===args.pass)
-        <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:ok});
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">round</span> (<span class="hljs-params"></span>) </span>{
+      i++
+      <span class="hljs-keyword">var</span> shasum = crypto.createHash(<span class="hljs-string">'sha512'</span>)
+      shasum.update(out, <span class="hljs-string">'utf8'</span>)
+      out = shasum.digest(<span class="hljs-string">'hex'</span>)
+      <span class="hljs-keyword">if</span> (rounds &lt;= i) {
+        <span class="hljs-keyword">return</span> done(out)
       }
-      <span class="keyword">else</span> <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:ok});
-    })
-  }
-  cmd_verify_password.descdata = <span class="keyword">function</span>(args){<span class="keyword">return</span> hide(args,{proposed:<span class="number">1</span>})}</pre></div></div>
+      <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> === i % <span class="hljs-number">88</span>) {
+        <span class="hljs-keyword">return</span> process.nextTick(round)
+      }
+      round()
+    }
+
+    round()
+  }</pre></div></div>
             
         </li>
         
@@ -787,36 +762,56 @@ Provides: {ok:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>Change password using user&#39;s nick or email
-- nick, email: to resolve user
-- user: user entity
-- password: new password
-- repeat: password repeat, optional
-Provides: {ok:,user:}</p>
+              <p>Encrypt password using a salt and multiple SHA512 rounds
+Override for password strength checking</p>
+<ul>
+<li>password: password string</li>
+<li>repeat: password repeat, optional
+Provides: {pass:,salt:,ok:,why:}
+use why if password too weak</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_change_password</span><span class="params">( args, done )</span>{</span>
-    <span class="keyword">var</span> seneca = <span class="keyword">this</span>
-    <span class="keyword">var</span> user = args.user
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_encrypt_password</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> salt = args.salt || uuid().substring(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>)
+    <span class="hljs-keyword">var</span> password = args.password
 
-    seneca.act(
-      { role:role, cmd:<span class="string">'encrypt_password'</span>, whence:<span class="string">'change/user='</span>+user.id+<span class="string">','</span>+user.nick,
-        password: args.password, repeat: args.repeat },
-      <span class="keyword">function</span>( err, out ){
-        <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-        <span class="keyword">if</span>( !out.ok ) <span class="keyword">return</span> done(<span class="literal">null</span>,out);
-
-        user.salt = out.salt
-        user.pass = out.pass
-        user.save$(<span class="keyword">function</span>(err,user){
-          <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-
-          done(<span class="literal">null</span>,{ok:<span class="literal">true</span>,user:user})
-        })
-      })
+    hasher(password + salt, options.rounds, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">pass</span>) </span>{
+      done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, pass: pass, salt: salt})
+    })
   }
-  cmd_change_password.descdata = <span class="keyword">function</span>(args){<span class="keyword">return</span> hide(args,{password:<span class="number">1</span>,repeat:<span class="number">1</span>})}</pre></div></div>
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepare_password_data</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> password = <span class="hljs-keyword">void</span> <span class="hljs-number">0</span> === args.password ? args.pass : args.password
+    <span class="hljs-keyword">var</span> repeat = args.repeat
+
+    <span class="hljs-keyword">if</span> (_.isUndefined(password)) {
+      <span class="hljs-keyword">if</span> (options.autopass) {
+        password = uuid()
+      }
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, code: <span class="hljs-string">'user/no-password'</span>, whence: args.whence})
+    }
+
+    <span class="hljs-keyword">if</span> (_.isUndefined(repeat)) {
+      <span class="hljs-keyword">if</span> (options.mustrepeat) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, code: <span class="hljs-string">'user/no-password-repeat'</span>, whence: args.whence})
+      }
+      <span class="hljs-keyword">else</span> repeat = password
+    }
+
+    <span class="hljs-keyword">if</span> (password !== repeat) {
+      <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'password_mismatch'</span>, whence: args.whence})
+    }
+
+    <span class="hljs-keyword">var</span> salt = args.salt || uuid().substring(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>)
+    <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, password: password, salt: salt})
+  }
+
+
+  cmd_encrypt_password.descdata = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args</span>) </span>{
+    <span class="hljs-keyword">return</span> hide(args, {password: <span class="hljs-number">1</span>, repeat: <span class="hljs-number">1</span>})
+  }</pre></div></div>
             
         </li>
         
@@ -827,43 +822,31 @@ Provides: {ok:,user:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>Register a new user
-- nick:     username, data store should ensure unique, alias: username, email used if not present
-- email:    primary email address, data store should ensure unique
-- name:     full name of user
-- active:   status of user, active==true means login succeeds
-- password: password text, alias: pass
-- confirmed:  user already confirmed, default: false
-Generated fields:
-- when: date and time of registration
-- confirmcode: used for confirmation
-Provides: 
-- success: {ok:true,user:}
-- failure: {ok:false,why:,nick:}</p>
+              <p>Verify proposed password is correct, redoing SHA512 rounds</p>
+<ul>
+<li>proposed: trial password string</li>
+<li>pass:     password hash</li>
+<li>salt:     password salt
+Provides: {ok:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_register</span><span class="params">(args,done)</span>{</span>
-    <span class="keyword">var</span> user = userent.make$()
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_verify_password</span> (<span class="hljs-params">args, done</span>) </span>{
+    seneca.act(
+      { role: role, cmd: <span class="hljs-string">'encrypt_password'</span>, whence: <span class="hljs-string">'verify_password/user='</span> + user.id + <span class="hljs-string">','</span> + user.nick,
+        password: args.proposed, salt: args.salt },
+      <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">return</span> done(err)
+        }
+        <span class="hljs-keyword">if</span> (!out.ok) {
+          <span class="hljs-keyword">return</span> done(err, out)
+        }
 
-    user.nick     = args.nick || args.username || args.email
-    user.email    = args.email
-    user.name     = args.name || <span class="string">''</span>
-    user.active   = <span class="keyword">void</span> <span class="number">0</span>==args.active ? <span class="literal">true</span> : args.active
-    user.when     = <span class="keyword">new</span> Date().toISOString()
+        <span class="hljs-keyword">var</span> pass = out.pass
 
-    <span class="keyword">if</span>( options.confirm ) {
-      user.confirmed = args.confirmed || <span class="literal">false</span>
-      user.confirmcode = uuid()
-    }
-
-    conditionalExtend(user, args)
-
-    <span class="keyword">var</span> exists = <span class="literal">false</span>
-
-    <span class="keyword">return</span> checknick(
-      <span class="keyword">function</span>(){ checkemail(
-        <span class="keyword">function</span>() { saveuser() })});</pre></div></div>
+        <span class="hljs-keyword">var</span> ok = (pass === args.pass)</pre></div></div>
             
         </li>
         
@@ -874,21 +857,26 @@ Provides:
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>unsafe nick unique check, data store should also enforce !!</p>
+              <p>for backwards compatibility with &lt;= 0.2.3</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="function"><span class="keyword">function</span> <span class="title">checknick</span><span class="params">(next)</span> {</span>
-      <span class="keyword">if</span>( user.nick ) {
-        userent.load$({nick:user.nick},<span class="keyword">function</span>(err,userfound){
-          <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>,user:user})
-          <span class="keyword">if</span>( userfound ) <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:<span class="string">'nick-exists'</span>,nick:args.nick})
-          next()
-        })
-        <span class="keyword">return</span>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!ok &amp;&amp; options.oldsha) {
+          <span class="hljs-keyword">var</span> shasum = crypto.createHash(<span class="hljs-string">'sha1'</span>)
+          shasum.update(args.proposed + args.salt)
+          pass = shasum.digest(<span class="hljs-string">'hex'</span>)
+
+          ok = (pass === args.pass)
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: ok})
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: ok})
       }
-      next()
-    }</pre></div></div>
+    )
+  }
+
+  cmd_verify_password.descdata = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args</span>) </span>{
+    <span class="hljs-keyword">return</span> hide(args, {proposed: <span class="hljs-number">1</span>})
+  }</pre></div></div>
             
         </li>
         
@@ -899,39 +887,47 @@ Provides:
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>unsafe email unique check, data store should also enforce !!</p>
+              <p>Change password using user’s nick or email</p>
+<ul>
+<li>nick, email: to resolve user</li>
+<li>user: user entity</li>
+<li>password: new password</li>
+<li>repeat: password repeat, optional
+Provides: {ok:,user:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="function"><span class="keyword">function</span> <span class="title">checkemail</span><span class="params">(next)</span> {</span>
-      <span class="keyword">if</span>( user.email ) {
-        userent.load$({email:user.email},<span class="keyword">function</span>(err,userfound){
-          <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>,user:user})
-          <span class="keyword">if</span>( userfound ) <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:<span class="string">'email-exists'</span>,nick:args.nick})
-          next()
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_change_password</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> user = args.user
+
+    seneca.act(
+      { role: role, cmd: <span class="hljs-string">'encrypt_password'</span>, whence: <span class="hljs-string">'change/user='</span> + user.id + <span class="hljs-string">','</span> + user.nick,
+        password: args.password, repeat: args.repeat, salt: args.salt },
+      <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">return</span> done(err)
+        }
+        <span class="hljs-keyword">if</span> (!out.ok) {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, out)
+        }
+
+        user.salt = out.salt
+        user.pass = out.pass
+        user.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+          <span class="hljs-keyword">if</span> (err) {
+            <span class="hljs-keyword">return</span> done(err)
+          }
+
+          user = user.data$(<span class="hljs-literal">false</span>)
+          done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, user: user})
         })
-        <span class="keyword">return</span>
-      }
-      next()
-    }
+      })
+  }
 
-    <span class="function"><span class="keyword">function</span> <span class="title">saveuser</span><span class="params">()</span> {</span>
-      seneca.act({ role:role, cmd:<span class="string">'encrypt_password'</span>, whence:<span class="string">'register/user='</span>+user.nick,
-                   password: args.password, repeat: args.repeat },<span class="keyword">function</span>( err, out ){
-                     <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-                     <span class="keyword">if</span>( !out.ok ) <span class="keyword">return</span> done(<span class="literal">null</span>,out);
-
-                     user.salt = out.salt
-                     user.pass = out.pass
-
-                     user.save$( <span class="keyword">function</span>( err, user ){
-                       <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err)
-
-                       seneca.log.debug(<span class="string">'register'</span>,user.nick,user.email,user)
-                       done(<span class="literal">null</span>,{ok:<span class="literal">true</span>,user:user})
-                     })
-                   })
-    }
+  cmd_change_password.descdata = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args</span>) </span>{
+    <span class="hljs-keyword">return</span> hide(args, {password: <span class="hljs-number">1</span>, repeat: <span class="hljs-number">1</span>})
   }</pre></div></div>
             
         </li>
@@ -943,65 +939,49 @@ Provides:
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>Login an existing user - generates a login token. User must be active
-- nick, email: to resolve user
-- user:     user entity
-- password: password text, alias: pass
-Provides: 
-- success: {ok:true,user:,login:}
-- failure: {ok:false,why:,nick:}</p>
+              <p>Register a new user</p>
+<ul>
+<li>nick:     username, data store should ensure unique, alias: username, email used if not present</li>
+<li>email:    primary email address, data store should ensure unique</li>
+<li>name:     full name of user</li>
+<li>active:   status of user, active==true means login succeeds</li>
+<li>password: password text, alias: pass</li>
+<li>confirmed:  user already confirmed, default: false
+Generated fields:</li>
+<li>when: date and time of registration</li>
+<li>confirmcode: used for confirmation
+Provides:</li>
+<li>success: {ok:true,user:}</li>
+<li>failure: {ok:false,why:,nick:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_login</span><span class="params">(args,done)</span>{</span>
-    <span class="keyword">var</span> seneca = <span class="keyword">this</span>, user = args.user, why;
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_register</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+    <span class="hljs-keyword">var</span> user = userent.make$()
 
-    <span class="keyword">if</span>( !user.active ) {
-      seneca.log.debug(<span class="string">'login/fail'</span>,why=<span class="string">'not-active'</span>, user)
-      <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:why,user:user})
+    user.nick = args.nick || args.username || args.email
+    user.email = args.email
+    user.name = args.name || <span class="hljs-string">''</span>
+    user.active = <span class="hljs-keyword">void</span> <span class="hljs-number">0</span> === args.active ? <span class="hljs-literal">true</span> : args.active
+    user.when = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().toISOString()
+
+    <span class="hljs-keyword">if</span> (options.confirm) {
+      user.confirmed = args.confirmed || <span class="hljs-literal">false</span>
+      user.confirmcode = uuid()
     }
 
-    <span class="keyword">if</span>( args.auto ) {
-      <span class="keyword">return</span> make_login( user, <span class="string">'auto'</span> );
-    }
-    <span class="keyword">else</span> {
-      seneca.act({role:role,cmd:<span class="string">'verify_password'</span>,proposed:args.password,pass:user.pass,salt:user.salt}, <span class="keyword">function</span>(err,out){
-        <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-        <span class="keyword">if</span>( !out.ok ) {
-          seneca.log.debug(<span class="string">'login/fail'</span>,why=<span class="string">'invalid-password'</span>,user)
-          <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:why})
-        }
-        <span class="keyword">else</span> <span class="keyword">return</span> make_login( user, <span class="string">'password'</span> );
-      })
-    }
+    conditionalExtend(user, args)
 
-
-    <span class="function"><span class="keyword">function</span> <span class="title">make_login</span><span class="params">( user, why )</span> {</span>
-      <span class="keyword">var</span> cleanargs = seneca.util.clean(_.clone(args))
-
-      <span class="keyword">var</span> login = loginent.make$( seneca.util.argprops(
-        {},
-        cleanargs,
-        {
-          id$     : uuid(),
-          nick    : user.nick,
-          user    : user.id,
-          when    : <span class="keyword">new</span> Date().toISOString(),
-          active  : <span class="literal">true</span>,
-          why     : why
-        },
-        <span class="string">"role,cmd,password"</span>))
-
-      login.token = login.id$, <span class="comment">// DEPRECATED</span>
-
-      login.save$( <span class="keyword">function</span>( err, login ){
-        <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-
-        seneca.log.debug(<span class="string">'login/ok'</span>,why,user,login)
-        done(<span class="literal">null</span>,{ok:<span class="literal">true</span>,user:user,login:login,why:why})
-      })
-    }
-  }</pre></div></div>
+    <span class="hljs-keyword">return</span> checknick(
+      <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        checkemail(
+          <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            saveuser()
+          })
+      })</pre></div></div>
             
         </li>
         
@@ -1012,40 +992,21 @@ Provides:
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>Confirm an existing user - using confirm code sent to user
-- nick, email: to resolve user
-- code: confirmcode
-Provides: 
-- success: {ok:true,user:}
-- failure: {ok:false,why:,nick:}</p>
+              <p>unsafe nick unique check, data store should also enforce !!</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_confirm</span><span class="params">(args,done)</span>{</span>
-    <span class="keyword">var</span> seneca = <span class="keyword">this</span>, user = args.user, why;
-
-    userent.load$({confirmcode:args.code}, <span class="keyword">function</span>(err,user){
-      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-
-      <span class="keyword">if</span>( user ) {
-        <span class="keyword">if</span>( user.active ) {
-          user.confirmed = <span class="literal">true</span>
-          user.save$( <span class="keyword">function</span>( err, user ){
-            <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-            done(<span class="literal">null</span>,{ok:<span class="literal">true</span>,user:user})
-          })
-        }
-        <span class="keyword">else</span> {
-          seneca.log.debug(<span class="string">'confirm/fail'</span>,why=<span class="string">'not-active'</span>,args.code,user)
-          <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:why,user:user})
-        }
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checknick</span> (<span class="hljs-params">next</span>) </span>{
+      <span class="hljs-keyword">if</span> (user.nick) {
+        userent.load$({nick: user.nick}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, userfound</span>) </span>{
+          <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err, {ok: <span class="hljs-literal">false</span>, user: user})
+          <span class="hljs-keyword">if</span> (userfound) <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'nick-exists'</span>, nick: args.nick})
+          next()
+        })
+        <span class="hljs-keyword">return</span>
       }
-      <span class="keyword">else</span> {
-        seneca.log.debug(<span class="string">'confirm/fail'</span>,why=<span class="string">'invalid-code'</span>,args.code,user)
-        <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:why})
-      }
-    })
-  }</pre></div></div>
+      next()
+    }</pre></div></div>
             
         </li>
         
@@ -1056,35 +1017,50 @@ Provides:
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <p>Authorize an existing user - resolve using token
-- token:    login token
-Provides: 
-- success: {ok:true,user:,login:}
-- failure: {ok:false,why:,token:}</p>
+              <p>unsafe email unique check, data store should also enforce !!</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_auth</span><span class="params">(args,done)</span>{</span>
-    <span class="keyword">var</span> q = {id:args.token}
-
-    loginent.load$(q, <span class="keyword">function</span>( err, login ) {
-      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-
-      <span class="keyword">if</span>( !login ) {
-        <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,token:args.token,why:<span class="string">'login-not-found'</span>})
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkemail</span> (<span class="hljs-params">next</span>) </span>{
+      <span class="hljs-keyword">if</span> (user.email) {
+        userent.load$({email: user.email}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, userfound</span>) </span>{
+          <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err, {ok: <span class="hljs-literal">false</span>, user: user})
+          <span class="hljs-keyword">if</span> (userfound) <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'email-exists'</span>, nick: args.nick})
+          next()
+        })
+        <span class="hljs-keyword">return</span>
       }
+      next()
+    }
 
-      userent.load$( {id:login.user}, <span class="keyword">function</span>( err, user ) {
-        <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-
-        <span class="keyword">if</span>( !user ) {
-          <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,token:args.token,user:login.user,why:<span class="string">'user-not-found'</span>})
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">saveuser</span> (<span class="hljs-params"></span>) </span>{
+      prepare_password_data(args, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">return</span> done(err)
         }
 
-        done(<span class="literal">null</span>,{user:user,login:login,ok:<span class="literal">true</span>})
-      })
-    })
-  }</pre></div></div>
+        <span class="hljs-keyword">if</span> (!data.ok) {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, data)
+        }
+
+        seneca.act(
+          {
+            role: role,
+            cmd: <span class="hljs-string">'encrypt_password'</span>,
+            whence: <span class="hljs-string">'register/user='</span> + user.nick,
+            password: data.password,
+            repeat: data.repeat,
+            salt: data.salt
+          }, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) {
+              <span class="hljs-keyword">return</span> done(err)
+            }
+            <span class="hljs-keyword">if</span> (!out.ok) {
+              <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, out)
+            }
+
+            user.salt = out.salt
+            user.pass = out.pass</pre></div></div>
             
         </li>
         
@@ -1095,34 +1071,33 @@ Provides:
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>Logout an existing user - resolve using token, idempotent
-- token:    login token
-Provides: 
-- success: {ok:true,user:,login:}</p>
+              <p>before saving user some cleanup should be done</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_logout</span><span class="params">(args,done)</span>{</span>
-    <span class="keyword">var</span> q = {id:args.token}
+            <div class="content"><div class='highlight'><pre>            cleanUser(user, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+              <span class="hljs-keyword">if</span> (err) {
+                <span class="hljs-keyword">return</span> done(err)
+              }
 
-    loginent.load$(q, <span class="keyword">function</span>( err, login ){
-      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
+              user.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+                <span class="hljs-keyword">if</span> (err) {
+                  <span class="hljs-keyword">return</span> done(err)
+                }
 
-      <span class="keyword">if</span>( !login ) {
-        <span class="keyword">return</span> {ok:<span class="literal">true</span>}
-      }
-
-      login.active = <span class="literal">false</span>
-      login.ended  = <span class="keyword">new</span> Date().getTime()
-      login.save$( <span class="keyword">function</span>( err, login ){
-        <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-
-        userent.load$({id:login.user}, <span class="keyword">function</span>( err, user ){
-          seneca.log.debug(<span class="string">'logout'</span>,user,login)
-          done(<span class="literal">null</span>,{user:user,login:login,ok:<span class="literal">true</span>})
-        })
+                seneca.log.debug(<span class="hljs-string">'register'</span>, user.nick, user.email, user)
+                done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, user: user})
+              })
+            })
+          }
+        )
       })
-    })
+    }
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cleanUser</span> (<span class="hljs-params">user, done</span>) </span>{
+    <span class="hljs-keyword">delete</span> user.repeat
+    done(<span class="hljs-literal">null</span>, user)
   }</pre></div></div>
             
         </li>
@@ -1134,28 +1109,70 @@ Provides:
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>Create a password reset token
-- nick, email: to resolve user
-- user:     user entity
-Provides: {ok:,reset:,user:}</p>
+              <p>Login an existing user - generates a login token. User must be active</p>
+<ul>
+<li>nick, email: to resolve user</li>
+<li>user:     user entity</li>
+<li>password: password text, alias: pass
+Provides:</li>
+<li>success: {ok:true,user:,login:}</li>
+<li>failure: {ok:false,why:,nick:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_create_reset</span><span class="params">( args, done )</span>{</span>
-    <span class="keyword">var</span> user = args.user
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_login</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> user = args.user
+    <span class="hljs-keyword">var</span> why
+    <span class="hljs-keyword">var</span> loginent = seneca.make(login_canon)
 
-    resetent.make$({
-      id$:    uuid(),
-      nick:   user.nick,
-      user:   user.id,
-      when:   <span class="keyword">new</span> Date().toISOString(),
-      active: <span class="literal">true</span>
 
-    }).save$( <span class="keyword">function</span>( err, reset ) {
-      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
+    <span class="hljs-keyword">if</span> (!user.active) {
+      seneca.log.debug(<span class="hljs-string">'login/fail'</span>, why = <span class="hljs-string">'not-active'</span>, user)
+      <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: why, user: user})
+    }
 
-      done(<span class="literal">null</span>,{reset:reset,user:user,ok:<span class="literal">true</span>})
-    })
+    <span class="hljs-keyword">if</span> (args.auto) {
+      <span class="hljs-keyword">return</span> make_login(user, <span class="hljs-string">'auto'</span>)
+    }
+    <span class="hljs-keyword">else</span> {
+      seneca.act({role: role, cmd: <span class="hljs-string">'verify_password'</span>, proposed: args.password, pass: user.pass, salt: user.salt}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
+        <span class="hljs-keyword">if</span> (!out.ok) {
+          seneca.log.debug(<span class="hljs-string">'login/fail'</span>, why = <span class="hljs-string">'invalid-password'</span>, user)
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: why})
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> make_login(user, <span class="hljs-string">'password'</span>)
+      })
+    }
+
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">make_login</span> (<span class="hljs-params">user, why</span>) </span>{
+      <span class="hljs-keyword">var</span> cleanargs = seneca.util.clean(_.clone(args))
+
+      <span class="hljs-keyword">var</span> login = loginent.make$(seneca.util.argprops(
+        {},
+        cleanargs,
+        {
+          id$: uuid(),
+          nick: user.nick,
+          user: user.id,
+          when: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().toISOString(),
+          active: <span class="hljs-literal">true</span>,
+          why: why
+        },
+        <span class="hljs-string">'role,cmd,password'</span>))
+
+      login.token = login.id$ <span class="hljs-comment">// DEPRECATED</span>
+
+      login.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, login</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
+
+        seneca.log.debug(<span class="hljs-string">'login/ok'</span>, why, user, login)
+        done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, user: user, login: login, why: why})
+      })
+    }
   }</pre></div></div>
             
         </li>
@@ -1167,31 +1184,42 @@ Provides: {ok:,reset:,user:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>Load a password reset token
-- token: reset token string
-Provides: {ok:,reset:,user:}</p>
+              <p>Confirm an existing user - using confirm code sent to user</p>
+<ul>
+<li>nick, email: to resolve user</li>
+<li>code: confirmcode
+Provides:</li>
+<li>success: {ok:true,user:}</li>
+<li>failure: {ok:false,why:,nick:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_load_reset</span><span class="params">( args, done )</span>{</span>
-    <span class="keyword">var</span> q = {id:args.token}
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_confirm</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> why
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
 
-    resetent.load$(q, <span class="keyword">function</span>( err, reset ) {
-      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
+    userent.load$({confirmcode: args.code}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
 
-      <span class="keyword">if</span>( !reset ) {
-        <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,token:args.token,why:<span class="string">'reset-not-found'</span>})
-      }
-
-      userent.load$( {id:reset.user}, <span class="keyword">function</span>( err, user ) {
-        <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-
-        <span class="keyword">if</span>( !user ) {
-          <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,token:args.token,user:reset.user,why:<span class="string">'user-not-found'</span>})
+      <span class="hljs-keyword">if</span> (user) {
+        <span class="hljs-keyword">if</span> (user.active) {
+          user.confirmed = <span class="hljs-literal">true</span>
+          user.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
+            done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, user: user})
+          })
         }
-
-        done(<span class="literal">null</span>,{user:user,reset:reset,ok:<span class="literal">true</span>})
-      })
+        <span class="hljs-keyword">else</span> {
+          seneca.log.debug(<span class="hljs-string">'confirm/fail'</span>, why = <span class="hljs-string">'not-active'</span>, args.code, user)
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: why, user: user})
+        }
+      }
+      <span class="hljs-keyword">else</span> {
+        seneca.log.debug(<span class="hljs-string">'confirm/fail'</span>, why = <span class="hljs-string">'invalid-code'</span>, args.code, user)
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: why})
+      }
     })
   }</pre></div></div>
             
@@ -1204,73 +1232,42 @@ Provides: {ok:,reset:,user:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <p>Execute a password change using a reset token
-- token: reset token string
-- password: new password
-- repeat: password repeat, optional
-Provides: {ok:,reset:,user:}</p>
+              <p>Authorize an existing user - resolve using token</p>
+<ul>
+<li>token:    login token
+Provides:</li>
+<li>success: {ok:true,user:,login:}</li>
+<li>failure: {ok:false,why:,token:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_execute_reset</span><span class="params">( args, done )</span>{</span>
-    <span class="keyword">var</span> seneca = <span class="keyword">this</span>
-    <span class="keyword">var</span> q = {id:args.token}
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_auth</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+    <span class="hljs-keyword">var</span> loginent = seneca.make(login_canon)
 
-    resetent.load$(q, <span class="keyword">function</span>( err, reset ) {
-      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
 
-      <span class="keyword">if</span>( !reset ) {
-        <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,token:args.token,why:<span class="string">'reset-not-found'</span>})
+    <span class="hljs-keyword">var</span> q = {id: args.token}
+
+    loginent.load$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, login</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
+
+      <span class="hljs-keyword">if</span> (!login) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, token: args.token, why: <span class="hljs-string">'login-not-found'</span>})
       }
 
-      <span class="keyword">if</span>( !reset.active ) {
-        <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,token:args.token,why:<span class="string">'reset-not-active'</span>})
-      }
+      userent.load$({id: login.user}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
 
-      <span class="keyword">if</span>( <span class="keyword">new</span> Date() &lt; <span class="keyword">new</span> Date(reset.when)+ options.resetperiod ) {
-        <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,token:args.token,why:<span class="string">'reset-stale'</span>})
-      }
+        <span class="hljs-keyword">if</span> (!user) {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, token: args.token, user: login.user, why: <span class="hljs-string">'user-not-found'</span>})
+        }
 
-      seneca.act({ role:role,cmd:<span class="string">'change_password'</span>,user:reset.user,
-                   password:args.password,repeat:args.repeat },
-                 <span class="keyword">function</span>( err, out ) {
-                   <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-
-                   out.reset = reset
-                   <span class="keyword">if</span>( !out.ok ) <span class="keyword">return</span> done(<span class="literal">null</span>,out)
-
-                   reset.active = <span class="literal">false</span>
-                   reset.save$( <span class="keyword">function</span>( err, reset ) {
-                     <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-
-                     seneca.log.debug(<span class="string">'reset'</span>,reset.id,user.id,user.nick,user,reset)
-                     done(<span class="literal">null</span>,{user:user,reset:reset,ok:<span class="literal">true</span>})
-                   })
-                 })
+        done(<span class="hljs-literal">null</span>, {user: user, login: login, ok: <span class="hljs-literal">true</span>})
+      })
     })
-  }
-
-
-  <span class="function"><span class="keyword">function</span> <span class="title">cmd_delete</span><span class="params">(args,done)</span>{</span>
-    <span class="keyword">var</span> user = userent.make$()
-
-    <span class="keyword">var</span> q = {}
-
-    <span class="keyword">if</span>( args.nick ) {
-      q.nick = args.nick
-    } <span class="keyword">else</span> <span class="keyword">if</span>( args.email ) {
-      q.email = args.email
-    } <span class="keyword">else</span> {
-      <span class="keyword">return</span> done({err:<span class="string">'cannot identify user to delete'</span>})
-    }
-
-    user.load$(q,<span class="keyword">function</span>(err,user){
-
-      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>})
-      <span class="keyword">if</span>( !user ) <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,exists:<span class="literal">false</span>})
-
-      <span class="keyword">var</span> nick = user.nick
-      q = {nick: nick}</pre></div></div>
+  }</pre></div></div>
             
         </li>
         
@@ -1281,13 +1278,48 @@ Provides: {ok:,reset:,user:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>delete from login</p>
+              <p>Logout an existing user - resolve using token, idempotent</p>
+<ul>
+<li>token:    login token
+Provides:</li>
+<li>success: {ok:true,user:,login:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> login = loginent.make$()
-      login.remove$(q, <span class="keyword">function</span>(err, data){
-        <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_logout</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+    <span class="hljs-keyword">var</span> loginent = seneca.make(login_canon)
+
+
+    <span class="hljs-keyword">var</span> q = {id: args.token}
+
+    loginent.load$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, login</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
+
+      <span class="hljs-keyword">if</span> (!login) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>})
+      }
+
+      login.active = <span class="hljs-literal">false</span>
+      login.ended = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime()
+      login.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, login</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">return</span> done(err)
+        }
+
+        userent.load$({id: login.user}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+          <span class="hljs-keyword">if</span> (err) {
+            <span class="hljs-keyword">return</span> done(err)
+          }
+
+          seneca.log.debug(<span class="hljs-string">'logout'</span>, user, login)
+          done(<span class="hljs-literal">null</span>, {user: user, login: login, ok: <span class="hljs-literal">true</span>})
+        })
+      })
+    })
+  }</pre></div></div>
             
         </li>
         
@@ -1298,46 +1330,39 @@ Provides: {ok:,reset:,user:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
-              <p>delete now from resetent</p>
+              <p>Create a password reset token</p>
+<ul>
+<li>nick, email: to resolve user</li>
+<li>user:     user entity
+Provides: {ok:,reset:,user:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> reset = resetent.make$()
-        reset.remove$(q, <span class="keyword">function</span>(err, data){
-          <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>})
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_create_reset</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> user = args.user
+    <span class="hljs-keyword">var</span> resetent = seneca.make(reset_canon)
 
-          user.remove$(q, <span class="keyword">function</span>(err, data){
-            <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>})
-            done(<span class="literal">null</span>,{ok:<span class="literal">true</span>})
-          })
-        })
-      })
+    <span class="hljs-keyword">var</span> token = uuid()
+
+    resetent
+    .make$({
+      id$: token,
+      token: token,
+      nick: user.nick,
+      user: user.id,
+      when: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().toISOString(),
+      active: <span class="hljs-literal">true</span>
     })
-  }
+    .save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, reset</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: err})
+      }
 
-  <span class="function"><span class="keyword">function</span> <span class="title">cmd_update</span><span class="params">(args,done)</span>{</span>
-    <span class="keyword">var</span> user = userent.make$()
-
-    <span class="keyword">var</span> q = {}
-
-    args.orig_nick = args.orig_nick || args.nick
-    <span class="keyword">if</span>( args.orig_nick ) {
-      q.nick = args.orig_nick
-    }
-    <span class="keyword">else</span> {
-      q.email = args.orig_email || args.email
-    }
-
-    user.load$(q,<span class="keyword">function</span>(err,user){
-
-      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>})
-      <span class="keyword">if</span>( !user ) <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,exists:<span class="literal">false</span>})
-
-      <span class="keyword">var</span> pwd   = args.password || <span class="string">''</span>
-      <span class="keyword">var</span> pwd2  = args.repeat || <span class="string">''</span>
-
-      <span class="keyword">if</span>( pwd ) {
-        <span class="keyword">if</span>( pwd === pwd2 &amp;&amp; <span class="number">1</span> &lt; pwd.length) {</pre></div></div>
+      done(<span class="hljs-literal">null</span>, {reset: reset.data$(<span class="hljs-literal">false</span>), user: user.data$(<span class="hljs-literal">false</span>), ok: <span class="hljs-literal">true</span>})
+    })
+  }</pre></div></div>
             
         </li>
         
@@ -1348,26 +1373,45 @@ Provides: {ok:,reset:,user:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <p>FIX: needs to a proper action call</p>
+              <p>Load a password reset token</p>
+<ul>
+<li>token: reset token string
+Provides: {ok:,reset:,user:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          cmd_change_password({nick:args.orig_nick,password:pwd},<span class="keyword">function</span>(err,userpwd){
-            <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err);
-            user = userpwd
-          })
-        }
-        <span class="keyword">else</span> {
-          <span class="keyword">return</span> done({err:<span class="string">'user/password_mismatch'</span>})
-        }
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_load_reset</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+    <span class="hljs-keyword">var</span> resetent = seneca.make(reset_canon)
+
+    <span class="hljs-keyword">var</span> q = { token: args.token }
+
+    resetent.load$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, reset</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: err})
       }
 
-      <span class="keyword">delete</span> args.orig_nick
-      <span class="keyword">delete</span> args.orig_email
+      <span class="hljs-keyword">if</span> (!reset) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, token: args.token, why: <span class="hljs-string">'reset-not-found'</span>})
+      }
+      reset = reset.data$(<span class="hljs-literal">false</span>)
 
-      <span class="keyword">return</span> checknick(
-        <span class="keyword">function</span>(){ checkemail(
-          <span class="keyword">function</span>() { updateuser(user) })});</pre></div></div>
+      userent.load$({id: reset.user}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: err})
+        }
+
+        <span class="hljs-keyword">if</span> (!user) {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, token: args.token, user: reset.user, why: <span class="hljs-string">'user-not-found'</span>})
+        }
+        user = user.data$(<span class="hljs-literal">false</span>)
+
+        done(<span class="hljs-literal">null</span>, {user: user, reset: reset, ok: <span class="hljs-literal">true</span>})
+      })
+    })
+  }</pre></div></div>
             
         </li>
         
@@ -1378,27 +1422,105 @@ Provides: {ok:,reset:,user:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <p>unsafe nick unique check, data store should also enforce !!</p>
+              <p>Execute a password change using a reset token</p>
+<ul>
+<li>token: reset token string</li>
+<li>password: new password</li>
+<li>repeat: password repeat, optional
+Provides: {ok:,reset:,user:}</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="function"><span class="keyword">function</span> <span class="title">checknick</span><span class="params">(next)</span> {</span>
-        <span class="keyword">if</span>( args.nick ) {
-          userent.list$({nick:args.nick},<span class="keyword">function</span>(err,users){
-            <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>,user:user})
-            <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; users.length; i++) {
-              <span class="keyword">var</span> each = users[i]
-              <span class="keyword">if</span> (each.id !== user.id){
-                <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:<span class="string">'nick-exists'</span>,nick:args.nick})
-              }
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_execute_reset</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> resetent = seneca.make(reset_canon)
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+
+    <span class="hljs-keyword">var</span> q = { id: args.token }
+
+    resetent.load$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, reset</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">return</span> done(err)
+      }
+
+      <span class="hljs-keyword">if</span> (!reset) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, token: args.token, why: <span class="hljs-string">'reset-not-found'</span>})
+      }
+
+      <span class="hljs-keyword">if</span> (!reset.active) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, token: args.token, why: <span class="hljs-string">'reset-not-active'</span>})
+      }
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>() &lt; <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(reset.when) + options.resetperiod) {
+        <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, token: args.token, why: <span class="hljs-string">'reset-stale'</span>})
+      }
+
+      userent.load$({ id: reset.user }, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, token: args.token, why: err})
+        }
+
+        <span class="hljs-keyword">if</span> (!user) {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'user-not-found'</span>})
+        }
+
+        seneca.act({ role: role, cmd: <span class="hljs-string">'change_password'</span>, user: user,
+            password: args.password, repeat: args.repeat, salt: args.salt },
+          <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) {
+              <span class="hljs-keyword">return</span> done(err)
             }
 
-            next()
+            <span class="hljs-keyword">if</span> (!out.ok) {
+              <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, out)
+            }
+
+            reset.active = <span class="hljs-literal">false</span>
+
+            reset.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, reset</span>) </span>{
+              <span class="hljs-keyword">if</span> (err) {
+                <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: err})
+              }
+
+              reset = reset.data$(<span class="hljs-literal">false</span>)
+              user = user.data$(<span class="hljs-literal">false</span>)
+
+              seneca.log.debug(<span class="hljs-string">'reset'</span>, reset.id, user.id, user.nick, user, reset)
+              done(<span class="hljs-literal">null</span>, {user: user, reset: reset, ok: <span class="hljs-literal">true</span>})
+            })
           })
-          <span class="keyword">return</span>
-        }
-        next()
-      }</pre></div></div>
+      })
+    })
+  }
+
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_delete</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+    <span class="hljs-keyword">var</span> loginent = seneca.make(login_canon)
+    <span class="hljs-keyword">var</span> resetent = seneca.make(reset_canon)
+
+    <span class="hljs-keyword">var</span> user = userent.make$()
+
+    <span class="hljs-keyword">var</span> q = {}
+
+    <span class="hljs-keyword">if</span> (args.nick) {
+      q.nick = args.nick
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (args.email) {
+      q.email = args.email
+    }
+    <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> done({err: <span class="hljs-string">'cannot identify user to delete'</span>})
+    }
+
+    user.load$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err, {ok: <span class="hljs-literal">false</span>})
+      <span class="hljs-keyword">if</span> (!user) <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, exists: <span class="hljs-literal">false</span>})
+
+      <span class="hljs-keyword">var</span> nick = user.nick
+      q = {nick: nick}</pre></div></div>
             
         </li>
         
@@ -1409,85 +1531,13 @@ Provides: {ok:,reset:,user:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <p>unsafe email unique check, data store should also enforce !!</p>
+              <p>delete from login</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="function"><span class="keyword">function</span> <span class="title">checkemail</span><span class="params">(next)</span> {</span>
-        <span class="keyword">if</span>( args.email ) {
-          userent.list$({email:args.email},<span class="keyword">function</span>(err,users){
-            <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>,user:user})
-            <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; users.length; i++) {
-              <span class="keyword">var</span> each = users[i]
-              <span class="keyword">if</span> (each.id !== user.id){
-                <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:<span class="string">'email-exists'</span>,nick:args.nick})
-              }
-            }
-
-            next()
-          })
-          <span class="keyword">return</span>
-        }
-        next()
-      }
-
-      <span class="function"><span class="keyword">function</span> <span class="title">updateuser</span><span class="params">(pwdupdate)</span> {</span>
-        user.nick  = args.nick  || pwdupdate.nick
-        user.name  = args.name  || pwdupdate.name
-        user.email = args.email || pwdupdate.email
-
-        user.salt = pwdupdate.salt
-        user.pass = pwdupdate.pass
-
-        <span class="keyword">if</span>( <span class="string">''</span> == user.nick ) {
-          done({err:<span class="string">'empty_nick'</span>})
-        }
-        <span class="keyword">else</span> <span class="keyword">if</span>( <span class="string">''</span> == user.email ) {
-          done({err:<span class="string">'empty_email'</span>})
-        }
-        <span class="keyword">else</span> {
-          conditionalExtend(user, args)
-          user.save$(<span class="keyword">function</span>(err,user){
-            done(err,{ok:!err,user:user})
-          })
-        }
-      }
-    })
-  }
-
-  <span class="function"><span class="keyword">function</span> <span class="title">cmd_disable</span><span class="params">(args, done)</span>{</span>
-    cmd_change_active(args, <span class="literal">false</span>, done)
-  }
-
-  <span class="function"><span class="keyword">function</span> <span class="title">cmd_enable</span><span class="params">(args, done)</span>{</span>
-    cmd_change_active(args, <span class="literal">true</span>, done)
-  }
-
-  <span class="function"><span class="keyword">function</span> <span class="title">cmd_change_active</span><span class="params">(args, active, done)</span>{</span>
-    <span class="keyword">var</span> user = userent.make$()
-
-    <span class="keyword">var</span> q = {}
-
-    <span class="keyword">if</span>( args.nick ) {
-      q.nick = args.nick
-    } <span class="keyword">else</span> <span class="keyword">if</span>( args.email ) {
-      q.email = args.email
-    }
-
-    <span class="keyword">if</span> ( !q.nick &amp;&amp; !q.email ){
-      <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,why:<span class="string">'cannot-identify-user'</span>})
-    }
-
-    user.load$(q,<span class="keyword">function</span>(err,user){
-      <span class="keyword">if</span>( err ) <span class="keyword">return</span> done(err,{ok:<span class="literal">false</span>})
-      <span class="keyword">if</span>( !user ) <span class="keyword">return</span> done(<span class="literal">null</span>,{ok:<span class="literal">false</span>,exists:<span class="literal">false</span>})
-
-      user.active = active
-      user.save$(<span class="keyword">function</span>(err,user){
-        done(err,{ok:!err,user:user})
-      })
-    })
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> login = loginent.make$()
+      login.remove$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> seneca.log.warn(err)</pre></div></div>
             
         </li>
         
@@ -1498,32 +1548,248 @@ Provides: {ok:,reset:,user:}</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
+              <p>delete now from resetent</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> reset = resetent.make$()
+        reset.remove$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>{
+          <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> seneca.log.warn(err)
+
+          user.remove$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err, {ok: <span class="hljs-literal">false</span>})
+            done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>})
+          })
+        })
+      })
+    })
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_update</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+
+    <span class="hljs-keyword">var</span> user = userent.make$()
+
+    <span class="hljs-keyword">var</span> q = {}
+
+    args.orig_nick = args.orig_nick || args.nick
+    <span class="hljs-keyword">if</span> (args.orig_nick) {
+      q.nick = args.orig_nick
+    }
+    <span class="hljs-keyword">else</span> {
+      q.email = args.orig_email || args.email
+    }
+
+    user.load$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err, {ok: <span class="hljs-literal">false</span>, why: err})
+      <span class="hljs-keyword">if</span> (!user) <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, exists: <span class="hljs-literal">false</span>})
+
+      <span class="hljs-keyword">var</span> pwd = args.password || <span class="hljs-string">''</span>
+      <span class="hljs-keyword">var</span> pwd2 = args.repeat || <span class="hljs-string">''</span>
+
+      <span class="hljs-keyword">if</span> (pwd) {
+        <span class="hljs-keyword">if</span> (pwd === pwd2 &amp;&amp; <span class="hljs-number">1</span> &lt; pwd.length) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>FIX: needs to a proper action call</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          cmd_change_password({nick: args.orig_nick, password: pwd}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, userpwd</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err, {ok: <span class="hljs-literal">false</span>, why: err})
+            user = userpwd
+          })
+        }
+        <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'user/password_mismatch'</span>})
+        }
+      }
+
+      <span class="hljs-keyword">delete</span> args.orig_nick
+      <span class="hljs-keyword">delete</span> args.orig_email
+
+      <span class="hljs-keyword">return</span> checknick(
+        <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+          checkemail(
+            <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+              updateuser(user)
+            })
+        })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>unsafe nick unique check, data store should also enforce !!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checknick</span> (<span class="hljs-params">next</span>) </span>{
+        <span class="hljs-keyword">if</span> (args.nick) {
+          userent.list$({nick: args.nick}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, users</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err, {ok: <span class="hljs-literal">false</span>, user: user})
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; users.length; i++) {
+              <span class="hljs-keyword">var</span> each = users[i]
+              <span class="hljs-keyword">if</span> (each.id !== user.id) {
+                <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'nick-exists'</span>, nick: args.nick})
+              }
+            }
+
+            next()
+          })
+          <span class="hljs-keyword">return</span>
+        }
+        next()
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>unsafe email unique check, data store should also enforce !!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkemail</span> (<span class="hljs-params">next</span>) </span>{
+        <span class="hljs-keyword">if</span> (args.email) {
+          userent.list$({email: args.email}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, users</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err, {ok: <span class="hljs-literal">false</span>, user: user})
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; users.length; i++) {
+              <span class="hljs-keyword">var</span> each = users[i]
+              <span class="hljs-keyword">if</span> (each.id !== user.id) {
+                <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'email-exists'</span>, nick: args.nick})
+              }
+            }
+
+            next()
+          })
+          <span class="hljs-keyword">return</span>
+        }
+        next()
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateuser</span> (<span class="hljs-params">pwdupdate</span>) </span>{
+        user.nick = args.nick || pwdupdate.nick
+        user.name = args.name || pwdupdate.name
+        user.email = args.email || pwdupdate.email
+
+        user.salt = pwdupdate.salt
+        user.pass = pwdupdate.pass
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">''</span> === user.nick) {
+          done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'empty_nick'</span>})
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">''</span> === user.email) {
+          done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'empty_email'</span>})
+        }
+        <span class="hljs-keyword">else</span> {
+          conditionalExtend(user, args)
+          user.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+            done(err, {ok: !err, user: user.data$(<span class="hljs-literal">false</span>)})
+          })
+        }
+      }
+    })
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_disable</span> (<span class="hljs-params">args, done</span>) </span>{
+    cmd_change_active.call(<span class="hljs-keyword">this</span>, args, <span class="hljs-literal">false</span>, done)
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_enable</span> (<span class="hljs-params">args, done</span>) </span>{
+    cmd_change_active.call(<span class="hljs-keyword">this</span>, args, <span class="hljs-literal">true</span>, done)
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_change_active</span> (<span class="hljs-params">args, active, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+
+    <span class="hljs-keyword">var</span> user = userent.make$()
+
+    <span class="hljs-keyword">var</span> q = {}
+
+    <span class="hljs-keyword">if</span> (args.nick) {
+      q.nick = args.nick
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (args.email) {
+      q.email = args.email
+    }
+
+    <span class="hljs-keyword">if</span> (!q.nick &amp;&amp; !q.email) {
+      <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'cannot-identify-user'</span>})
+    }
+
+    user.load$(q, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err, {ok: <span class="hljs-literal">false</span>})
+      <span class="hljs-keyword">if</span> (!user) <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, exists: <span class="hljs-literal">false</span>})
+
+      user.active = active
+      user.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+        done(err, {ok: !err, user: user})
+      })
+    })
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
               <p>DEPRECATED - do this in seneca-auth</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="keyword">function</span> <span class="title">cmd_clean</span><span class="params">(args,done)</span>{</span>
-    <span class="keyword">var</span> user = args.user.data$()
-    <span class="keyword">delete</span> user.pass
-    <span class="keyword">delete</span> user.salt
-    <span class="keyword">delete</span> user.active
-    <span class="keyword">delete</span> user.$
-    done(<span class="literal">null</span>,user)
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_clean</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> user = args.user.data$()
+    <span class="hljs-keyword">delete</span> user.pass
+    <span class="hljs-keyword">delete</span> user.salt
+    <span class="hljs-keyword">delete</span> user.active
+    <span class="hljs-keyword">delete</span> user.$
+    done(<span class="hljs-literal">null</span>, user)
   }
 
 
+  seneca.add({init: role}, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args, done</span>) </span>{
+    <span class="hljs-keyword">var</span> seneca = <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">var</span> userent = seneca.make(user_canon)
+    <span class="hljs-keyword">var</span> loginent = seneca.make(login_canon)
+    <span class="hljs-keyword">var</span> resetent = seneca.make(reset_canon)
 
-  seneca.add({init:role},<span class="keyword">function</span>(args,done){
-    <span class="keyword">this</span>.act(<span class="string">'role:util, cmd:define_sys_entity'</span>, {list:[
-      { entity:userent.entity$, fields:options.user.fields},
-      { entity:loginent.entity$,fields:options.login.fields},
-      { entity:resetent.entity$,fields:options.reset.fields}
-    ]},done)
+    <span class="hljs-keyword">this</span>.act(<span class="hljs-string">'role:util, cmd:define_sys_entity'</span>, {
+      list: [
+        { entity: userent.entity$, fields: options.user.fields },
+        { entity: loginent.entity$, fields: options.login.fields },
+        { entity: resetent.entity$, fields: options.reset.fields }
+      ]
+    }, done)
   })
 
 
-  <span class="keyword">return</span> {
-    name:role
+  <span class="hljs-keyword">return</span> {
+    name: role
   }
 }</pre></div></div>
             

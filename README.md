@@ -23,7 +23,7 @@ There are two core concepts: user and login. A _user_, storing the user account 
 and a _login_, representing an instance of a user that has been authenticated. A user can have multiple logins.
 
 This module does not make any assumptions about the context it runs in. 
-Use the [seneca-auth](http://github.com/rjrodger/seneca-auth) plugin to handle web and social media authentication.
+Use the [seneca-auth](http://github.com/senecajs/seneca-auth) plugin to handle web and social media authentication.
 
 For a working example, see the [Seneca user accounts example](https://github.com/rjrodger/seneca-examples/tree/master/user-accounts)
 
@@ -62,7 +62,7 @@ This example, uses a _pin_ for convenience: `userpin.register( ... )` is the sam
 
 In the example code, a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
 password. The successful login provides a login instance. The _login.id_ property can be used to authenticate this login. For example,
-the [seneca-auth](http://github.com/rjrodger/seneca-auth) plugin uses this token as a HTTP authentication cookie.
+the [seneca-auth](http://github.com/senecajs/seneca-auth) plugin uses this token as a HTTP authentication cookie.
 
 To run this example (and the other code in this README), try:
 
@@ -82,7 +82,7 @@ npm install seneca
 npm install seneca-user
 ```
 
-You'll need the [seneca](http://github.com/rjrodger/seneca) module to use this module - it's just a plugin.
+You'll need the [seneca](http://github.com/senecajs/seneca) module to use this module - it's just a plugin.
 
 ## Usage
 
@@ -111,7 +111,7 @@ contains an _ok_ field that is either true or false, indicating the success or f
 
 ## Options
 
-   * _rounds_: number of SHA512 rounds to use for password encryption, default: 11111
+   * _**rounds**_: number of SHA512 rounds to use for password encryption, default: 11111
    * _autopass_: automatically generate an (unrecoverable) password if none is supplied - mostly good for testing, default: true
    * _mustrepeat_: you must provide a _repeat_ argument (a repeat of the password) when setting a password
    * _resetperiod_: duration in millis that a password reset token is valid, default: 24 hours
@@ -123,7 +123,7 @@ seneca.use('user',{ resetperiod: 3600*1000 })
 ```
 ## Annotated Source Code
 
-The full source code of this plugin is [annotated](http://rjrodger.github.io/seneca-user/user.html).
+The full source code of this plugin is [annotated](http://senecajs.github.io/seneca-user/user.html).
 
 ## Entities
 
@@ -196,7 +196,7 @@ Object with properties:
    * _ok_: true if login succeeded, false if not
    * _login_: login entity, id is the login token, used as cookie
    * _user_: user entity
-   * _why_: indicates reason login failed or succeeded, refer to [source](https://github.com/rjrodger/seneca-user/blob/master/lib/user.js) for codes.
+   * _why_: indicates reason login failed or succeeded, refer to [source](https://github.com/senecajs/seneca-user/blob/master/lib/user.js) for codes.
 
 
 
@@ -239,7 +239,7 @@ Object with properties:
 
    * _ok_: true if registration succeeded, false if not
    * _user_: new user entity
-   * _why_: indicates reason registration failed, refer to [source](https://github.com/rjrodger/seneca-user/blob/master/lib/user.js) for codes.
+   * _why_: indicates reason registration failed, refer to [source](https://github.com/senecajs/seneca-user/blob/master/lib/user.js) for codes.
 
 
 
@@ -376,7 +376,7 @@ Object with properties:
 
    * _ok_: true if operation is OK
 
-### role:user, cmd:delete
+### role:user, cmd:remove
 
 Deletes an user and all relationed records.
 
@@ -391,7 +391,7 @@ Object with properties:
    * _ok_: true if operation is OK
 
 
-### role:user, cmd:enable
+### role:user, cmd:activate
 
 Enables an user.
 
@@ -408,7 +408,7 @@ Object with properties:
 
    * _ok_: true if operation is OK
 
-### role:user, cmd:disable
+### role:user, cmd:deactivate
 
 Disables an user.
 
@@ -487,8 +487,7 @@ For example, to add some custom fields when registering a user:
 ## Test
 
 ```sh
-cd test
-mocha user.test.js --seneca.log.print
+npm test
 ```
 
 [npm-badge]: https://badge.fury.io/js/seneca-user.svg

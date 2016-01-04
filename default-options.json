@@ -1,0 +1,32 @@
+{
+  "role": "user",
+  "rounds": 11111,
+  "autopass": true,
+  "mustrepeat": false,
+  "resetperiod": 86400000,
+  "confirm": false,
+  "oldsha": true,
+  "user": {
+    "fields": [
+      {
+        "name": "pass",
+        "hide": true
+      },
+      {
+        "name": "salt",
+        "hide": true
+      }
+    ]
+  },
+  "login": {
+    "fields": []
+  },
+  "reset": {
+    "fields": []
+  },
+  "updateUser": {
+    "omit": [
+      "role", "cmd", "nick", "email", "name", "active", "username", "password", "salt", "pass", "id", "confirmed", "confirmcode"
+    ]
+  }
+}

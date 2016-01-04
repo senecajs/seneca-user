@@ -7,36 +7,46 @@
     "user",
     "plugin"
   ],
-  "author": "Richard Rodger",
+  "author": {
+    "name": "Richard Rodger",
+    "email": "richard@ricebridge.com",
+    "url": "http://richardrodger.com/"
+  },
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "mocha test/*.test.js",
-    "coverage": "istanbul cover _mocha test/*.test.js && cat ./coverage/lcov.info | coveralls"
+    "test": "lab test/*.test.js -r console -v -L -m 3000 -t 70",
+    "annotate": "docco user.js -o doc"
   },
   "files": [
     "LICENSE.txt",
     "README.md",
-    "user.js"
+    "user.js",
+    "default-options.json"
+  ],
+  "contributors": [
+    {
+      "name": "Mircea Alexandru",
+      "email": "mircea.alexandru@gmail.com",
+      "url": "http://www.alexandrumircea.ro"
+    }
   ],
   "engines": {
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "underscore": "~1.8.3",
-    "node-uuid": "~1.4.1"
-  },
-  "peerDependencies": {
-    "seneca": "*"
+    "eraro": "0.4.1",
+    "lodash": "3.10.1",
+    "node-uuid": "1.4.7"
   },
   "devDependencies": {
-    "async": "~1.5.0",
-    "chai": "~3.4.1",
+    "chai": "~1.9.1",
+    "lab": "6.x.x",
     "coveralls": "^2.11.6",
-    "gex": "~0.2.2",
-    "istanbul": "^0.4.1",
-    "mocha": "~2.3.4",
-    "seneca": "~0.9.3"
+    "eslint-config-seneca": "1.x.x",
+    "eslint-plugin-hapi": "2.x.x",
+    "eslint-plugin-standard": "1.x.x",
+    "seneca": "0.7.2"
   },
   "repository": {
     "type": "git",
