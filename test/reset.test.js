@@ -3,14 +3,15 @@
 
 var Seneca = require('seneca')
 
-var assert = require('chai').assert
 var _ = require('lodash')
 
 var Lab = require('lab')
+var Code = require('code')
 var lab = exports.lab = Lab.script()
 var suite = lab.suite
 var test = lab.test
 var before = lab.before
+var expect = Code.expect
 
 var si = Seneca()
 si.use('../user')
@@ -39,16 +40,16 @@ suite('seneca-user reset suite tests ', function () {
 
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user1Data), function (err, data) {
-      assert.isNull(err)
-      assert.equal(user1Data.nick, data.user.nick)
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user1Data.nick)
       done(err)
     })
   })
 
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user2Data), function (err, data) {
-      assert.isNull(err)
-      assert.equal(user2Data.nick, data.user.nick)
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user2Data.nick)
       done(err)
     })
   })
@@ -56,9 +57,9 @@ suite('seneca-user reset suite tests ', function () {
   var resetId
   test('user/create_reset unknown user test', function (done) {
     si.act({ role: 'user', cmd: 'create_reset', nick: user1Data.nick }, function (err, data) {
-      assert.isNull(err)
-      assert.ok(data.ok)
-      assert(data.reset.id)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
+      expect(data.reset.id).to.exist()
       resetId = data.reset.token
       done(err)
     })
@@ -66,17 +67,17 @@ suite('seneca-user reset suite tests ', function () {
 
   test('user/create_reset unknown user test', function (done) {
     si.act({ role: 'user', cmd: 'execute_reset', token: resetId, password: 'x', repeat: 'x' }, function (err, data) {
-      assert.isNull(err)
-      assert.ok(data.ok)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
       done(err)
     })
   })
 
   test('user/login user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: 'x'}, function (err, data) {
-      assert.isNull(err)
-      assert.ok(data.ok)
-      assert(data.user)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
+      expect(data.user).to.exist()
       done(err)
     })
   })
