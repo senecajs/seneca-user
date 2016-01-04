@@ -477,6 +477,7 @@ module.exports = function user(options) {
     user.name     = args.name || ''
     user.active   = void 0==args.active ? true : args.active
     user.when     = new Date().toISOString()
+    user.id$      = args.id$ || args.id || void 0
 
     if( options.confirm ) {
       user.confirmed = args.confirmed || false
