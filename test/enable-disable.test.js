@@ -3,14 +3,15 @@
 
 var Seneca = require('seneca')
 
-var Assert = require('chai').assert
 var _ = require('lodash')
 
 var Lab = require('lab')
+var Code = require('code')
 var lab = exports.lab = Lab.script()
 var suite = lab.suite
 var test = lab.test
 var before = lab.before
+var expect = Code.expect
 
 var si = Seneca()
 si.use('../user')
@@ -41,62 +42,62 @@ suite('seneca-user activate/deactivate suite tests ', function () {
 
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user1Data), function (err, data) {
-      Assert.isNull(err)
-      Assert.equal(user1Data.nick, data.user.nick)
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user1Data.nick)
       done(err)
     })
   })
 
   test('user/register test', function (done) {
     si.act(_.extend({role: 'user', cmd: 'register'}, user2Data), function (err, data) {
-      Assert.isNull(err)
-      Assert.equal(user2Data.nick, data.user.nick)
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user2Data.nick)
       done(err)
     })
   })
 
   test('user/login user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      Assert.isNull(err)
-      Assert.ok(data.ok)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
       done(err)
     })
   })
 
   test('user/disable user test', function (done) {
     si.act({role: 'user', cmd: 'deactivate', nick: user1Data.nick}, function (err, data) {
-      Assert.isNull(err)
-      Assert.ok(data.ok)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
       done(err)
     })
   })
 
   test('user/login user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      Assert.isNull(err)
-      Assert.notOk(data.ok)
-      Assert.equal('not-active', data.why)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.false()
+      expect(data.why).to.equal('not-active')
       done(err)
     })
   })
 
   test('user/enable user test', function (done) {
     si.act({role: 'user', cmd: 'activate', nick: user1Data.nick}, function (err, data) {
-      Assert.isNull(err)
-      Assert.ok(data.ok)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
       done(err)
     })
   })
 
   test('user/verify password user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      Assert.isNull(err)
-      Assert.ok(data.ok)
-      Assert(data.user)
-      Assert(data.user.pass)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
+      expect(data.user).to.be.exist()
+      expect(data.user.pass).to.exist()
       si.act({role: 'user', cmd: 'verify_password', proposed: user1Data.password, salt: user1Data.salt, pass: data.user.pass}, function (err, data) {
-        Assert.isNull(err)
-        Assert.ok(data.ok)
+        expect(err).to.not.exist()
+        expect(data.ok).to.be.true()
         done(err)
       })
     })
@@ -104,13 +105,13 @@ suite('seneca-user activate/deactivate suite tests ', function () {
 
   test('user/incorrect verify password user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      Assert.isNull(err)
-      Assert.ok(data.ok)
-      Assert(data.user)
-      Assert(data.user.pass)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
+      expect(data.user).to.exist()
+      expect(data.user.pass).to.exist()
       si.act({role: 'user', cmd: 'verify_password', proposed: user1Data.password + '1', salt: user1Data.salt, pass: data.user.pass}, function (err, data) {
-        Assert.isNull(err)
-        Assert.notOk(data.ok)
+        expect(err).to.not.exist()
+        expect(data.ok).to.be.false()
         done(err)
       })
     })
@@ -118,26 +119,26 @@ suite('seneca-user activate/deactivate suite tests ', function () {
 
   test('user/login user test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
-      Assert.isNull(err)
-      Assert.ok(data.ok)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
       done(err)
     })
   })
 
   test('user/disable unknown user test', function (done) {
     si.act({role: 'user', cmd: 'deactivate'}, function (err, data) {
-      Assert.isNull(err)
-      Assert.notOk(data.ok)
-      Assert.equal('cannot-identify-user', data.why)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.false()
+      expect(data.why).to.equal('cannot-identify-user')
       done(err)
     })
   })
 
   test('user/enable unknown user test', function (done) {
     si.act({role: 'user', cmd: 'activate'}, function (err, data) {
-      Assert.isNull(err)
-      Assert.notOk(data.ok)
-      Assert.equal('cannot-identify-user', data.why)
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.false()
+      expect(data.why).to.equal('cannot-identify-user')
       done(err)
     })
   })
