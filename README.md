@@ -2,6 +2,12 @@
 
 ## A user management plugin for the [Seneca](http://senecajs.org) toolkit
 
+[![npm version][npm-badge]][npm-url]
+[![Build Status][travis-badge]][travis-url]
+[![Coverage Status][coveralls-badge]][coveralls-url]
+[![Dependency Status][david-badge]][david-url]
+[![Gitter chat][gitter-badge]][gitter-url]
+
 This module is a plugin for the Seneca framework. It provides business logic for user management, such as:
 
    * login
@@ -26,9 +32,6 @@ have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 Current Version: 0.2.10
 
 Tested on: Node 0.10.29, Seneca 0.5.18
-
-[![Build Status](https://travis-ci.org/senecajs/seneca-user.png?branch=master)](https://travis-ci.org/senecajs/seneca-user)
-
 
 
 ## Quick example
@@ -500,3 +503,13 @@ npm test
 ```
 
 
+[coveralls-badge]:https://coveralls.io/repos/senecajs/seneca-user/badge.svg?branch=master&service=github
+[coveralls-url]: https://coveralls.io/github/senecajs/seneca-user?branch=master
+[travis-badge]:https://travis-ci.org/senecajs/seneca-user.png?branch=master
+[travis-url]:https://travis-ci.org/senecajs/seneca-user
+[david-badge]: https://david-dm.org/senecajs/seneca-user.svg
+[david-url]: https://david-dm.org/senecajs/seneca-user
+[gitter-badge]: https://badges.gitter.im/senecajs/seneca.png
+[gitter-url]: https://gitter.im/senecajs/seneca
+[npm-badge]: https://badge.fury.io/js/seneca-user.svg
+[npm-url]: https://badge.fury.io/js/seneca-user
