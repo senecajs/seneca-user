@@ -13,7 +13,7 @@ There are two core concepts: user and login. A _user_, storing the user account 
 and a _login_, representing an instance of a user that has been authenticated. A user can have multiple logins.
 
 This module does not make any assumptions about the context it runs in. 
-Use the [seneca-auth](http://github.com/rjrodger/seneca-auth) plugin to handle web and social media authentication.
+Use the [seneca-auth](http://github.com/senecajs/seneca-auth) plugin to handle web and social media authentication.
 
 For a working example, see the <a href="https://github.com/rjrodger/seneca-examples/tree/master/user-accounts">Seneca user accounts example</a>.
 
@@ -27,7 +27,7 @@ Current Version: 0.2.10
 
 Tested on: Node 0.10.29, Seneca 0.5.18
 
-[![Build Status](https://travis-ci.org/rjrodger/seneca-user.png?branch=master)](https://travis-ci.org/rjrodger/seneca-user)
+[![Build Status](https://travis-ci.org/senecajs/seneca-user.png?branch=master)](https://travis-ci.org/senecajs/seneca-user)
 
 
 
@@ -61,7 +61,7 @@ This example, uses a _pin_ for convenience: <code>userpin.register( ... )</code>
 
 In the example code, a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
 password. The successful login provides a login instance. The _login.id_ property can be used to authenticate this login. For example,
-the [seneca-auth](http://github.com/rjrodger/seneca-auth) plugin uses this token as a HTTP authentication cookie.
+the [seneca-auth](http://github.com/senecajs/seneca-auth) plugin uses this token as a HTTP authentication cookie.
 
 To run this example (and the other code in this README), try:
 
@@ -83,7 +83,7 @@ npm install seneca
 npm install seneca-user
 ```
 
-You'll need the [seneca](http://github.com/rjrodger/seneca) module to use this module - it's just a plugin.
+You'll need the [seneca](http://github.com/senecajs/seneca) module to use this module - it's just a plugin.
 
 
 
@@ -130,7 +130,7 @@ seneca.use('user',{ resetperiod: 3600*1000 })
 
 ## Annotated Source Code
 
-The full source code of this plugin is [annotated](http://rjrodger.github.io/seneca-user/user.html).
+The full source code of this plugin is [annotated](http://senecajs.github.io/seneca-user/user.html).
 
 
 
@@ -205,7 +205,7 @@ Object with properties:
    * _ok_: true if login succeeded, false if not
    * _login_: login entity, id is the login token, used as cookie
    * _user_: user entity
-   * _why_: indicates reason login failed or succeeded, refer to [source](https://github.com/rjrodger/seneca-user/blob/master/lib/user.js) for codes.
+   * _why_: indicates reason login failed or succeeded, refer to [source](https://github.com/senecajs/seneca-user/blob/master/lib/user.js) for codes.
 
 
 
@@ -248,7 +248,7 @@ Object with properties:
 
    * _ok_: true if registration succeeded, false if not
    * _user_: new user entity
-   * _why_: indicates reason registration failed, refer to [source](https://github.com/rjrodger/seneca-user/blob/master/lib/user.js) for codes.
+   * _why_: indicates reason registration failed, refer to [source](https://github.com/senecajs/seneca-user/blob/master/lib/user.js) for codes.
 
 
 
