@@ -15,7 +15,7 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab test/*.test.js -r console -v -L -m 3000 -t 70",
+    "test": "lab test/*.test.js -r console -v -L -m 3000 -t 76",
     "annotate": "docco user.js -o doc"
   },
   "files": [
@@ -29,6 +29,10 @@
       "name": "Mircea Alexandru",
       "email": "mircea.alexandru@gmail.com",
       "url": "http://www.alexandrumircea.ro"
+    }, {
+      "name": "Cristian Kiss",
+      "email": "kissdevel@gmail.com",
+      "url": "https://github.com/ckiss"
     }
   ],
   "engines": {
@@ -40,9 +44,8 @@
     "node-uuid": "1.4.7"
   },
   "devDependencies": {
-    "chai": "~1.9.1",
-    "code": "^1.5.0",
-    "coveralls": "^2.11.6",
+    "code": "1.5.0",
+    "coveralls": "2.11.6",
     "eslint-config-seneca": "1.x.x",
     "eslint-plugin-hapi": "2.x.x",
     "eslint-plugin-standard": "1.x.x",
