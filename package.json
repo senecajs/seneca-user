@@ -44,7 +44,6 @@
     "node-uuid": "1.4.7"
   },
   "devDependencies": {
-    "chai": "1.9.1",
     "code": "1.5.0",
     "coveralls": "2.11.6",
     "eslint-config-seneca": "1.x.x",
