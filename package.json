@@ -15,7 +15,9 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab test/*.test.js -r console -v -L -m 3000 -t 76",
+    "test": "lab -P test -r console -v -m 3000 -t 76",
+    "lint": "lab -dL",
+    "coverage": "lab -s -P test -r lcov | coveralls",
     "annotate": "docco user.js -o doc"
   },
   "files": [
