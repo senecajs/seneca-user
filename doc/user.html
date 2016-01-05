@@ -31,15 +31,15 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* Copyright (c) 2012-2014 Richard Rodger, MIT License */</span>
-<span class="hljs-pi">'use strict'</span>
+<span class="hljs-meta">'use strict'</span>
 
 
-<span class="hljs-keyword">var</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>)
+<span class="hljs-keyword">var</span> Crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>)
 
 <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>)
-<span class="hljs-keyword">var</span> uuid = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-uuid'</span>)
+<span class="hljs-keyword">var</span> Uuid = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-uuid'</span>)
 
-<span class="hljs-keyword">var</span> error = <span class="hljs-built_in">require</span>(<span class="hljs-string">'eraro'</span>)(
+<span class="hljs-keyword">var</span> Eraro = <span class="hljs-built_in">require</span>(<span class="hljs-string">'eraro'</span>)(
   {
     package: <span class="hljs-string">'seneca-user'</span>
   }
@@ -697,7 +697,7 @@ Execute a <em>sys/reset</em> entry by reset token, providing the new password.</
           <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err)
           <span class="hljs-keyword">if</span> (!user) {
             <span class="hljs-keyword">if</span> (fail) {
-              <span class="hljs-keyword">return</span> done(error(seneca.fail(<span class="hljs-string">'user/not-found'</span>, q)))
+              <span class="hljs-keyword">return</span> done(Eraro(seneca.fail(<span class="hljs-string">'user/not-found'</span>, q)))
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'user-not-found'</span>, nick: q.nick, email: q.email})
           }
@@ -738,7 +738,7 @@ Execute a <em>sys/reset</em> entry by reset token, providing the new password.</
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">round</span> (<span class="hljs-params"></span>) </span>{
       i++
-      <span class="hljs-keyword">var</span> shasum = crypto.createHash(<span class="hljs-string">'sha512'</span>)
+      <span class="hljs-keyword">var</span> shasum = Crypto.createHash(<span class="hljs-string">'sha512'</span>)
       shasum.update(out, <span class="hljs-string">'utf8'</span>)
       out = shasum.digest(<span class="hljs-string">'hex'</span>)
       <span class="hljs-keyword">if</span> (rounds &lt;= i) {
@@ -773,8 +773,22 @@ use why if password too weak</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_encrypt_password</span> (<span class="hljs-params">args, done</span>) </span>{
-    <span class="hljs-keyword">var</span> salt = args.salt || uuid().substring(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>)
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_encrypt_password</span> (<span class="hljs-params">args, done</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>128 bits of salt</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> salt = args.salt || create_salt()
     <span class="hljs-keyword">var</span> password = args.password
 
     hasher(password + salt, options.rounds, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">pass</span>) </span>{
@@ -788,7 +802,7 @@ use why if password too weak</li>
 
     <span class="hljs-keyword">if</span> (_.isUndefined(password)) {
       <span class="hljs-keyword">if</span> (options.autopass) {
-        password = uuid()
+        password = Uuid()
       }
       <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, code: <span class="hljs-string">'user/no-password'</span>, whence: args.whence})
     }
@@ -804,10 +818,13 @@ use why if password too weak</li>
       <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">false</span>, why: <span class="hljs-string">'password_mismatch'</span>, whence: args.whence})
     }
 
-    <span class="hljs-keyword">var</span> salt = args.salt || uuid().substring(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>)
-    <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, password: password, salt: salt})
+    seneca.act(<span class="hljs-string">'role: '</span> + role + <span class="hljs-string">', cmd: encrypt_password'</span>, {password: password, salt: args.salt}, done)
   }
 
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">create_salt</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> Crypto.randomBytes(<span class="hljs-number">16</span>).toString(<span class="hljs-string">'ascii'</span>)
+  }
 
   cmd_encrypt_password.descdata = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args</span>) </span>{
     <span class="hljs-keyword">return</span> hide(args, {password: <span class="hljs-number">1</span>, repeat: <span class="hljs-number">1</span>})
@@ -816,11 +833,11 @@ use why if password too weak</li>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Verify proposed password is correct, redoing SHA512 rounds</p>
 <ul>
@@ -851,18 +868,18 @@ Provides: {ok:}</li>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>for backwards compatibility with &lt;= 0.2.3</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!ok &amp;&amp; options.oldsha) {
-          <span class="hljs-keyword">var</span> shasum = crypto.createHash(<span class="hljs-string">'sha1'</span>)
+          <span class="hljs-keyword">var</span> shasum = Crypto.createHash(<span class="hljs-string">'sha1'</span>)
           shasum.update(args.proposed + args.salt)
           pass = shasum.digest(<span class="hljs-string">'hex'</span>)
 
@@ -881,11 +898,11 @@ Provides: {ok:}</li>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Change password using user’s nick or email</p>
 <ul>
@@ -933,11 +950,11 @@ Provides: {ok:,user:}</li>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Register a new user</p>
 <ul>
@@ -970,7 +987,7 @@ Provides:</li>
 
     <span class="hljs-keyword">if</span> (options.confirm) {
       user.confirmed = args.confirmed || <span class="hljs-literal">false</span>
-      user.confirmcode = uuid()
+      user.confirmcode = Uuid()
     }
 
     conditionalExtend(user, args)
@@ -986,11 +1003,11 @@ Provides:</li>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>unsafe nick unique check, data store should also enforce !!</p>
 
@@ -1011,11 +1028,11 @@ Provides:</li>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>unsafe email unique check, data store should also enforce !!</p>
 
@@ -1043,54 +1060,36 @@ Provides:</li>
           <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, data)
         }
 
-        seneca.act(
-          {
-            role: role,
-            cmd: <span class="hljs-string">'encrypt_password'</span>,
-            whence: <span class="hljs-string">'register/user='</span> + user.nick,
-            password: data.password,
-            repeat: data.repeat,
-            salt: data.salt
-          }, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, out</span>) </span>{
-            <span class="hljs-keyword">if</span> (err) {
-              <span class="hljs-keyword">return</span> done(err)
-            }
-            <span class="hljs-keyword">if</span> (!out.ok) {
-              <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, out)
-            }
-
-            user.salt = out.salt
-            user.pass = out.pass</pre></div></div>
+        user.salt = data.salt
+        user.pass = data.pass</pre></div></div>
             
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>before saving user some cleanup should be done</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            cleanUser(user, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
-              <span class="hljs-keyword">if</span> (err) {
-                <span class="hljs-keyword">return</span> done(err)
-              }
-
-              user.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
-                <span class="hljs-keyword">if</span> (err) {
-                  <span class="hljs-keyword">return</span> done(err)
-                }
-
-                seneca.log.debug(<span class="hljs-string">'register'</span>, user.nick, user.email, user)
-                done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, user: user})
-              })
-            })
+            <div class="content"><div class='highlight'><pre>        cleanUser(user, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+          <span class="hljs-keyword">if</span> (err) {
+            <span class="hljs-keyword">return</span> done(err)
           }
-        )
+
+          user.save$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, user</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) {
+              <span class="hljs-keyword">return</span> done(err)
+            }
+
+            seneca.log.debug(<span class="hljs-string">'register'</span>, user.nick, user.email, user)
+            done(<span class="hljs-literal">null</span>, {ok: <span class="hljs-literal">true</span>, user: user})
+          })
+        })
       })
     }
   }
@@ -1103,11 +1102,11 @@ Provides:</li>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Login an existing user - generates a login token. User must be active</p>
 <ul>
@@ -1155,7 +1154,7 @@ Provides:</li>
         {},
         cleanargs,
         {
-          id$: uuid(),
+          id$: Uuid(),
           nick: user.nick,
           user: user.id,
           when: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().toISOString(),
@@ -1178,11 +1177,11 @@ Provides:</li>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Confirm an existing user - using confirm code sent to user</p>
 <ul>
@@ -1226,11 +1225,11 @@ Provides:</li>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Authorize an existing user - resolve using token</p>
 <ul>
@@ -1272,11 +1271,11 @@ Provides:</li>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Logout an existing user - resolve using token, idempotent</p>
 <ul>
@@ -1324,11 +1323,11 @@ Provides:</li>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>Create a password reset token</p>
 <ul>
@@ -1344,7 +1343,7 @@ Provides: {ok:,reset:,user:}</li>
     <span class="hljs-keyword">var</span> user = args.user
     <span class="hljs-keyword">var</span> resetent = seneca.make(reset_canon)
 
-    <span class="hljs-keyword">var</span> token = uuid()
+    <span class="hljs-keyword">var</span> token = Uuid()
 
     resetent
     .make$({
@@ -1367,11 +1366,11 @@ Provides: {ok:,reset:,user:}</li>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>Load a password reset token</p>
 <ul>
@@ -1416,11 +1415,11 @@ Provides: {ok:,reset:,user:}</li>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>Execute a password change using a reset token</p>
 <ul>
@@ -1525,11 +1524,11 @@ Provides: {ok:,reset:,user:}</li>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>delete from login</p>
 
@@ -1542,11 +1541,11 @@ Provides: {ok:,reset:,user:}</li>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>delete now from resetent</p>
 
@@ -1594,11 +1593,11 @@ Provides: {ok:,reset:,user:}</li>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>FIX: needs to a proper action call</p>
 
@@ -1628,11 +1627,11 @@ Provides: {ok:,reset:,user:}</li>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>unsafe nick unique check, data store should also enforce !!</p>
 
@@ -1659,11 +1658,11 @@ Provides: {ok:,reset:,user:}</li>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>unsafe email unique check, data store should also enforce !!</p>
 
@@ -1752,11 +1751,11 @@ Provides: {ok:,reset:,user:}</li>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>DEPRECATED - do this in seneca-auth</p>
 
