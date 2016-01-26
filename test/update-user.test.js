@@ -80,6 +80,26 @@ suite('seneca-user update suite tests ', function () {
     })
   })
 
+  // now update user and also change its password
+  test('user/update test new nick and password', function (done) {
+    si.act({role: 'user', cmd: 'update', name: 'some name', orig_nick: user1Data.nick, password: 'p1', repeat: 'p1'}, function (err, data) {
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
+      done(err)
+    })
+  })
+
+  test('user/login user test after update and change password', function (done) {
+    si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: 'p1'}, function (err, data) {
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
+      expect(data.user).to.exist()
+      expect(data.user.name).to.be.equal('some name')
+      done(err)
+    })
+  })
+
+
   test('user/delete user test', function (done) {
     si.act({role: 'user', cmd: 'delete', nick: user1Data.nick}, function (err, data) {
       expect(err).to.not.exist()
