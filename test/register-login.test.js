@@ -14,7 +14,12 @@ var before = lab.before
 var expect = Code.expect
 
 var si = Seneca()
-si.use('../user')
+if (si.version >= '2.0.0'){
+  si
+    .use(require('seneca-entity'))
+}
+si
+  .use('../user')
 
 var user1Data = {
   nick: 'nick1',
