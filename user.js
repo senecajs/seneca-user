@@ -1049,8 +1049,16 @@ module.exports = function user (options) {
         }
         else {
           conditionalExtend(user, args)
-          user.save$(function (err, user) {
-            done(err, {ok: !err, user: user.data$(false)})
+
+          // before saving user some cleanup should be done
+          cleanUser(user, function (err, user) {
+            if (err) {
+              return done(null, {ok: false, why: err})
+            }
+
+            user.save$(function (err, user) {
+              done(err, {ok: !err, user: user.data$(false)})
+            })
           })
         }
       }

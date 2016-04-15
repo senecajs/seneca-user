@@ -85,6 +85,8 @@ suite('seneca-user update suite tests ', function () {
     si.act({role: 'user', cmd: 'update', name: 'some name', orig_nick: user1Data.nick, password: 'p1', repeat: 'p1'}, function (err, data) {
       expect(err).to.not.exist()
       expect(data.ok).to.be.true()
+      expect(data.user.repeat).to.not.exist()
+      expect(data.user.password).to.not.exist()
       done(err)
     })
   })
