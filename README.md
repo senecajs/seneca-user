@@ -32,6 +32,9 @@ For a working example, see the [Seneca user accounts example](https://github.com
 If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
+### Seneca compatibility
+Supports Seneca versions **1.x** and **2.x**
+
 ## Quick example
 
 ```js
