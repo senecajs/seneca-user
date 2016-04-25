@@ -1,6 +1,9 @@
 language: node_js
 sudo: false
 
+env:
+  - SENECA_VER=@1.4.0
+
 node_js:
   - "0.10"
   - "0.12"
@@ -10,6 +13,9 @@ node_js:
 cache:
   directories:
   - node_modules
+
+before_script:
+  - npm install seneca$SENECA_VER
 
 after_script:
   npm run coverage
