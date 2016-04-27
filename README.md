@@ -33,7 +33,17 @@ If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
 ### Seneca compatibility
+
 Supports Seneca versions **1.x** and **2.x**
+
+## Install
+
+```sh
+npm install seneca
+npm install seneca-user
+```
+
+You'll need the [seneca](http://github.com/senecajs/seneca) module to use this module - it's just a plugin.
 
 ## Quick example
 
@@ -73,19 +83,9 @@ To run this example (and the other code in this README), try:
 node test/readme.js
 ```
 
-
 ## Deeper example
 
 Take a look at the [user accounts example](http://github.com/rjrodger/seneca-examples).
-
-## Install
-
-```sh
-npm install seneca
-npm install seneca-user
-```
-
-You'll need the [seneca](http://github.com/senecajs/seneca) module to use this module - it's just a plugin.
 
 ## Usage
 
@@ -199,7 +199,7 @@ Object with properties:
    * `ok_: true if login succeeded, false if no`
    * _login_: login entity, id is the login token, used as cookie
    * `user_: user entit`
-   * _why_: indicates reason login failed or succeeded, refer to [source](https://github.com/senecajs/seneca-user/blob/master/lib/user.js) for codes.
+   * _why_: indicates reason login failed or succeeded, refer to [source](https://github.com/senecajs/seneca-user/blob/master/user.js) for codes.
 
 
 
@@ -242,7 +242,7 @@ Object with properties:
 
    * `ok`: true if registration succeeded, false if no
    * `user`: new user entity
-   * `why`: indicates reason registration failed, refer to [source](https://github.com/senecajs/seneca-user/blob/master/lib/user.js) for codes`
+   * `why`: indicates reason registration failed, refer to [source](https://github.com/senecajs/seneca-user/blob/master/user.js) for codes`
 
 
 
@@ -453,9 +453,7 @@ You can also set up the logging programmatically:
       }
     })
 
-For more on logging, see the [seneca logging example](http://senecajs.org/logging-example.html).
-
-
+For more on logging, see the [seneca logging example](http://senecajs.org/tutorials/logging-with-seneca.html).
 
 
 ### Customization
@@ -483,6 +481,11 @@ For example, to add some custom fields when registering a user:
     })
 ```
 
+## Contributing
+
+The [Senecajs org][] encourages open participation. If you feel you
+can help in any way, be it with documentation, examples, extra
+testing, or new features please get in touch.
 
 ## Test
 
@@ -490,6 +493,12 @@ For example, to add some custom fields when registering a user:
 npm test
 ```
 
+## License
+
+Copyright (c) 2012-2016, Richard Rodger and other contributors.
+Licensed under [MIT][].
+
+[MIT]: ./LICENSE
 [npm-badge]: https://badge.fury.io/js/seneca-user.svg
 [npm-url]: https://badge.fury.io/js/seneca-user
 [travis-badge]: https://api.travis-ci.org/senecajs/seneca-user.svg
@@ -500,3 +509,4 @@ npm test
 [david-url]: https://david-dm.org/senecajs/seneca-user
 [gitter-badge]: https://badges.gitter.im/senecajs/seneca.svg
 [gitter-url]: https://gitter.im/senecajs/seneca
+[Senecajs org]: https://github.com/senecajs/
