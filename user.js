@@ -973,7 +973,6 @@ module.exports = function user (options) {
 
       if (pwd) {
         if (pwd === pwd2 && 1 < pwd.length) {
-
           seneca.act('role: ' + role + ', cmd: change_password', _.extend({}, q, {password: pwd}), function (err, userpwd) {
             if (err) return done(err, {ok: false, why: err})
             user = userpwd
