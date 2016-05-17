@@ -15,7 +15,8 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab -P test -r console -v -m 3000 -t 76",
+    "test": "lab -P test -r console -v -m 3000 -t 76 $LAB_FLAGS",
+    "test:node6": "LAB_FLAGS='--leaks' && npm test",
     "lint": "lab -dL",
     "coverage": "lab -s -P test -r lcov | coveralls",
     "annotate": "docco user.js -o doc"
