@@ -623,7 +623,12 @@ module.exports = function user (options) {
       return make_login(user, 'auto')
     }
     else {
-      seneca.act({role: role, cmd: 'verify_password', proposed: args.password, pass: user.pass, salt: user.salt}, function (err, out) {
+      var pass = user.pass
+      if (_.isBuffer(pass)) {
+        pass = pass.toString('utf8')
+      }
+
+      seneca.act({role: role, cmd: 'verify_password', proposed: args.password, pass: pass, salt: user.salt}, function (err, out) {
         if (err) return done(err)
         if (!out.ok) {
           seneca.log.debug('login/fail', why = 'invalid-password', user)
