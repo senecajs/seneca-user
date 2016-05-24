@@ -326,6 +326,11 @@ module.exports = function user (options) {
             }
             else return done(null, {ok: false, why: 'user-not-found', nick: q.nick, email: q.email})
           }
+
+          if (_.isBuffer(user.pass)) {
+            user.pass = user.pass.toString('utf8')
+          }
+
           args.user = user
 
           return cmd.call(seneca, args, done)
@@ -623,6 +628,7 @@ module.exports = function user (options) {
       return make_login(user, 'auto')
     }
     else {
+
       seneca.act({role: role, cmd: 'verify_password', proposed: args.password, pass: user.pass, salt: user.salt}, function (err, out) {
         if (err) return done(err)
         if (!out.ok) {
