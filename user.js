@@ -326,6 +326,11 @@ module.exports = function user (options) {
             }
             else return done(null, {ok: false, why: 'user-not-found', nick: q.nick, email: q.email})
           }
+
+          if (_.isBuffer(user.pass)) {
+            user.pass = user.pass.toString('utf8')
+          }
+
           args.user = user
 
           return cmd.call(seneca, args, done)
@@ -623,12 +628,8 @@ module.exports = function user (options) {
       return make_login(user, 'auto')
     }
     else {
-      var pass = user.pass
-      if (_.isBuffer(pass)) {
-        pass = pass.toString('utf8')
-      }
 
-      seneca.act({role: role, cmd: 'verify_password', proposed: args.password, pass: pass, salt: user.salt}, function (err, out) {
+      seneca.act({role: role, cmd: 'verify_password', proposed: args.password, pass: user.pass, salt: user.salt}, function (err, out) {
         if (err) return done(err)
         if (!out.ok) {
           seneca.log.debug('login/fail', why = 'invalid-password', user)
