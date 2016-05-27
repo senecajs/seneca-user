@@ -118,6 +118,7 @@ contains an `ok` field that is either true or false, indicating the success or f
    * `autopass`: automatically generate an (unrecoverable) password if none is supplied - mostly good for testing, default: true
    * `mustrepeat`: you must provide a `repeat` argument (a repeat of the password) when setting a password
    * `resetperiod`: duration in millis that a password reset token is valid, default: 24 hours
+   * `pepper`: used in addition to password salts, a pepper is very similar but is stored in code instead of a database.
 
 To set options, do so when you load the plugin:
 

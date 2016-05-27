@@ -35,6 +35,7 @@ module.exports = function user (options) {
   // Use this when you want to load multiple versions of the plugin
   // and expose them via different patterns.
   var role = options.role
+  var pepper = options.pepper
 
   // # Action patterns
   // These define the pattern interface for this plugin.
@@ -383,7 +384,7 @@ module.exports = function user (options) {
     var salt = args.salt || create_salt()
     var password = args.password
 
-    hasher(password + salt, options.rounds, function (pass) {
+    hasher(pepper + password + salt, options.rounds, function (pass) {
       done(null, {ok: true, pass: pass, salt: salt})
     })
   }
