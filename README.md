@@ -49,6 +49,7 @@ You'll need the [seneca](http://github.com/senecajs/seneca) module to use this m
 
 ```js
 var seneca = require('seneca')()
+seneca .use('entity')
 seneca.use('user')
 
 seneca.ready(function (){
