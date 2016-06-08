@@ -6,6 +6,7 @@
   "resetperiod": 86400000,
   "confirm": false,
   "oldsha": true,
+  "pepper": "",
   "user": {
     "fields": [
       {
