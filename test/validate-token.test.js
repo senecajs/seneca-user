@@ -34,15 +34,7 @@ suite('seneca-user login and token validation suite tests ', function () {
   before({}, function (done) {
     si.ready(function (err) {
       if (err) return process.exit(!console.error(err))
-      done()
-    })
-  })
-
-  test('user/register test', function (done) {
-    si.act(_.extend({role: 'user', cmd: 'register'}, user1Data), function (err, data) {
-      expect(err).to.not.exist()
-      expect(data.user.nick).to.equal(user1Data.nick)
-      done(err)
+      si.act(_.extend({role: 'user', cmd: 'register'}, user1Data), done)
     })
   })
 
