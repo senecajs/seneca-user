@@ -120,6 +120,7 @@ contains an `ok` field that is either true or false, indicating the success or f
    * `mustrepeat`: you must provide a `repeat` argument (a repeat of the password) when setting a password
    * `resetperiod`: duration in millis that a password reset token is valid, default: 24 hours
    * `pepper`: used in addition to password salts, a pepper is very similar but is stored in code instead of a database.
+   * `lockTry`: number of failed attempts before the account is locked, default 3, set to null to disable this feature
 
 To set options, do so when you load the plugin:
 
@@ -430,6 +431,19 @@ Object with properties:
 
    * `ok`: true if operation is OK
 
+### role:user, cmd:set_user_lock
+
+Sets the lock on users account
+
+#### Argumants:
+
+   * `id`: the id of the user
+   * `failTry`: boolean to say if the login failed or not
+   * `why`: why the accouunts lock status is being changed
+
+#### Provides:
+
+   * `ok`: true if the account was unloocked or false if the lock was incremented
 
 ## Logging
 
