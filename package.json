@@ -1,7 +1,7 @@
 {
   "name": "seneca-user",
   "description": "User management plugin for the seneca module.",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "keywords": [
     "seneca",
     "user",
@@ -40,7 +40,8 @@
     },
     {
       "name": "Mihai Dima",
-      "email": "mihaizn@gmail.com"
+      "email": "mihaizn@gmail.com",
+      "url": "https://github.com/mihaidma"
     }
   ],
   "engines": {

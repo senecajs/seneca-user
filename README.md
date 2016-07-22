@@ -34,7 +34,7 @@ have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
 ### Seneca compatibility
 
-Supports Seneca versions **1.x** and **2.x**
+Supports Seneca versions **1.x** - **3.x**
 
 ## Install
 
