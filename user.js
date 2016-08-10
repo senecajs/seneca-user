@@ -724,6 +724,11 @@ module.exports = function user (options) {
         return done(null, {ok: false, token: args.token, why: 'login-not-found'})
       }
 
+      // If active is false and ended is present then we are trying to auth with an expired token.
+      if(!login.active && login.ended) {
+        return done(null, {ok: false, token: args.token, why: 'token-expired'})
+      }
+
       userent.load$({id: login.user}, function (err, user) {
         if (err) return done(err)
 

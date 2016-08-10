@@ -19,3 +19,5 @@ README.html
 .DS_Store
 *~
 coverage
+
+.idea/
