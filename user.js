@@ -724,6 +724,10 @@ module.exports = function user (options) {
         return done(null, {ok: false, token: args.token, why: 'login-not-found'})
       }
 
+      if (!login.active) {
+        return done(null, {ok: false, token: args.token, why: 'login-inactive'})
+      }
+
       userent.load$({id: login.user}, function (err, user) {
         if (err) return done(err)
 
