@@ -15,8 +15,7 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab -P test -r console -v -m 3000 -t 76 $LAB_FLAGS",
-    "test:node6": "LAB_FLAGS='--leaks' && npm test",
+    "test": "lab -v -L -P test -r console -m 3000 -t 76",
     "lint": "lab -dL",
     "coverage": "lab -s -P test -r lcov | coveralls",
     "annotate": "docco user.js -o doc"
@@ -45,7 +44,7 @@
     }
   ],
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4.0.0"
   },
   "dependencies": {
     "eraro": "0.4.1",
@@ -69,7 +68,6 @@
     "url": "https://github.com/senecajs/seneca-user.git"
   },
   "pre-commit": [
-    "test",
-    "lint"
+    "test"
   ]
 }
