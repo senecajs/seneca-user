@@ -15,7 +15,7 @@ var expect = Code.expect
 
 var si = Seneca()
 
-if (si.version >= '2.0.0'){
+if (si.version >= '2.0.0') {
   si
     .use(require('seneca-entity'))
 }
@@ -40,6 +40,7 @@ suite('seneca-user login and token validation suite tests ', function () {
 
   test('user/login validate token test', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
+      if (err) return done(err)
       si.act({role: 'user', cmd: 'auth', token: data.login.token}, function (err, data_auth) {
         expect(err).to.not.exist()
         expect(data_auth.ok).to.be.true()
@@ -51,7 +52,9 @@ suite('seneca-user login and token validation suite tests ', function () {
 
   test('user/login validate token after logout', function (done) {
     si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
+      if (err) return done(err)
       si.act({role: 'user', cmd: 'logout', token: data.login.token}, function (err, data_logout) {
+        if (err) return done(err)
         si.act({role: 'user', cmd: 'auth', token: data.login.token}, function (err, data_auth) {
           expect(err).to.not.exist()
           expect(data_auth.ok).to.be.false()

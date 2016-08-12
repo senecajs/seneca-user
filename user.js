@@ -221,7 +221,7 @@ module.exports = function user (options) {
 
   // ### Enable User - DEPRECATED
   // Replaced with **activate** command
-  seneca.add({role: role, cmd: 'enable'},// keep this for backward compatibility
+  seneca.add({role: role, cmd: 'enable'}, // keep this for backward compatibility
     cmd_enable)
 
   // ### Activate user
@@ -232,7 +232,7 @@ module.exports = function user (options) {
 
   // ### Disable User - DEPRECATED
   // Replaced with **deactivate** command
-  seneca.add({role: role, cmd: 'disable'},// keep this for backward compatibility
+  seneca.add({role: role, cmd: 'disable'}, // keep this for backward compatibility
     cmd_disable)
 
   // ### Deactivate user
@@ -243,7 +243,7 @@ module.exports = function user (options) {
 
   // ### Delete User - DEPRECATED
   // Replaced with **remove** command
-  seneca.add({role: role, cmd: 'delete'},// keep this for backward compatibility
+  seneca.add({role: role, cmd: 'delete'}, // keep this for backward compatibility
     cmd_delete)
 
   // ### Remove user
@@ -629,7 +629,6 @@ module.exports = function user (options) {
       return make_login(user, 'auto')
     }
     else {
-
       seneca.act({role: role, cmd: 'verify_password', proposed: args.password, pass: user.pass, salt: user.salt}, function (err, out) {
         if (err) return done(err)
         if (!out.ok) {
