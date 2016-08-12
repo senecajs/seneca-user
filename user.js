@@ -219,6 +219,12 @@ module.exports = function user (options) {
     cmd_update)
 
 
+  // ### Set user lock
+  // Pattern: _**role**:user, **cmd**:set_user_lock_
+  seneca.add({role: role, cmd: 'set_user_lock'},
+    cmd_set_user_lock)
+
+
   // ### Enable User - DEPRECATED
   // Replaced with **activate** command
   seneca.add({role: role, cmd: 'enable'}, // keep this for backward compatibility
@@ -485,6 +491,7 @@ module.exports = function user (options) {
           return done(null, out)
         }
 
+        user.lockTry = 0
         user.salt = out.salt
         user.pass = out.pass
         user.save$(function (err, user) {
@@ -526,6 +533,7 @@ module.exports = function user (options) {
     user.name = args.name || ''
     user.active = void 0 === args.active ? true : args.active
     user.when = new Date().toISOString()
+    user.lockTry = 0;
 
     if (options.confirm) {
       user.confirmed = args.confirmed || false
@@ -612,7 +620,7 @@ module.exports = function user (options) {
   // - password: password text, alias: pass
   // Provides:
   // - success: {ok:true,user:,login:}
-  // - failure: {ok:false,why:,nick:}
+  // - failure: {ok:false,why:,user:}
   function cmd_login (args, done) {
     var seneca = this
     var user = args.user
@@ -625,6 +633,10 @@ module.exports = function user (options) {
       return done(null, {ok: false, why: why, user: user})
     }
 
+    if (user.lockTry >= options.lockTry && !_.isNull(options.lockTry)) {
+      seneca.log.debug('login/fail', why = 'locked-out', user)
+      return done(null, {ok: false, why: why, user: user})
+    }
     if (args.auto) {
       return make_login(user, 'auto')
     }
@@ -633,7 +645,10 @@ module.exports = function user (options) {
         if (err) return done(err)
         if (!out.ok) {
           seneca.log.debug('login/fail', why = 'invalid-password', user)
-          return done(null, {ok: false, why: why})
+          seneca.act({role: role, cmd: 'set_user_lock', id: user.id, failTry: true, why: why},function (err, out) {
+            if (err) return done(err)
+            done(null, {ok: false, why: why, user:user})
+          })
         }
         else return make_login(user, 'password')
       })
@@ -660,13 +675,47 @@ module.exports = function user (options) {
 
       login.save$(function (err, login) {
         if (err) return done(err)
-
-        seneca.log.debug('login/ok', why, user, login)
-        done(null, {ok: true, user: user, login: login, why: why})
+        seneca.act({role: role, cmd: 'set_user_lock', id: user.id}, function (err, out) {
+          if (err) return done(err)
+          seneca.log.debug('login/ok', why, user, login)
+          done(null, {ok: true, user: user, login: login, why: why})
+        })
       })
     }
   }
 
+  // Unlocks accounts that a user has been locked out of due to failled password attempts
+  // Or let the lock if the user failed to login to their account
+  // - id, user id to unlock
+  // - failTry, boolean to say login failed
+  // - why, why account lock was changed
+  // Provides:
+  // - success: {ok:true, why:}
+  // - failure: {ok:false, why:}
+  function cmd_set_user_lock (args, done) {
+    var seneca = this
+    var why
+    var userent = seneca.make(user_canon)
+    var ok
+
+    userent.load$({id: args.id}, function (err, user) {
+      if (err) return done(err, {ok: false, why: err})
+      if(!_.isUndefined(args.failTry) && args.failTry) {
+        user.lockTry = user.lockTry + 1
+        ok = false
+        why = args.why
+      } else {
+        user.lockTry = 0
+        ok = true
+        why = 'account-unlocked'
+      }
+      user.save$(function (err, user) {
+        if (err) return done(err, {ok: false, why: err})
+        seneca.log.debug('user/lock', why, user)
+        done(null, {ok: ok, why: why})
+      })
+    })
+  }
 
   // Confirm an existing user - using confirm code sent to user
   // - nick, email: to resolve user

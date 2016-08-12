@@ -7,6 +7,7 @@
   "confirm": false,
   "oldsha": true,
   "pepper": "",
+  "lockTry": null,
   "user": {
     "fields": [
       {
