@@ -15,7 +15,7 @@ var wrongPassword = 'fail1fail'
 var resetPassword = 'reset1reset'
 
 var si = Seneca()
-if (si.version >= '2.0.0'){
+if (si.version >= '2.0.0') {
   si
     .use(require('seneca-entity'))
 }
@@ -25,14 +25,14 @@ var user1Data = {
   nick: 'nick1',
   email: 'nick1@example.com',
   password: 'test1test',
-  active: true,
+  active: true
 }
 
 var user2Data = {
   nick: 'nick2',
   email: 'nick2@example.com',
   password: 'test2test',
-  active: true,
+  active: true
 }
 
 suite('seneca-user update suite tests ', function () {
@@ -69,9 +69,9 @@ suite('seneca-user update suite tests ', function () {
     })
   })
 
-  for(var i=0; i<3; i++) {
+  for (var i = 0; i < 3; i++) {
     test('user/login user test', function (done) {
-      si.act({role: 'user', cmd: 'login', nick: user1Data.nick,  password: wrongPassword}, function (err, data) {
+      si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: wrongPassword}, function (err, data) {
         expect(err).to.not.exist()
         expect(data.ok).to.be.false()
         done(err)

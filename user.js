@@ -533,7 +533,7 @@ module.exports = function user (options) {
     user.name = args.name || ''
     user.active = void 0 === args.active ? true : args.active
     user.when = new Date().toISOString()
-    user.lockTry = 0;
+    user.lockTry = 0
 
     if (options.confirm) {
       user.confirmed = args.confirmed || false
@@ -645,9 +645,9 @@ module.exports = function user (options) {
         if (err) return done(err)
         if (!out.ok) {
           seneca.log.debug('login/fail', why = 'invalid-password', user)
-          seneca.act({role: role, cmd: 'set_user_lock', id: user.id, failTry: true, why: why},function (err, out) {
+          seneca.act({role: role, cmd: 'set_user_lock', id: user.id, failTry: true, why: why}, function (err, out) {
             if (err) return done(err)
-            done(null, {ok: false, why: why, user:user})
+            done(null, {ok: false, why: why, user: user})
           })
         }
         else return make_login(user, 'password')
@@ -700,11 +700,12 @@ module.exports = function user (options) {
 
     userent.load$({id: args.id}, function (err, user) {
       if (err) return done(err, {ok: false, why: err})
-      if(!_.isUndefined(args.failTry) && args.failTry) {
+      if (!_.isUndefined(args.failTry) && args.failTry) {
         user.lockTry = user.lockTry + 1
         ok = false
         why = args.why
-      } else {
+      }
+      else {
         user.lockTry = 0
         ok = true
         why = 'account-unlocked'

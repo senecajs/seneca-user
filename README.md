@@ -435,7 +435,7 @@ Object with properties:
 
 Sets the lock on users account
 
-#### Argumants:
+#### Arguments:
 
    * `id`: the id of the user
    * `failTry`: boolean to say if the login failed or not
