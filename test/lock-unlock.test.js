@@ -3,8 +3,6 @@
 var Seneca = require('seneca')
 var Async = require('async')
 
-// var _ = require('lodash')
-
 var Lab = require('lab')
 var Code = require('code')
 var lab = exports.lab = Lab.script()
@@ -14,11 +12,12 @@ var before = lab.before
 var beforeEach = lab.beforeEach
 var expect = Code.expect
 var wrongPassword = 'fail1fail'
-// var resetPassword = 'reset1reset'
 var failedCount = 3
 
 var si = Seneca()
-var siDefault = Seneca()
+var siDefault = Seneca({
+  log: 'silent'
+})
 
 if (si.version >= '2.0.0') {
   si.use(require('seneca-entity'))
@@ -26,9 +25,6 @@ if (si.version >= '2.0.0') {
 }
 
 var user_canon = 'sys/user'
-// var login_canon = 'sys/login'
-// var reset_canon = 'sys/reset'
-
 var user1Data = {
   nick: 'nick1',
   email: 'nick1@example.com',
@@ -70,7 +66,6 @@ suite('seneca-user default lock tests ', function () {
         expect(err).to.not.exist()
         expect(data.ok).to.be.false()
         expect(data.why).to.equal('invalid-password')
-        console.log(data)
 
         next()
       })
@@ -81,8 +76,7 @@ suite('seneca-user default lock tests ', function () {
   })
 })
 
-
-si.use('../user', {lockTry: failedCount})
+si.use('../user', { failedLoginCount: failedCount })
 suite('seneca-user lock tests ', function () {
   beforeEach(initData(si))
 
@@ -100,7 +94,6 @@ suite('seneca-user lock tests ', function () {
         expect(data.ok).to.be.false()
         var reason = (n < failedCount) ? 'invalid-password' : 'locked-out'
         expect(data.why).to.equal(reason)
-        console.log(data)
 
         next()
       })
@@ -112,11 +105,10 @@ suite('seneca-user lock tests ', function () {
 
   test('Successfull login resets failedLoginCount', function (done) {
     Async.timesSeries(failedCount + 2, function (n, next) {
-      var loginSucceeds = (n === failedCount)
-      var pass = loginSucceeds ? user1Data.nick : wrongPassword
+      var loginSucceeds = (n === (failedCount - 1))
+      var pass = loginSucceeds ? user1Data.password : wrongPassword
 
       si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: pass}, function (err, data) {
-        console.log(data)
         expect(err).to.not.exist()
         expect(data.ok).to.equal(loginSucceeds)
         expect(data.why).to.not.equal('locked-out')
@@ -125,6 +117,7 @@ suite('seneca-user lock tests ', function () {
       })
     }, function (err, results) {
       expect(err).to.not.exist()
+
       done()
     })
   })
@@ -136,7 +129,6 @@ suite('seneca-user lock tests ', function () {
         expect(data.ok).to.be.false()
         var reason = (n < failedCount) ? 'invalid-password' : 'locked-out'
         expect(data.why).to.equal(reason)
-        console.log(data)
 
         next()
       })
@@ -145,12 +137,15 @@ suite('seneca-user lock tests ', function () {
       si.act({role: 'user', cmd: 'unlock', id: user1Data.id}, function (err, data) {
         expect(err).to.not.exist()
         expect(data.ok).to.be.true()
+        expect(data.why).to.equal('account-unlocked')
+
         si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
           expect(err).to.not.exist()
           expect(data.ok).to.be.true()
+
+          done()
         })
       })
-      done()
     })
   })
 })

@@ -219,10 +219,10 @@ module.exports = function user (options) {
     cmd_update)
 
 
-  // ### Set user lock
-  // Pattern: _**role**:user, **cmd**:set_user_lock_
-  seneca.add({role: role, cmd: 'set_user_lock'},
-    cmd_set_user_lock)
+  // ### Unlock user
+  // Pattern: _**role**:user, **cmd**:unlock_
+  seneca.add({role: role, cmd: 'unlock'},
+    cmd_unlock)
 
 
   // ### Enable User - DEPRECATED
@@ -491,7 +491,7 @@ module.exports = function user (options) {
           return done(null, out)
         }
 
-        user.lockTry = 0
+        // user.failedLoginCount = 0
         user.salt = out.salt
         user.pass = out.pass
         user.save$(function (err, user) {
@@ -533,7 +533,7 @@ module.exports = function user (options) {
     user.name = args.name || ''
     user.active = void 0 === args.active ? true : args.active
     user.when = new Date().toISOString()
-    user.lockTry = 0
+    user.failedLoginCount = 0
 
     if (options.confirm) {
       user.confirmed = args.confirmed || false
@@ -633,7 +633,7 @@ module.exports = function user (options) {
       return done(null, {ok: false, why: why, user: user})
     }
 
-    if (user.lockTry >= options.lockTry && !_.isNull(options.lockTry)) {
+    if (options.failedLoginCount && user.failedLoginCount >= options.failedLoginCount) {
       seneca.log.debug('login/fail', why = 'locked-out', user)
       return done(null, {ok: false, why: why, user: user})
     }
@@ -645,7 +645,7 @@ module.exports = function user (options) {
         if (err) return done(err)
         if (!out.ok) {
           seneca.log.debug('login/fail', why = 'invalid-password', user)
-          seneca.act({role: role, cmd: 'set_user_lock', id: user.id, failTry: true, why: why}, function (err, out) {
+          cmd_increment_lock(seneca, user.id, false, function (err, out) {
             if (err) return done(err)
             done(null, {ok: false, why: why, user: user})
           })
@@ -675,8 +675,9 @@ module.exports = function user (options) {
 
       login.save$(function (err, login) {
         if (err) return done(err)
-        seneca.act({role: role, cmd: 'set_user_lock', id: user.id}, function (err, out) {
+        cmd_increment_lock(seneca, user.id, true, function (err, out) {
           if (err) return done(err)
+
           seneca.log.debug('login/ok', why, user, login)
           done(null, {ok: true, user: user, login: login, why: why})
         })
@@ -684,37 +685,42 @@ module.exports = function user (options) {
     }
   }
 
-  // Unlocks accounts that a user has been locked out of due to failled password attempts
-  // Or let the lock if the user failed to login to their account
-  // - id, user id to unlock
-  // - failTry, boolean to say login failed
-  // - why, why account lock was changed
+  // Increments the number of failed login attempts
+  // - id, user id to which to increment the failed attempts
+  // - reset - boolean that says if the counter is reset to 0 or not
   // Provides:
-  // - success: {ok:true, why:}
-  // - failure: {ok:false, why:}
-  function cmd_set_user_lock (args, done) {
-    var seneca = this
-    var why
+  // - success: {ok:true}
+  // - failure: {ok:false}
+  function cmd_increment_lock (seneca, id, reset, done) {
     var userent = seneca.make(user_canon)
-    var ok
 
-    userent.load$({id: args.id}, function (err, user) {
+    userent.load$({id: id}, function (err, user) {
       if (err) return done(err, {ok: false, why: err})
-      if (!_.isUndefined(args.failTry) && args.failTry) {
-        user.lockTry = user.lockTry + 1
-        ok = false
-        why = args.why
+
+      if (reset) {
+        user.failedLoginCount = 0
       }
       else {
-        user.lockTry = 0
-        ok = true
-        why = 'account-unlocked'
+        user.failedLoginCount++
       }
       user.save$(function (err, user) {
         if (err) return done(err, {ok: false, why: err})
-        seneca.log.debug('user/lock', why, user)
-        done(null, {ok: ok, why: why})
+        seneca.log.debug('increment lock ', user, 'failedLoginCount ', user.failedLoginCount)
+        done(null, {ok: true, why: 'login-count-modified'})
       })
+    })
+  }
+
+  // Unlocks accounts that a user has been locked out of due to failed password attempts
+  // - id: user id to unlock
+  // Provides:
+  // - success: {ok:true}
+  // - failure: {ok:false}
+  function cmd_unlock (args, done) {
+    var seneca = this
+    cmd_increment_lock(seneca, args.id, true, function (err, out) {
+      if (err) return done(err, {ok: false, why: err})
+      done(null, {ok: true, why: 'account-unlocked'})
     })
   }
 
