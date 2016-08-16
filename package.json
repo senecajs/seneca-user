@@ -15,7 +15,7 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab -v -L -P test -r console -m 3000 -t 76",
+    "test": "lab -v -L -P test -r console -m 3000 -t 80",
     "lint": "lab -dL",
     "coverage": "lab -s -P test -r lcov | coveralls",
     "annotate": "docco user.js -o doc"
@@ -52,6 +52,7 @@
     "node-uuid": "1.4.7"
   },
   "devDependencies": {
+    "async": "2.0.x",
     "code": "3.0.x",
     "coveralls": "2.11.x",
     "docco": "0.7.x",
