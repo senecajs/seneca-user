@@ -44,7 +44,12 @@ function initData (si) {
         expect(data.user.nick).to.equal(user1Data.nick)
         user1Data.id = data.user.id
 
-        done(err)
+        siDefault.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
+          expect(err).to.not.exist()
+          expect(data.ok).to.be.true()
+
+          done()
+        })
       })
     })
   }
@@ -100,7 +105,14 @@ suite('seneca-user lock tests ', function () {
       })
     }, function (err, results) {
       expect(err).to.not.exist()
-      done()
+
+      si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
+        expect(err).to.not.exist()
+        expect(data.ok).to.equal(false)
+        expect(data.why).to.equal('locked-out')
+
+        done()
+      })
     })
   })
 
@@ -170,7 +182,6 @@ suite('seneca-user lock tests ', function () {
       si.act({role: 'user', cmd: 'unlock', id: user1Data.id}, function (err, data) {
         expect(err).to.not.exist()
         expect(data.ok).to.be.true()
-        expect(data.why).to.equal('account-unlocked')
 
         si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: user1Data.password}, function (err, data) {
           expect(err).to.not.exist()

@@ -635,7 +635,7 @@ module.exports = function user (options) {
 
     if (options.failedLoginCount && user.failedLoginCount >= options.failedLoginCount) {
       seneca.log.debug('login/fail', why = 'locked-out', user)
-      return done(null, {ok: false, why: why, user: user})
+      return done(null, {ok: false, why: why})
     }
     if (args.auto) {
       return make_login(user, 'auto')
@@ -647,7 +647,7 @@ module.exports = function user (options) {
           seneca.log.debug('login/fail', why = 'invalid-password', user)
           cmd_increment_lock(seneca, user.id, false, function (err, out) {
             if (err) return done(err)
-            done(null, {ok: false, why: why, user: user})
+            done(null, {ok: false, why: why})
           })
         }
         else return make_login(user, 'password')
@@ -706,7 +706,7 @@ module.exports = function user (options) {
       user.save$(function (err, user) {
         if (err) return done(err, {ok: false, why: err})
         seneca.log.debug('increment lock ', user, 'failedLoginCount ', user.failedLoginCount)
-        done(null, {ok: true, why: 'login-count-modified'})
+        done(null, {ok: true})
       })
     })
   }
@@ -720,7 +720,7 @@ module.exports = function user (options) {
     var seneca = this
     cmd_increment_lock(seneca, args.id, true, function (err, out) {
       if (err) return done(err, {ok: false, why: err})
-      done(null, {ok: true, why: 'account-unlocked'})
+      done(null, {ok: true})
     })
   }
 
