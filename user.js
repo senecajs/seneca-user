@@ -491,7 +491,7 @@ module.exports = function user (options) {
           return done(null, out)
         }
 
-        // user.failedLoginCount = 0
+        user.failedLoginCount = 0
         user.salt = out.salt
         user.pass = out.pass
         user.save$(function (err, user) {
