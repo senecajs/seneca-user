@@ -1,5 +1,6 @@
-## 1.2.0
+## 2.0.0 - 16.08.2016
 
+* Brute force protection: lock account after few failed attempts PR#63
 * Add active check on token in user, auth pattern PR#56
 * Dropped support for Node 0.10, 0.12
 * Updated dependencies

@@ -7,7 +7,7 @@
   "confirm": false,
   "oldsha": true,
   "pepper": "",
-  "lockTry": null,
+  "failedLoginCount": null,
   "user": {
     "fields": [
       {
