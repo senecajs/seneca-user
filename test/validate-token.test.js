@@ -2,6 +2,7 @@
 'use strict'
 
 var Seneca = require('seneca')
+var SenecaUse = require('./senecaUse')
 
 var _ = require('lodash')
 
@@ -15,12 +16,8 @@ var expect = Code.expect
 
 var si = Seneca()
 
-if (si.version >= '3.0.0') {
-  si.use(require('seneca-basic'))
-}
-if (si.version >= '2.0.0') {
-  si.use(require('seneca-entity'))
-}
+SenecaUse(si)
+
 si.use('../user')
 
 var user1Data = {
