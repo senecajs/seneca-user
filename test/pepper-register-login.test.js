@@ -2,6 +2,7 @@
 'use strict'
 
 var Seneca = require('seneca')
+var SenecaUse = require('./senecaUse')
 
 var _ = require('lodash')
 
@@ -14,12 +15,10 @@ var before = lab.before
 var expect = Code.expect
 
 var si = Seneca()
-if (si.version >= '2.0.0') {
-  si
-    .use(require('seneca-entity'))
-}
-si
-  .use('../user', { pepper: 'Please generate your own pepper for production' })
+
+SenecaUse(si)
+
+si.use('../user', { pepper: 'Please generate your own pepper for production' })
 
 var user1Data = {
   nick: 'nick1',
