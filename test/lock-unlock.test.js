@@ -20,6 +20,10 @@ var siDefault = Seneca({
   log: 'silent'
 })
 
+if (si.version >= '3.0.0') {
+  si.use(require('seneca-basic'))
+  siDefault.use(require('seneca-basic'))
+}
 if (si.version >= '2.0.0') {
   si.use(require('seneca-entity'))
   siDefault.use(require('seneca-entity'))

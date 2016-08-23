@@ -62,6 +62,7 @@
     "lab": "11.0.x",
     "pre-commit": "1.1.x",
     "seneca": "plugin",
+    "seneca-basic": "0.4.x",
     "seneca-entity": "1.2.x"
   },
   "repository": {
