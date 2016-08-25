@@ -1,3 +1,9 @@
+## 2.1.0 25-08-2016
+
+* Updated dependencies
+* Added Seneca 3 and Node 6 support
+* Dropped Node 5 support
+
 ## 2.0.0 - 16.08.2016
 
 * Brute force protection: lock account after few failed attempts PR#63
