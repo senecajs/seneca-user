@@ -19,3 +19,6 @@ README.html
 .DS_Store
 *~
 coverage
+
+doc/coverage.html
+doc/annotated
