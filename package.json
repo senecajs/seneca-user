@@ -16,12 +16,12 @@
   "main": "user.js",
   "scripts": {
     "test": "lab -v -L -P test -r console -m 3000 -t 80",
-    "lint": "lab -dL",
-    "coverage": "lab -s -P test -r lcov | coveralls",
+    "coveralls": "lab -s -P test -r lcov | coveralls",
+    "coverage": "lab -v -P test -L -t 80 -r html",
     "annotate": "docco user.js -o doc"
   },
   "files": [
-    "LICENSE.txt",
+    "LICENSE",
     "README.md",
     "user.js",
     "default-options.json"
@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "eraro": "0.4.1",
-    "lodash": "4.14.2",
+    "lodash": "4.15.0",
     "node-uuid": "1.4.7"
   },
   "devDependencies": {
