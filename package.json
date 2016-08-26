@@ -17,8 +17,8 @@
   "scripts": {
     "test": "lab -v -L -P test -r console -m 3000 -t 80",
     "coveralls": "lab -s -P test -r lcov | coveralls",
-    "coverage": "lab -v -P test -L -t 80 -r html",
-    "annotate": "docco user.js -o doc"
+    "coverage": "lab -v -P test -L -t 80 -r html > doc/coverage.html",
+    "annotate": "docco user.js -o doc/annotated"
   },
   "files": [
     "LICENSE",
