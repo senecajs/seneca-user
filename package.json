@@ -27,21 +27,22 @@
     "default-options.json"
   ],
   "contributors": [
-    {
-      "name": "Mircea Alexandru",
-      "email": "mircea.alexandru@gmail.com",
-      "url": "http://www.alexandrumircea.ro"
-    },
-    {
-      "name": "Cristian Kiss",
-      "email": "kissdevel@gmail.com",
-      "url": "https://github.com/ckiss"
-    },
-    {
-      "name": "Mihai Dima",
-      "email": "mihaizn@gmail.com",
-      "url": "https://github.com/mihaidma"
-    }
+    "Mircea Alexandru <mircea.alexandru@gmail.com> (http://www.alexandrumircea.ro)",
+    "Cristian Kiss <kissdevel@gmail.com> (https://github.com/ckiss)",
+    "Mihai Dima <mihaizn@gmail.com> (https://github.com/mihaidma)",
+    "Adrien Becchis (https://github.com/AdrieanKhisbe)",
+    "Shane Lacey (https://github.com/shanel262)",
+    "Otávio Augusto Soares (https://github.com/otaviosoares)",
+    "Dean McDonnell (https://github.com/mcdonnelldean)",
+    "Nicolas Herment (https://github.com/nherment)",
+    "Paolo Chiodi (https://github.com/paolochiodi)",
+    "Emer Rutherford (https://github.com/eeswr)",
+    "Matteo Collina (https://github.com/mcollina)",
+    "Wyatt Preul (https://github.com/geek)",
+    "rithdmc (https://github.com/rithdmc)",
+    "Guy Ellis (https://github.com/guyellis)",
+    "Cian Butler (https://github.com/butlerx)",
+    "Sorin Silaghi (https://github.com/sorin7486)"
   ],
   "engines": {
     "node": ">=4.0.0"
