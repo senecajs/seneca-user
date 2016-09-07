@@ -53,7 +53,7 @@ You'll need the [seneca](http://github.com/senecajs/seneca) module to use this m
 
 ## Quick example
 
-In the [example code](https://github.com/senecajs/seneca-user/tree/master/test/example.js), a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
+In the [example code](seneca-user-example.js), a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
 password. The successful login provides a login instance. The `login.id` property can be used to authenticate this login. For example,
 the [seneca-auth](http://github.com/senecajs/seneca-auth) plugin uses this token as a HTTP authentication cookie.
 
@@ -505,3 +505,4 @@ Licensed under [MIT][].
 [Senecajs org]: https://github.com/senecajs/
 [seneca-basic-url]: https://github.com/senecajs/seneca-basic
 [seneca-entity-url]: https://github.com/senecajs/seneca-entity
+[seneca-user-example.js]: https://github.com/senecajs/seneca-user/blob/master/test/example.js
