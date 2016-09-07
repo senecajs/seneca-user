@@ -19,7 +19,7 @@ This module is a plugin for the Seneca framework. It provides business logic for
    * registration
    * password handling, incl. resets
 
-This plugin needs [seneca-basic][seneca-basic-url] and [seneca-entity][seneca-entity-url] plugins to function properly.
+**This plugin needs [seneca-basic][seneca-basic-url] and [seneca-entity][seneca-entity-url] plugins to function properly.**
 
 There are two core concepts: user and login. A _user_, storing the user account details and encrypted passwords,
 and a _login_, representing an instance of a user that has been authenticated. A user can have multiple logins.
