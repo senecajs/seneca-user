@@ -53,36 +53,14 @@ You'll need the [seneca](http://github.com/senecajs/seneca) module to use this m
 
 ## Quick example
 
-```js
-var seneca = require('seneca')()
-seneca.use(require('seneca-basic'))
-seneca.use(require('seneca-entity'))
-seneca.use(require('seneca-user'))
-
-seneca.ready(function (){
-  seneca.act( {role: 'user', cmd: 'register', name: "Flann O'Brien", email: 'nincompoop@deselby.com', password: 'blackair'},
-  function (err, out) {
-
-    seneca.act({role: 'user', cmd: 'login', email: 'nincompoop@deselby.com', password: 'bicycle'}, function (err, out) {
-      console.log('login success: ' + out.ok)
-
-      seneca.act({role: 'user', cmd: 'login', email: 'nincompoop@deselby.com', password: 'blackair'}, function (err,out) {
-        console.log('login success: ' + out.ok)
-        console.log('login instance: ' + out.login)
-      })
-    })
-  })
-})
-```
-
-In the example code, a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
+In the [example code](https://github.com/senecajs/seneca-user/tree/master/test/example.js), a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
 password. The successful login provides a login instance. The `login.id` property can be used to authenticate this login. For example,
 the [seneca-auth](http://github.com/senecajs/seneca-auth) plugin uses this token as a HTTP authentication cookie.
 
-To run this example (and the other code in this README), try:
+To run this example, try:
 
 ```sh
-node test/readme.js
+node test/example.js
 ```
 
 ## Deeper example
