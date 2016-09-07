@@ -36,7 +36,7 @@ have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
 ## Code examples
 
-For code samples, please see the [tests](https://github.com/senecajs/seneca-user/tree/master/test) for this plugin.
+For code samples, please see the [tests](https://github.com/senecajs/seneca-user/tree/master/doc/examples/basic.js) for this plugin.
 
 ### Seneca compatibility
 

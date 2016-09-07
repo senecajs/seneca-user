@@ -3,7 +3,7 @@ seneca.use(require('seneca-basic'))
 seneca.use(require('seneca-entity'))
 seneca.use(require('seneca-user'))
 
-seneca.ready(function () {
+seneca.ready(() => {
   seneca.act({role: 'user', cmd: 'register', name: "Flann O'Brien", email: 'nincompoop@deselby.com', password: 'blackair'},
   function (err, out) {
     if (err) {
