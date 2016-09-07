@@ -32,6 +32,10 @@ For a working example, see the [Seneca user accounts example](https://github.com
 If you're using this module, feel free to contact me on Twitter if you
 have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
+## Code examples
+
+For code samples, please see the [tests](https://github.com/senecajs/seneca-user/tree/master/test) for this plugin.
+
 ### Seneca compatibility
 
 Supports Seneca versions **1.x** - **3.x**
