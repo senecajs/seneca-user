@@ -19,6 +19,8 @@ This module is a plugin for the Seneca framework. It provides business logic for
    * registration
    * password handling, incl. resets
 
+This plugin needs [seneca-basic][seneca-basic-url] and [seneca-entity][seneca-entity-url] plugins to function properly.
+
 There are two core concepts: user and login. A _user_, storing the user account details and encrypted passwords,
 and a _login_, representing an instance of a user that has been authenticated. A user can have multiple logins.
 
@@ -53,21 +55,18 @@ You'll need the [seneca](http://github.com/senecajs/seneca) module to use this m
 
 ```js
 var seneca = require('seneca')()
-seneca.use('basic')
-seneca.use('entity')
-seneca.use('user')
+seneca.use(require('seneca-basic'))
+seneca.use(require('seneca-entity'))
+seneca.use(require('seneca-user'))
 
 seneca.ready(function (){
-
-  var userpin = seneca.pin({role: 'user', cmd:'*'})
-
-  userpin.register( {name: "Flann O'Brien",email:'nincompoop@deselby.com',password:'blackair'},
+  seneca.act( {role: 'user', cmd: 'register', name: "Flann O'Brien", email: 'nincompoop@deselby.com', password: 'blackair'},
   function (err, out) {
 
-    userpin.login({email: 'nincompoop@deselby.com', password: 'bicycle'}, function (err, out) {
+    seneca.act({role: 'user', cmd: 'login', email: 'nincompoop@deselby.com', password: 'bicycle'}, function (err, out) {
       console.log('login success: ' + out.ok)
 
-      userpin.login({email: 'nincompoop@deselby.com',password:'blackair'}, function (err,out) {
+      seneca.act({role: 'user', cmd: 'login', email: 'nincompoop@deselby.com', password: 'blackair'}, function (err,out) {
         console.log('login success: ' + out.ok)
         console.log('login instance: ' + out.login)
       })
@@ -75,9 +74,6 @@ seneca.ready(function (){
   })
 })
 ```
-
-This example, uses a _pin_ for convenience: `userpin.register( ... )` is the same as
-`seneca.act({role:'user',cmd:'register', ... )`.
 
 In the example code, a user is registered, and then two login attempts are made. The first with an incorrect password, the second with the correct
 password. The successful login provides a login instance. The `login.id` property can be used to authenticate this login. For example,
@@ -529,3 +525,5 @@ Licensed under [MIT][].
 [gitter-badge]: https://badges.gitter.im/senecajs/seneca.svg
 [gitter-url]: https://gitter.im/senecajs/seneca
 [Senecajs org]: https://github.com/senecajs/
+[seneca-basic-url]: https://github.com/senecajs/seneca-basic
+[seneca-entity-url]: https://github.com/senecajs/seneca-entity
