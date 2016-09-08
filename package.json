@@ -7,11 +7,7 @@
     "user",
     "plugin"
   ],
-  "author": {
-    "name": "Richard Rodger",
-    "email": "richard@ricebridge.com",
-    "url": "http://richardrodger.com/"
-  },
+  "author": "Richard Rodger <richard@ricebridge.com> (http://richardrodger.com/)",
   "license": "MIT",
   "main": "user.js",
   "scripts": {
@@ -68,9 +64,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/senecajs/seneca-user.git"
+    "url": "git+https://github.com/senecajs/seneca-user.git"
   },
   "pre-commit": [
     "test"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/senecajs/seneca-user/issues"
+  },
+  "homepage": "https://github.com/senecajs/seneca-user#readme",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  }
 }

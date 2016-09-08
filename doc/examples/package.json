@@ -1,0 +1,15 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "basic.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "seneca-user": "^2.1.0",
+    "seneca": "plugin"
+  }
+}
