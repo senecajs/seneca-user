@@ -190,20 +190,20 @@ Login an existing user. Creates a new `sys_login` entry.
 
 #### Arguments:
 
-   * `nick_: required if no email, identifies user, alias: usernam`
-   * _email_: required if no nick, identifies user
-   * `password_: password as entered by user, optional if using _auto`
-   * _auto_: automatic login without password, default: _false_. Use this to generate login tokens.
-   * `user_: specify user using a sys/user entity - for convenience use inside your own actions, when you already have a user entity loade`
+   * `nick`: required if no email, identifies user, alias: username
+   * `email`: required if no nick, identifies user
+   * `password`: password as entered by user, optional if using _auto
+   * `auto`: automatic login without password, default: _false_. Use this to generate login tokens.
+   * `user`: specify user using a sys/user entity - for convenience use inside your own actions, when you already have a user entity loaded
 
 #### Provides:
 
 Object with properties:
 
-   * `ok_: true if login succeeded, false if no`
-   * _login_: login entity, id is the login token, used as cookie
-   * `user_: user entit`
-   * _why_: indicates reason login failed or succeeded, refer to [source](https://github.com/senecajs/seneca-user/blob/master/user.js) for codes.
+   * `ok_: true if login succeeded, false if not
+   * `login`: login entity, id is the login token, used as cookie
+   * `user_: user entity
+   * `why`: indicates reason login failed or succeeded, refer to [source](https://github.com/senecajs/seneca-user/blob/master/user.js) for codes.
 
 
 
@@ -213,7 +213,7 @@ Logout a user. Update _sys/login_ entry to _active:false_. Adds _ended_ field wi
 
 #### Arguments:
 
-   * `token_: existing login token, maybe from a cooki`
+   * `token`: existing login token, maybe from a cookie
 
 #### Provides:
 
@@ -314,9 +314,9 @@ Execute a password reset action. The user identified by the reset token is allow
 
 #### Arguments:
 
-   * _token_: reset token
-   * _password_: new password
-   * _repeat_: optional, repeat of new password
+   * `token`: reset token
+   * `password`: new password
+   * `repeat`: optional, repeat of new password
 
 #### Provides:
 
