@@ -19,7 +19,7 @@ exports.up = function(db) {
     id: {
       type: type.STRING,
       length: 36,
-      unique: true,
+      primaryKey: true,
       notNull: true
     },
     nick: {
