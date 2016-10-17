@@ -477,12 +477,9 @@ module.exports = function user (options) {
   // - repeat: password repeat, optional
   // Provides: {ok:,user:}
   function cmd_change_password (args, done) {
-    var seneca = this
     var user = args.user
 
-    seneca.act(
-      { role: role, cmd: 'encrypt_password', whence: 'change/user=' + user.id + ',' + user.nick,
-        password: args.password, repeat: args.repeat, salt: args.salt },
+    prepare_password_data(args,
       function (err, out) {
         if (err) {
           return done(err)
