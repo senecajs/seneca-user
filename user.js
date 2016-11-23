@@ -5,7 +5,7 @@
 var Crypto = require('crypto')
 
 var _ = require('lodash')
-var Uuid = require('node-uuid')
+var Uuid = require('uuid').v4
 
 var Eraro = require('eraro')(
   {
