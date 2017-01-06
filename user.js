@@ -842,6 +842,13 @@ module.exports = function user (options) {
   function cmd_create_reset (args, done) {
     var seneca = this
     var user = args.user
+    var why
+
+    if (!user.active) {
+      seneca.log.debug('create-reset/fail', why = 'not-active', user)
+      return done(null, {ok: false, why: why, user: user})
+    }
+
     var resetent = seneca.make(reset_canon)
 
     var token = Uuid()
