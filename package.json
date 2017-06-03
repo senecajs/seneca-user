@@ -15,9 +15,9 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab -v -L -P test -r console -m 3000 -t 80",
-    "coveralls": "lab -s -P test -r lcov | coveralls",
-    "coverage": "lab -v -P test -L -t 80 -r html > doc/coverage.html",
+    "test": "lab -v -L -P test -r console -m 3000 -t 80 -I WebAssembly",
+    "coveralls": "lab -s -P test -r lcov  -I WebAssembly | coveralls",
+    "coverage": "lab -v -P test -L -t 80 -r html -I WebAssembly > doc/coverage.html",
     "annotate": "docco user.js -o doc/annotated"
   },
   "files": [
