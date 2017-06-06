@@ -940,7 +940,7 @@ module.exports = function user (options) {
         }
 
         seneca.act({ role: role, cmd: 'change_password', user: user,
-            password: args.password, repeat: args.repeat, salt: args.salt },
+          password: args.password, repeat: args.repeat, salt: args.salt },
           function (err, out) {
             if (err) {
               return done(err)
