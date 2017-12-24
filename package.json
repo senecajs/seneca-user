@@ -18,7 +18,8 @@
     "test": "lab -v -L -P test -r console -m 3000 -t 70 -I WebAssembly",
     "coveralls": "lab -s -P test -r lcov  -I WebAssembly | coveralls",
     "coverage": "lab -v -P test -L -t 70 -r html -I WebAssembly > doc/coverage.html",
-    "annotate": "docco user.js -o doc/annotated"
+    "annotate": "docco user.js -o doc/annotated",
+    "prettier": "prettier --write --no-semi --single-quote user.js test/*.js"
   },
   "files": [
     "LICENSE",
@@ -62,6 +63,7 @@
     "eslint-plugin-standard": "3.x.x",
     "lab": "13.1.x",
     "pre-commit": "1.2.x",
+    "prettier": "^1.9.2",
     "seneca": "plugin",
     "seneca-basic": "0.5.x",
     "seneca-entity": "2.0.x"

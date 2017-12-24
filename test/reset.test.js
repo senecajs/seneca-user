@@ -8,7 +8,7 @@ var _ = require('lodash')
 
 var Lab = require('lab')
 var Code = require('code')
-var lab = exports.lab = Lab.script()
+var lab = (exports.lab = Lab.script())
 var suite = lab.suite
 var test = lab.test
 var before = lab.before
@@ -34,24 +34,30 @@ var user2Data = {
   active: true
 }
 
-suite('seneca-user reset suite tests ', function () {
-  before({}, function (done) {
-    si.ready(function (err) {
+suite('seneca-user reset suite tests ', function() {
+  before({}, function(done) {
+    si.ready(function(err) {
       if (err) return process.exit(!console.error(err))
       done()
     })
   })
 
-  test('user/register test', function (done) {
-    si.act(_.extend({role: 'user', cmd: 'register'}, user1Data), function (err, data) {
+  test('user/register test', function(done) {
+    si.act(_.extend({ role: 'user', cmd: 'register' }, user1Data), function(
+      err,
+      data
+    ) {
       expect(err).to.not.exist()
       expect(data.user.nick).to.equal(user1Data.nick)
       done(err)
     })
   })
 
-  test('user/register test', function (done) {
-    si.act(_.extend({role: 'user', cmd: 'register'}, user2Data), function (err, data) {
+  test('user/register test', function(done) {
+    si.act(_.extend({ role: 'user', cmd: 'register' }, user2Data), function(
+      err,
+      data
+    ) {
       expect(err).to.not.exist()
       expect(data.user.nick).to.equal(user2Data.nick)
       done(err)
@@ -59,31 +65,45 @@ suite('seneca-user reset suite tests ', function () {
   })
 
   var resetId
-  test('user/create_reset unknown user test', function (done) {
-    si.act({ role: 'user', cmd: 'create_reset', nick: user1Data.nick }, function (err, data) {
-      expect(err).to.not.exist()
-      expect(data.ok).to.be.true()
-      expect(data.reset.id).to.exist()
-      resetId = data.reset.token
-      done(err)
-    })
+  test('user/create_reset unknown user test', function(done) {
+    si.act(
+      { role: 'user', cmd: 'create_reset', nick: user1Data.nick },
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.ok).to.be.true()
+        expect(data.reset.id).to.exist()
+        resetId = data.reset.token
+        done(err)
+      }
+    )
   })
 
-  test('user/create_reset unknown user test', function (done) {
-    si.act({ role: 'user', cmd: 'execute_reset', token: resetId, password: 'x', repeat: 'x' }, function (err, data) {
-      expect(err).to.not.exist()
-      expect(data.ok).to.be.true()
-      done(err)
-    })
+  test('user/create_reset unknown user test', function(done) {
+    si.act(
+      {
+        role: 'user',
+        cmd: 'execute_reset',
+        token: resetId,
+        password: 'x',
+        repeat: 'x'
+      },
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.ok).to.be.true()
+        done(err)
+      }
+    )
   })
 
-  test('user/login user test', function (done) {
-    si.act({role: 'user', cmd: 'login', nick: user1Data.nick, password: 'x'}, function (err, data) {
-      expect(err).to.not.exist()
-      expect(data.ok).to.be.true()
-      expect(data.user).to.exist()
-      done(err)
-    })
+  test('user/login user test', function(done) {
+    si.act(
+      { role: 'user', cmd: 'login', nick: user1Data.nick, password: 'x' },
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.ok).to.be.true()
+        expect(data.user).to.exist()
+        done(err)
+      }
+    )
   })
 })
-
