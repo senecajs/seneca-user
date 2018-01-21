@@ -71,8 +71,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/senecajs/seneca-user.git"
-  },
-  "pre-commit": [
-    "test"
-  ]
+  }
 }
