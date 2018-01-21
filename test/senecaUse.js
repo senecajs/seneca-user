@@ -1,5 +1,4 @@
-
-module.exports = function senecaUse (seneca) {
+module.exports = function senecaUse(seneca) {
   if (seneca.version >= '3.0.0') {
     seneca.use(require('seneca-basic'))
   }
