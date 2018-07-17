@@ -57,6 +57,7 @@
     "code": "4",
     "coveralls": "3",
     "lab": "14",
+    "prettier": "1",
     "seneca": "plugin",
     "seneca-basic": "0",
     "seneca-entity": "2"
