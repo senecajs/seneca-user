@@ -1,11 +1,11 @@
-/* Copyright (c) 2012-2014 Richard Rodger, MIT License */
+/* Copyright (c) 2012-2018 Richard Rodger, MIT License */
 'use strict'
 
 
 var Crypto = require('crypto')
 
 var _ = require('lodash')
-var Uuid = require('node-uuid')
+var Uuid = require('uuid')
 
 var Eraro = require('eraro')(
   {
@@ -645,7 +645,7 @@ module.exports = function user (options) {
         if (err) return done(err)
         if (!out.ok) {
           seneca.log.debug('login/fail', why = 'invalid-password', user)
-          cmd_increment_lock(seneca, user.id, false, function (err, out) {
+          cmd_increment_lock(seneca, user.id, false, function (err) {
             if (err) return done(err)
             done(null, {ok: false, why: why})
           })
@@ -675,7 +675,7 @@ module.exports = function user (options) {
 
       login.save$(function (err, login) {
         if (err) return done(err)
-        cmd_increment_lock(seneca, user.id, true, function (err, out) {
+        cmd_increment_lock(seneca, user.id, true, function (err) {
           if (err) return done(err)
 
           seneca.log.debug('login/ok', why, user, login)
@@ -718,7 +718,7 @@ module.exports = function user (options) {
   // - failure: {ok:false}
   function cmd_unlock (args, done) {
     var seneca = this
-    cmd_increment_lock(seneca, args.id, true, function (err, out) {
+    cmd_increment_lock(seneca, args.id, true, function (err) {
       if (err) return done(err, {ok: false, why: err})
       done(null, {ok: true})
     })
@@ -997,15 +997,15 @@ module.exports = function user (options) {
       q = {nick: nick}
       // delete from login
       var login = loginent.make$()
-      login.remove$(q, function (err, data) {
+      login.remove$(q, function (err) {
         if (err) return seneca.log.warn(err)
 
         // delete now from resetent
         var reset = resetent.make$()
-        reset.remove$(q, function (err, data) {
+        reset.remove$(q, function (err) {
           if (err) return seneca.log.warn(err)
 
-          user.remove$(q, function (err, data) {
+          user.remove$(q, function (err) {
             if (err) return done(err, {ok: false})
             done(null, {ok: true})
           })

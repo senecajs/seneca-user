@@ -1,2 +1,5 @@
 test/a.js
-        
+test/stubs
+docs/examples
+tmp
+test

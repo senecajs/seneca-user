@@ -15,10 +15,10 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab -v -L -P test -r console -m 3000 -t 70 -I WebAssembly",
+    "test": "lab -v -L -P test -r console -m 3000 -t 70 -I URL,URLSearchParams,SharedArrayBuffer,Atomics,BigUint64Array,BigInt64Array,BigInt",
     "coveralls": "lab -s -P test -r lcov  -I WebAssembly | coveralls",
     "coverage": "lab -v -P test -L -t 70 -r html -I WebAssembly > doc/coverage.html",
-    "annotate": "docco user.js -o doc/annotated"
+    "prettier": "prettier --write --no-semi --single-quote *.js lib/*.js test/*.js"
   },
   "files": [
     "LICENSE",
@@ -48,23 +48,18 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
-    "eraro": "0.4.1",
-    "lodash": "4.17.4",
-    "node-uuid": "1.4.8"
+    "eraro": "1.0",
+    "lodash": "4.17",
+    "uuid": "3.3"
   },
   "devDependencies": {
-    "async": "2.4.x",
-    "code": "4.0.x",
-    "coveralls": "2.13.x",
-    "docco": "0.7.x",
-    "eslint-config-seneca": "3.x.x",
-    "eslint-plugin-hapi": "4.x.x",
-    "eslint-plugin-standard": "3.x.x",
-    "lab": "13.1.x",
-    "pre-commit": "1.2.x",
+    "async": "2",
+    "code": "4",
+    "coveralls": "3",
+    "lab": "14",
     "seneca": "plugin",
-    "seneca-basic": "0.5.x",
-    "seneca-entity": "2.0.x"
+    "seneca-basic": "0",
+    "seneca-entity": "2"
   },
   "repository": {
     "type": "git",
