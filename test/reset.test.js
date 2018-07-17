@@ -34,6 +34,13 @@ var user2Data = {
   active: true
 }
 
+var user3Data = {
+  nick: 'nick3',
+  email: 'nick3@example.com',
+  password: 'test3test',
+  active: false
+}
+
 suite('seneca-user reset suite tests ', function () {
   before({}, function (done) {
     si.ready(function (err) {
@@ -54,6 +61,14 @@ suite('seneca-user reset suite tests ', function () {
     si.act(_.extend({role: 'user', cmd: 'register'}, user2Data), function (err, data) {
       expect(err).to.not.exist()
       expect(data.user.nick).to.equal(user2Data.nick)
+      done(err)
+    })
+  })
+
+  test('user/register test', function (done) {
+    si.act(_.extend({role: 'user', cmd: 'register'}, user3Data), function (err, data) {
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user3Data.nick)
       done(err)
     })
   })
@@ -82,6 +97,15 @@ suite('seneca-user reset suite tests ', function () {
       expect(err).to.not.exist()
       expect(data.ok).to.be.true()
       expect(data.user).to.exist()
+      done(err)
+    })
+  })
+
+  test('/user/create_reset fails if user inactive', function (done) {
+    si.act({ role: 'user', cmd: 'create_reset', nick: user3Data.nick }, function (err, data) {
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.false()
+      expect(data.why).to.equal('not-active')
       done(err)
     })
   })
