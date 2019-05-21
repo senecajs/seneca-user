@@ -276,7 +276,7 @@ module.exports = function user(options) {
   function cmd_load_user(args, done) {
     seneca
       .make(user_canon)
-      .load$(_.omit(args, ['role', 'get']), function(err, user) {
+      .load$(_.pick(args, ['id', 'nick', 'email']), function(err, user) {
         if (err) return done(err)
         return done(null, { ok: true, user: user })
       })
