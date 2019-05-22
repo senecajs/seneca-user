@@ -104,6 +104,19 @@ suite('seneca-user update suite tests ', function() {
     })
   })
 
+  test('user/get user test email', function(done) {
+    si.act({ role: 'user', get: 'user', email: user2Data.email }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
+      expect(data.user.email).to.be.equal(user2Data.email) // check?
+      done(err)
+    })
+  })
+
+
   // now update user based on orig_nick and also change its password
   test('user/update test new nick and password', function(done) {
     si.act(

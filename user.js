@@ -276,9 +276,9 @@ module.exports = function user(options) {
   function cmd_load_user(args, done) {
 
     var q = {}
-    if (q.id) q.id = args.id
-    if (q.email) q.email = args.email
-    if (q.nick) q.nick = args.nick
+    if (args.id) q.id = args.id
+    if (args.email) q.email = args.email
+    if (args.nick) q.nick = args.nick
    
     seneca
       .make(user_canon)
