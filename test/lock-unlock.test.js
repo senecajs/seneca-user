@@ -1,28 +1,24 @@
+/* Copyright (c) 2010-2019 Richard Rodger and other contributors, MIT License. */
 'use strict'
 
 var Seneca = require('seneca')
 var Async = require('async')
-var SenecaUse = require('./senecaUse')
+const Shared = require('./shared')
 
-var Lab = require('lab')
-var Code = require('code')
+const Code = require('@hapi/code')
+const Lab = require('@hapi/lab')
+
 var lab = (exports.lab = Lab.script())
+var describe = lab.describe
 var suite = lab.suite
-var test = lab.test
-var before = lab.before
-var beforeEach = lab.beforeEach
 var expect = Code.expect
+var it = Shared.make_it(lab)
+
+
 var wrongPassword = 'fail1fail'
 var resetPassword = 'reset1reset'
 var failedCount = 3
 
-var si = Seneca()
-var siDefault = Seneca({
-  log: 'silent'
-})
-
-SenecaUse(si)
-SenecaUse(siDefault)
 
 var user_canon = 'sys/user'
 var user1Data = {
@@ -33,86 +29,83 @@ var user1Data = {
   id: ''
 }
 
-function initData(si) {
-  return function init(done) {
+
+var si = Shared.seneca_instance({user: { failedLoginCount: failedCount }})
+
+
+async function init() {
+  return new Promise((resolve)=>{
     si.make(user_canon).remove$({ all$: true }, function(err) {
       expect(err).to.not.exist()
-
+      
       si.act({ role: 'user', cmd: 'register' }, user1Data, function(err, data) {
         expect(err).to.not.exist()
         expect(data.user.nick).to.equal(user1Data.nick)
         user1Data.id = data.user.id
-
-        siDefault.act(
+        
+        si.act(
           {
             role: 'user',
             cmd: 'login',
-            nick: user1Data.nick,
+              nick: user1Data.nick,
             password: user1Data.password
           },
           function(err, data) {
             expect(err).to.not.exist()
             expect(data.ok).to.be.true()
 
-            done()
+            resolve()
           }
         )
       })
     })
-  }
+  })
 }
 
-siDefault.use(require('../user'))
 suite('seneca-user default lock tests ', function() {
-  beforeEach(initData(siDefault))
+  lab.beforeEach(init)
+  
+  it('No lock by default', function(done) {
+    var si = Shared.seneca_instance()
+    
+    si.act({ role: 'user', cmd: 'register' }, user1Data, function(err, data) {
+      expect(err).to.not.exist()
 
-  before({}, function(done) {
-    siDefault.ready(function(err) {
-      if (err) return process.exit(!console.error(err))
-      done()
+      Async.timesSeries(
+        failedCount + 5,
+        function(n, next) {
+
+          si.act(
+            {
+              role: 'user',
+              cmd: 'login',
+              nick: data.user.nick,
+              password: wrongPassword
+            },
+            function(err, data) {
+              expect(err).to.not.exist()
+              expect(data.ok).to.be.false()
+              expect(data.why).to.equal('invalid-password')
+              
+              next()
+            }
+          )
+        },
+        function(err, results) {
+          expect(err).to.not.exist()
+          done()
+        }
+      )
     })
-  })
-
-  test('No lock by default', function(done) {
-    Async.timesSeries(
-      failedCount + 5,
-      function(n, next) {
-        siDefault.act(
-          {
-            role: 'user',
-            cmd: 'login',
-            nick: user1Data.nick,
-            password: wrongPassword
-          },
-          function(err, data) {
-            expect(err).to.not.exist()
-            expect(data.ok).to.be.false()
-            expect(data.why).to.equal('invalid-password')
-
-            next()
-          }
-        )
-      },
-      function(err, results) {
-        expect(err).to.not.exist()
-        done()
-      }
-    )
   })
 })
 
-si.use('../user', { failedLoginCount: failedCount })
+
 suite('seneca-user lock tests ', function() {
-  beforeEach(initData(si))
+  lab.beforeEach(init)
 
-  before({}, function(done) {
-    si.ready(function(err) {
-      if (err) return process.exit(!console.error(err))
-      done()
-    })
-  })
 
-  test('Lock after failedLoginCount attempts', function(done) {
+  it('Lock after failedLoginCount attempts', function(done) {
     Async.timesSeries(
       failedCount + 1,
       function(n, next) {
@@ -155,7 +148,7 @@ suite('seneca-user lock tests ', function() {
     )
   })
 
-  test('Password reset resets failed logins counter', function(done) {
+  it('Password reset resets failed logins counter', function(done) {
     Async.timesSeries(
       failedCount + 2,
       function(n, next) {
@@ -210,7 +203,7 @@ suite('seneca-user lock tests ', function() {
     )
   })
 
-  test('Successfull login resets failed logins counter', function(done) {
+  it('Successfull login resets failed logins counter', function(done) {
     Async.timesSeries(
       failedCount + 2,
       function(n, next) {
@@ -236,7 +229,7 @@ suite('seneca-user lock tests ', function() {
     )
   })
 
-  test('Unlock after lock', function(done) {
+  it('Unlock after lock', function(done) {
     Async.timesSeries(
       failedCount + 1,
       function(n, next) {

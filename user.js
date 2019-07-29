@@ -6,9 +6,11 @@ var Crypto = require('crypto')
 var _ = require('lodash')
 var Uuid = require('uuid')
 
+/*
 var Eraro = require('eraro')({
   package: 'seneca-user'
 })
+*/
 
 // WARNING: this plugin is for *internal* use, DO NOT expose via an API.
 // See the seneca-auth plugin for an example of an API that uses this plugin.
@@ -333,7 +335,7 @@ module.exports = function user(options) {
           if (err) return done(err)
           if (!user) {
             if (fail) {
-              return done(Eraro(seneca.fail('user/not-found', q)))
+              return done(seneca.error('user/not-found', q))
             } else
               return done(null, {
                 ok: false,

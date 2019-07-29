@@ -1,24 +1,20 @@
-/* Copyright (c) 2010-2013 Richard Rodger */
+/* Copyright (c) 2010-2019 Richard Rodger and other contributors, MIT License. */
 'use strict'
 
+
 var Seneca = require('seneca')
-var SenecaUse = require('./senecaUse')
+const Shared = require('./shared')
 
-var _ = require('lodash')
+const Code = require('@hapi/code')
+const Lab = require('@hapi/lab')
 
-var Lab = require('lab')
-var Code = require('code')
 var lab = (exports.lab = Lab.script())
+var describe = lab.describe
 var suite = lab.suite
-var test = lab.test
-var before = lab.before
 var expect = Code.expect
+var it = Shared.make_it(lab)
 
-var si = Seneca()
 
-SenecaUse(si)
-
-si.use('../user')
 
 var user1Data = {
   nick: 'nick1',
@@ -29,62 +25,62 @@ var user1Data = {
 }
 
 suite('seneca-user login and token validation suite tests ', function() {
-  before({}, function(done) {
-    si.ready(function(err) {
-      if (err) return process.exit(!console.error(err))
-      si.act(_.extend({ role: 'user', cmd: 'register' }, user1Data), done)
+  it('user/login validate token test', function(fin) {
+    var si = Shared.seneca_instance({fin:fin})
+    si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function() {
+      si.act(
+        {
+          role: 'user',
+          cmd: 'login',
+          nick: user1Data.nick,
+          password: user1Data.password
+        },
+        function(err, data) {
+          if (err) return fin(err)
+          si.act({ role: 'user', cmd: 'auth', token: data.login.token }, function(
+            err,
+            data_auth
+          ) {
+            expect(err).to.not.exist()
+            expect(data_auth.ok).to.be.true()
+            expect(data.user.nick).to.equal(data_auth.user.nick)
+            fin(err)
+          })
+        }
+      )
     })
   })
 
-  test('user/login validate token test', function(done) {
-    si.act(
-      {
-        role: 'user',
-        cmd: 'login',
-        nick: user1Data.nick,
-        password: user1Data.password
-      },
-      function(err, data) {
-        if (err) return done(err)
-        si.act({ role: 'user', cmd: 'auth', token: data.login.token }, function(
-          err,
-          data_auth
-        ) {
-          expect(err).to.not.exist()
-          expect(data_auth.ok).to.be.true()
-          expect(data.user.nick).to.equal(data_auth.user.nick)
-          done(err)
-        })
-      }
-    )
-  })
-
-  test('user/login validate token after logout', function(done) {
-    si.act(
-      {
-        role: 'user',
-        cmd: 'login',
-        nick: user1Data.nick,
-        password: user1Data.password
-      },
-      function(err, data) {
-        if (err) return done(err)
-        si.act(
-          { role: 'user', cmd: 'logout', token: data.login.token },
-          function(err, data_logout) {
-            if (err) return done(err)
-            si.act(
-              { role: 'user', cmd: 'auth', token: data.login.token },
-              function(err, data_auth) {
-                expect(err).to.not.exist()
-                expect(data_auth.ok).to.be.false()
-                expect(data_auth.why).to.equal('login-inactive')
-                done(err)
-              }
-            )
-          }
-        )
-      }
-    )
+  it('user/login validate token after logout', function(fin) {
+    var si = Shared.seneca_instance({fin:fin})
+    si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function() {
+      
+      si.act(
+        {
+          role: 'user',
+          cmd: 'login',
+          nick: user1Data.nick,
+          password: user1Data.password
+        },
+        function(err, data) {
+          if (err) return fin(err)
+          si.act(
+            { role: 'user', cmd: 'logout', token: data.login.token },
+            function(err, data_logout) {
+              if (err) return fin(err)
+              si.act(
+                { role: 'user', cmd: 'auth', token: data.login.token },
+                function(err, data_auth) {
+                  expect(err).to.not.exist()
+                  expect(data_auth.ok).to.be.false()
+                  expect(data_auth.why).to.equal('login-inactive')
+                  fin(err)
+                }
+              )
+            }
+          )
+        }
+      )
+    })
   })
 })

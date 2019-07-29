@@ -1,24 +1,21 @@
-/* Copyright (c) 2010-2013 Richard Rodger */
+/* Copyright (c) 2010-2019 Richard Rodger and other contributors, MIT License. */
 'use strict'
 
 var Seneca = require('seneca')
-var SenecaUse = require('./senecaUse')
+const Shared = require('./shared')
 
-var _ = require('lodash')
+const Code = require('@hapi/code')
+const Lab = require('@hapi/lab')
 
-var Lab = require('lab')
-var Code = require('code')
 var lab = (exports.lab = Lab.script())
+var describe = lab.describe
 var suite = lab.suite
-var test = lab.test
-var before = lab.before
 var expect = Code.expect
+var it = Shared.make_it(lab)
 
-var si = Seneca()
+var si = Shared.seneca_instance()
 
-SenecaUse(si)
 
-si.use('../user')
 
 var user1Data = {
   nick: 'nick1',
@@ -35,15 +32,9 @@ var user2Data = {
 }
 
 suite('seneca-user update suite tests ', function() {
-  before({}, function(done) {
-    si.ready(function(err) {
-      if (err) return process.exit(!console.error(err))
-      done()
-    })
-  })
 
-  test('user/register test user1', function(done) {
-    si.act(_.extend({ role: 'user', cmd: 'register' }, user1Data), function(
+  it('user/register test user1', function(done) {
+    si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function(
       err,
       data
     ) {
@@ -53,8 +44,8 @@ suite('seneca-user update suite tests ', function() {
     })
   })
 
-  test('user/register test user2', function(done) {
-    si.act(_.extend({ role: 'user', cmd: 'register' }, user2Data), function(
+  it('user/register test user2', function(done) {
+    si.act(Object.assign({ role: 'user', cmd: 'register' }, user2Data), function(
       err,
       data
     ) {
@@ -64,7 +55,7 @@ suite('seneca-user update suite tests ', function() {
     })
   })
 
-  test('user/update test', function(done) {
+  it('user/update test', function(done) {
     si.act(
       { role: 'user', cmd: 'update', nick: user1Data.nick, otherProp: 'a' },
       function(err, data) {
@@ -76,7 +67,7 @@ suite('seneca-user update suite tests ', function() {
     )
   })
 
-  test('user/update test new nick', function(done) {
+  it('user/update test new nick', function(done) {
     si.act(
       {
         role: 'user',
@@ -92,7 +83,7 @@ suite('seneca-user update suite tests ', function() {
     )
   })
 
-  test('user/get user test', function(done) {
+  it('user/get user test', function(done) {
     si.act({ role: 'user', get: 'user', nick: user1Data.nick }, function(
       err,
       data
@@ -104,7 +95,7 @@ suite('seneca-user update suite tests ', function() {
     })
   })
 
-  test('user/get user test email', function(done) {
+  it('user/get user test email', function(done) {
     si.act({ role: 'user', get: 'user', email: user2Data.email }, function(
       err,
       data
@@ -118,7 +109,7 @@ suite('seneca-user update suite tests ', function() {
 
 
   // now update user based on orig_nick and also change its password
-  test('user/update test new nick and password', function(done) {
+  it('user/update test new nick and password', function(done) {
     si.act(
       {
         role: 'user',
@@ -138,7 +129,7 @@ suite('seneca-user update suite tests ', function() {
     )
   })
 
-  test('user/login user test after update and change password', function(done) {
+  it('user/login user test after update and change password', function(done) {
     si.act(
       { role: 'user', cmd: 'login', nick: user1Data.nick, password: 'p1' },
       function(err, data) {
@@ -152,7 +143,7 @@ suite('seneca-user update suite tests ', function() {
   })
 
   // now update user based on orig_email and also change its password
-  test('user/update test new nick and password', function(done) {
+  it('user/update test new nick and password', function(done) {
     si.act(
       {
         role: 'user',
@@ -169,7 +160,7 @@ suite('seneca-user update suite tests ', function() {
     )
   })
 
-  test('user/login user test after update and change password', function(done) {
+  it('user/login user test after update and change password', function(done) {
     si.act(
       { role: 'user', cmd: 'login', nick: user1Data.nick, password: 'p2' },
       function(err, data) {
@@ -182,7 +173,7 @@ suite('seneca-user update suite tests ', function() {
     )
   })
 
-  test('user/delete user test', function(done) {
+  it('user/delete user test', function(done) {
     si.act({ role: 'user', cmd: 'delete', nick: user1Data.nick }, function(
       err,
       data
@@ -193,7 +184,7 @@ suite('seneca-user update suite tests ', function() {
     })
   })
 
-  test('user/login user test', function(done) {
+  it('user/login user test', function(done) {
     si.act(
       {
         role: 'user',

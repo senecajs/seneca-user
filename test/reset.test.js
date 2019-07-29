@@ -1,24 +1,20 @@
-/* Copyright (c) 2010-2013 Richard Rodger */
+/* Copyright (c) 2010-2019 Richard Rodger and other contributors, MIT License. */
 'use strict'
 
 var Seneca = require('seneca')
-var SenecaUse = require('./senecaUse')
+const Shared = require('./shared')
 
-var _ = require('lodash')
+const Code = require('@hapi/code')
+const Lab = require('@hapi/lab')
 
-var Lab = require('lab')
-var Code = require('code')
 var lab = (exports.lab = Lab.script())
+var describe = lab.describe
 var suite = lab.suite
-var test = lab.test
-var before = lab.before
 var expect = Code.expect
+var it = Shared.make_it(lab)
 
-var si = Seneca()
+var si = Shared.seneca_instance()
 
-SenecaUse(si)
-
-si.use('../user')
 
 var user1Data = {
   nick: 'nick1',
@@ -42,15 +38,9 @@ var user3Data = {
 }
 
 suite('seneca-user reset suite tests ', function() {
-  before({}, function(done) {
-    si.ready(function(err) {
-      if (err) return process.exit(!console.error(err))
-      done()
-    })
-  })
 
-  test('user/register test', function(done) {
-    si.act(_.extend({ role: 'user', cmd: 'register' }, user1Data), function(
+  it('user/register test', function(done) {
+    si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function(
       err,
       data
     ) {
@@ -60,8 +50,8 @@ suite('seneca-user reset suite tests ', function() {
     })
   })
 
-  test('user/register test', function(done) {
-    si.act(_.extend({ role: 'user', cmd: 'register' }, user2Data), function(
+  it('user/register test', function(done) {
+    si.act(Object.assign({ role: 'user', cmd: 'register' }, user2Data), function(
       err,
       data
     ) {
@@ -71,8 +61,8 @@ suite('seneca-user reset suite tests ', function() {
     })
   })
 
-  test('user/register test', function(done) {
-    si.act(_.extend({ role: 'user', cmd: 'register' }, user3Data), function(
+  it('user/register test', function(done) {
+    si.act(Object.assign({ role: 'user', cmd: 'register' }, user3Data), function(
       err,
       data
     ) {
@@ -83,7 +73,7 @@ suite('seneca-user reset suite tests ', function() {
   })
 
   var resetId
-  test('user/create_reset unknown user test', function(done) {
+  it('user/create_reset unknown user test', function(done) {
     si.act(
       { role: 'user', cmd: 'create_reset', nick: user1Data.nick },
       function(err, data) {
@@ -96,7 +86,7 @@ suite('seneca-user reset suite tests ', function() {
     )
   })
 
-  test('user/create_reset unknown user test', function(done) {
+  it('user/create_reset unknown user test', function(done) {
     si.act(
       {
         role: 'user',
@@ -113,7 +103,7 @@ suite('seneca-user reset suite tests ', function() {
     )
   })
 
-  test('user/login user test', function(done) {
+  it('user/login user test', function(done) {
     si.act(
       { role: 'user', cmd: 'login', nick: user1Data.nick, password: 'x' },
       function(err, data) {
@@ -125,7 +115,7 @@ suite('seneca-user reset suite tests ', function() {
     )
   })
 
-  test('/user/create_reset fails if user inactive', function(done) {
+  it('/user/create_reset fails if user inactive', function(done) {
     si.act(
       { role: 'user', cmd: 'create_reset', nick: user3Data.nick },
       function(err, data) {
