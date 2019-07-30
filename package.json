@@ -58,12 +58,14 @@
   },
   "devDependencies": {
     "@hapi/code": "^6.0.0",
+    "@hapi/joi": "^15.1.0",
     "@hapi/lab": "^19.1.0",
     "async": "^3.1.0",
     "coveralls": "^3.0.5",
     "prettier": "^1.18.2",
     "seneca": "^3.12.1",
     "seneca-basic": "^0.6.0",
+    "seneca-doc": "^0.1.2",
     "seneca-entity": "^4.1.0",
     "seneca-promisify": "^0.8.0"
   },

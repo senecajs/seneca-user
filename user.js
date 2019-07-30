@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2018 Richard Rodger, MIT License */
+/* Copyright (c) 2012-2019 Richard Rodger, MIT License */
 'use strict'
 
 var Crypto = require('crypto')
@@ -6,16 +6,55 @@ var Crypto = require('crypto')
 var _ = require('lodash')
 var Uuid = require('uuid')
 
-/*
-var Eraro = require('eraro')({
-  package: 'seneca-user'
-})
-*/
+
+const Hasher = require('./hasher.js')
+const Docs = require('./user-docs.js')
+
 
 // WARNING: this plugin is for *internal* use, DO NOT expose via an API.
 // See the seneca-auth plugin for an example of an API that uses this plugin.
 
-module.exports = function user(options) {
+module.exports = user
+
+module.exports.errors = {}
+
+module.exports.defaults = {
+  "role": "user",
+  "rounds": 11111,
+  "autopass": true,
+  "mustrepeat": false,
+  "resetperiod": 86400000,
+  "confirm": false,
+  "oldsha": true,
+  "pepper": "",
+  salt_strfmt: 'hex',
+  "failedLoginCount": null,
+  "user": {
+    "fields": [
+      {
+        "name": "pass",
+        "hide": true
+      },
+      {
+        "name": "salt",
+        "hide": true
+      }
+    ]
+  },
+  "login": {
+    "fields": []
+  },
+  "reset": {
+    "fields": []
+  },
+  "updateUser": {
+    "omit": [
+      "role", "cmd", "nick", "email", "name", "active", "username", "password", "salt", "pass", "id", "confirmed", "confirmcode"
+    ]
+  }
+}
+
+function user(options) {
   var seneca = this
 
   var user_canon = 'sys/user'
@@ -25,9 +64,9 @@ module.exports = function user(options) {
   // # Plugin options.
   // These are the defaults. You can override using the _options_ argument.
   // Example: `seneca.use("user",{mustrepeat:true})`.
-  var default_options = require('./default-options.json')
+  // var default_options = require('./default-options.json')
 
-  options = seneca.util.deepextend(default_options, options)
+  // options = seneca.util.deepextend(default_options, options)
 
   // You can change the _role_ value for the plugin patterns.
   // Use this when you want to load multiple versions of the plugin
@@ -35,31 +74,42 @@ module.exports = function user(options) {
   var role = options.role
   var pepper = options.pepper
 
+
   // # Action patterns
   // These define the pattern interface for this plugin.
+  seneca.add('role:'+role+',cmd:encrypt_password', cmd_encrypt_password)
 
-  function conditionalExtend(user, args) {
-    var extra = _.omit(args, options.updateUser.omit)
-    _.map(extra, function(val, key) {
-      if (!key.match(/\$/)) {
-        user[key] = val
-      }
-    })
+
+  Object.assign(cmd_encrypt_password, Docs.cmd_encrypt_password)
+
+
+  // Encrypt password using a salt and multiple SHA512 rounds
+  // Override for password strength checking
+  // - password: password string
+  // - repeat: password repeat, optional
+  // Provides: {pass:,salt:,ok:,why:}
+  // use why if password too weak
+  function cmd_encrypt_password(args, done) {
+    // 128 bits of salt
+    var salt = args.salt || create_salt()
+    var password = args.password
+
+    
+    // TODO: use a queue to rate limit
+    Hasher(
+      {
+        src:pepper + password + salt,
+        rounds:options.rounds
+      },
+      function(err, out) {
+        var hashout = { ok: !err, pass: out.hash, salt: salt }
+        done(err, hashout)
+      })
   }
+  
 
-  // ### Encrypt a plain text password string
-  // Pattern: _**role**:user, **cmd**:encrypt_password_
-  seneca.add(
-    {
-      role: role,
-      cmd: 'encrypt_password',
-
-      password: { type: 'string$' }, // password plain text string
-      repeat: { type: 'string$' } // password plain text string, repeated
-    },
-    cmd_encrypt_password
-  )
-
+  
+  
   // ### Verify a password string
   // Pattern: _**role**:user, **cmd**:verify_password_
   // Has the user entered the correct password?
@@ -358,15 +408,17 @@ module.exports = function user(options) {
   }
 
   function hide(args, propnames) {
-    var outargs = _.extend({}, args)
+    var outargs = Object.assign({}, args)
     for (var pn in propnames) {
       outargs[pn] = '[HIDDEN]'
     }
     return outargs
   }
 
-  function hasher(src, rounds, done) {
-    var out = src
+
+  /*
+  function hasher(spec, done) {
+    var out = spec.src
     var i = 0
 
     // don't chew up the CPU
@@ -375,8 +427,8 @@ module.exports = function user(options) {
       var shasum = Crypto.createHash('sha512')
       shasum.update(out, 'utf8')
       out = shasum.digest('hex')
-      if (rounds <= i) {
-        return done(out)
+      if (spec.rounds <= i) {
+        return done(null,out)
       }
       if (0 === i % 88) {
         return process.nextTick(round)
@@ -386,22 +438,8 @@ module.exports = function user(options) {
 
     round()
   }
-
-  // Encrypt password using a salt and multiple SHA512 rounds
-  // Override for password strength checking
-  // - password: password string
-  // - repeat: password repeat, optional
-  // Provides: {pass:,salt:,ok:,why:}
-  // use why if password too weak
-  function cmd_encrypt_password(args, done) {
-    // 128 bits of salt
-    var salt = args.salt || create_salt()
-    var password = args.password
-
-    hasher(pepper + password + salt, options.rounds, function(pass) {
-      done(null, { ok: true, pass: pass, salt: salt })
-    })
-  }
+  */
+  
 
   function prepare_password_data(args, done) {
     var password = void 0 === args.password ? args.pass : args.password
@@ -444,7 +482,7 @@ module.exports = function user(options) {
   }
 
   function create_salt() {
-    return Crypto.randomBytes(16).toString('ascii')
+    return Crypto.randomBytes(16).toString( options.salt_strfmt )
   }
 
   cmd_encrypt_password.descdata = function(args) {
@@ -477,15 +515,7 @@ module.exports = function user(options) {
 
         var ok = pass === args.pass
 
-        // for backwards compatibility with <= 0.2.3
-        if (!ok && options.oldsha) {
-          var shasum = Crypto.createHash('sha1')
-          shasum.update(args.proposed + args.salt)
-          pass = shasum.digest('hex')
-
-          ok = pass === args.pass
-          return done(null, { ok: ok })
-        } else return done(null, { ok: ok })
+        return done(null, { ok: ok })
       }
     )
   }
@@ -570,7 +600,7 @@ module.exports = function user(options) {
       user.confirmcode = Uuid()
     }
 
-    conditionalExtend(user, args)
+    intern.conditional_extend(options, user, args)
 
     return checknick(function() {
       checkemail(function() {
@@ -1139,32 +1169,42 @@ module.exports = function user(options) {
       if (err) return done(err, { ok: false, why: err })
       if (!user) return done(null, { ok: false, exists: false })
 
-      var pwd = args.password || ''
-      var pwd2 = args.repeat || ''
-
-      if (pwd) {
-        if (pwd === pwd2 && 1 < pwd.length) {
-          seneca.act(
-            'role: ' + role + ', cmd: change_password',
-            _.extend({}, q, { password: pwd }),
-            function(err, userpwd) {
-              if (err) return done(err, { ok: false, why: err })
-              user = userpwd
-            }
-          )
-        } else {
-          return done(null, { ok: false, why: 'user/password_mismatch' })
-        }
-      }
-
       delete args.orig_nick
       delete args.orig_email
 
-      return checknick(function() {
-        checkemail(function() {
-          updateuser(user)
+
+      return changepwd(function(){
+        checknick(function() {
+          checkemail(function() {
+            updateuser(user)
+          })
         })
       })
+
+
+      function changepwd(next) {
+        var pwd = args.password || ''
+        var pwd2 = args.repeat || ''
+
+        if (pwd) {
+          if (pwd === pwd2 && 1 < pwd.length) {
+            seneca.act(
+              'role: ' + role + ', cmd: change_password',
+              Object.assign({}, q, { password: pwd }),
+              function(err, userpwd) {
+                if (err) return done(err, { ok: false, why: err })
+                user.pass = userpwd.user.pass
+                user.salt = userpwd.user.salt
+                next()
+              }
+            )
+          } else {
+            return done(null, { ok: false, why: 'user/password_mismatch' })
+          }
+        }
+        else next()
+      }
+
 
       // unsafe nick unique check, data store should also enforce !!
       function checknick(next) {
@@ -1225,7 +1265,7 @@ module.exports = function user(options) {
         } else if ('' === user.email) {
           done(null, { ok: false, why: 'empty_email' })
         } else {
-          conditionalExtend(user, args)
+          intern.conditional_extend(options, user, args)
 
           // before saving user some cleanup should be done
           cleanUser(user, function(err, user) {
@@ -1310,5 +1350,17 @@ module.exports = function user(options) {
 
   return {
     name: role
+  }
+}
+
+
+var intern = user.intern = {
+  conditional_extend: function (options, user, args) {
+    var extra = _.omit(args, options.updateUser.omit)
+    _.map(extra, function(val, key) {
+      if (!key.match(/\$/)) {
+        user[key] = val
+      }
+    })
   }
 }
