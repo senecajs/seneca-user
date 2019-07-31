@@ -70,7 +70,6 @@ suite('seneca-user activate/deactivate suite tests ', function() {
         password: user1Data.password
       },
       function(err, data) {
-        console.log(err, data)
         expect(err).to.not.exist()
         expect(data.ok).to.be.true()
         fin(err)

@@ -57,16 +57,14 @@
     "uuid": "3.3"
   },
   "devDependencies": {
-    "@hapi/code": "^6.0.0",
-    "@hapi/joi": "^15.1.0",
-    "@hapi/lab": "^19.1.0",
     "async": "^3.1.0",
     "coveralls": "^3.0.5",
     "prettier": "^1.18.2",
-    "seneca": "^3.12.1",
+    "seneca": "plugin",
     "seneca-basic": "^0.6.0",
-    "seneca-doc": "^0.1.2",
+    "seneca-doc": "^0.2.0",
     "seneca-entity": "^4.1.0",
+    "seneca-plugin-validator": "^0.1.1",
     "seneca-promisify": "^0.8.0"
   },
   "repository": {
