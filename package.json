@@ -1,7 +1,7 @@
 {
-  "name": "seneca-user",
+  "name": "@seneca/user",
   "description": "User management plugin for Seneca",
-  "version": "2.1.4",
+  "version": "3.0.0",
   "keywords": [
     "seneca",
     "user",

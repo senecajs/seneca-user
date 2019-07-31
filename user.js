@@ -19,6 +19,7 @@ module.exports = user
 module.exports.errors = {}
 
 module.exports.defaults = {
+  test: false,
   "role": "user",
   "rounds": 11111,
   "autopass": true,
@@ -98,6 +99,7 @@ function user(options) {
     // TODO: use a queue to rate limit
     Hasher(
       {
+        test: options.test,
         src:pepper + password + salt,
         rounds:options.rounds
       },
@@ -587,12 +589,17 @@ function user(options) {
     var seneca = this
     var userent = seneca.make(user_canon)
     var user = userent.make$()
+    var when = new Date()
 
+    
     user.nick = args.nick || args.username || args.email
     user.email = args.email
     user.name = args.name || ''
     user.active = void 0 === args.active ? true : args.active
-    user.when = new Date().toISOString()
+
+    user.when = when.toISOString()
+    user.t_c = when.getTime()
+    
     user.failedLoginCount = 0
 
     if (options.confirm) {

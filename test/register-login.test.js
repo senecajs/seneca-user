@@ -13,6 +13,7 @@ var suite = lab.suite
 var expect = Code.expect
 var it = Shared.make_it(lab)
 
+// NOTE: uses external process as part of test
 var si = Shared.seneca_instance()
 
 var user1Data = {
@@ -31,6 +32,14 @@ var user2Data = {
   active: true
 }
 
+var user_log = []
+
+si.on('act-out', function(msg, res) {
+  if('user' === msg.role) {
+    user_log.push([msg, res])
+  }
+})
+
 suite('seneca-user register-login suite tests ', function() {
 
   it('user/register test', function(done) {
@@ -41,6 +50,11 @@ suite('seneca-user register-login suite tests ', function() {
       expect(err).to.not.exist()
       expect(data.user.repeat).to.not.exist()
       expect(user1Data.nick, data.nick).to.exist()
+
+      var d = new Date()
+      d.setTime(data.user.t_c)
+      expect(d.toISOString()).equal(data.user.when)
+
       done(err)
     })
   })
@@ -137,5 +151,12 @@ suite('seneca-user register-login suite tests ', function() {
         done(err)
       }
     )
+  })
+
+
+  it('user_log', function(fin){
+    expect(user_log.length).above(0)
+    fin()
+    //console.log(user_log)
   })
 })

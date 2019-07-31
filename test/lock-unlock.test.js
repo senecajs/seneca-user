@@ -30,7 +30,7 @@ var user1Data = {
 }
 
 
-var si = Shared.seneca_instance({user: { failedLoginCount: failedCount }})
+var si = Shared.seneca_instance({user: { test: true, failedLoginCount: failedCount }})
 
 
 async function init() {

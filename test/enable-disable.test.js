@@ -35,7 +35,7 @@ var user2Data = {
 }
 
 
-var si = Shared.seneca_instance()
+var si = Shared.seneca_instance({user:{test:true}})
 
 suite('seneca-user activate/deactivate suite tests ', function() {
   it('user/register test', function(fin) {

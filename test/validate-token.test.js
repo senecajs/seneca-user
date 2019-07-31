@@ -26,7 +26,7 @@ var user1Data = {
 
 suite('seneca-user login and token validation suite tests ', function() {
   it('user/login validate token test', function(fin) {
-    var si = Shared.seneca_instance({fin:fin})
+    var si = Shared.seneca_instance({fin:fin,user:{test:true}})
     si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function() {
       si.act(
         {
@@ -52,7 +52,7 @@ suite('seneca-user login and token validation suite tests ', function() {
   })
 
   it('user/login validate token after logout', function(fin) {
-    var si = Shared.seneca_instance({fin:fin})
+    var si = Shared.seneca_instance({fin:fin,user:{test:true}})
     si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function() {
       
       si.act(

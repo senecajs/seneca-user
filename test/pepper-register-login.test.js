@@ -13,7 +13,7 @@ var suite = lab.suite
 var expect = Code.expect
 var it = Shared.make_it(lab)
 
-var si = Shared.seneca_instance({user:{ pepper: 'Please generate your own pepper for production' }})
+var si = Shared.seneca_instance({user:{ test: true, pepper: 'Please generate your own pepper for production' }})
 
 var user1Data = {
   nick: 'nick1',

@@ -7,12 +7,18 @@ const ChildProcess = require('child_process')
 
 
 module.exports = function hasher(spec, done) {
-  const process = ChildProcess.fork(__dirname+'/hasher.js')
-  process.send(spec)
-  process.on('message', async (msg) => {
-    done(null, {hash:msg.hash})
-  })
-  process.on('error', done)
+  if(spec.test) {
+    var hash = runhash({src:spec.src, rounds:1})
+    return done(null,{hash:hash})
+  }
+  else {
+    const process = ChildProcess.fork(__dirname+'/hasher.js')
+    process.send(spec)
+    process.on('message', async (msg) => {
+      done(null, {hash:msg.hash})
+    })
+    process.on('error', done)
+  }
 }
 
 process.on('message', async (msg) => {
