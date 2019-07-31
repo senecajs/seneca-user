@@ -1,7 +1,7 @@
 {
   "name": "@seneca/user",
   "description": "User management plugin for Seneca",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "keywords": [
     "seneca",
     "user",
@@ -28,7 +28,8 @@
     "LICENSE",
     "README.md",
     "user.js",
-    "default-options.json"
+    "user-docs.js",
+    "lib/hasher.js"
   ],
   "contributors": [
     "Mircea Alexandru <mircea.alexandru@gmail.com> (http://www.alexandrumircea.ro)",

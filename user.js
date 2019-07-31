@@ -6,7 +6,7 @@ var Crypto = require('crypto')
 var _ = require('lodash')
 var Uuid = require('uuid')
 
-const Hasher = require('./hasher.js')
+const Hasher = require('./lib/hasher.js')
 const Docs = require('./user-docs.js')
 
 // WARNING: this plugin is for *internal* use, DO NOT expose via an API.
