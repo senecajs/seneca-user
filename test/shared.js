@@ -13,7 +13,7 @@ module.exports = {
       .use('promisify')
       .use('basic')
       .use('entity')
-      .use('..',opts.user)
+      .use('..', opts.user)
   },
 
   make_it: function(lab) {

@@ -13,9 +13,7 @@ var suite = lab.suite
 var expect = Code.expect
 var it = Shared.make_it(lab)
 
-var si = Shared.seneca_instance({user:{test:true}})
-
-
+var si = Shared.seneca_instance({ user: { test: true } })
 
 var user1Data = {
   nick: 'nick1',
@@ -32,27 +30,26 @@ var user2Data = {
 }
 
 suite('seneca-user update suite tests ', function() {
-
   it('user/register test user1', function(done) {
-    si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function(
-      err,
-      data
-    ) {
-      expect(err).to.not.exist()
-      expect(data.user.nick).to.equal(user1Data.nick)
-      done(err)
-    })
+    si.act(
+      Object.assign({ role: 'user', cmd: 'register' }, user1Data),
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.user.nick).to.equal(user1Data.nick)
+        done(err)
+      }
+    )
   })
 
   it('user/register test user2', function(done) {
-    si.act(Object.assign({ role: 'user', cmd: 'register' }, user2Data), function(
-      err,
-      data
-    ) {
-      expect(err).to.not.exist()
-      expect(data.user.nick).to.equal(user2Data.nick)
-      done(err)
-    })
+    si.act(
+      Object.assign({ role: 'user', cmd: 'register' }, user2Data),
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.user.nick).to.equal(user2Data.nick)
+        done(err)
+      }
+    )
   })
 
   it('user/update test', function(done) {
@@ -127,7 +124,6 @@ suite('seneca-user update suite tests ', function() {
       }
     )
   })
-
 
   it('user/login user test after update and change password', function(done) {
     si.act(

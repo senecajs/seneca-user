@@ -14,11 +14,9 @@ var suite = lab.suite
 var expect = Code.expect
 var it = Shared.make_it(lab)
 
-
 var wrongPassword = 'fail1fail'
 var resetPassword = 'reset1reset'
 var failedCount = 3
-
 
 var user_canon = 'sys/user'
 var user1Data = {
@@ -29,25 +27,25 @@ var user1Data = {
   id: ''
 }
 
-
-var si = Shared.seneca_instance({user: { test: true, failedLoginCount: failedCount }})
-
+var si = Shared.seneca_instance({
+  user: { test: true, failedLoginCount: failedCount }
+})
 
 async function init() {
-  return new Promise((resolve)=>{
+  return new Promise(resolve => {
     si.make(user_canon).remove$({ all$: true }, function(err) {
       expect(err).to.not.exist()
-      
+
       si.act({ role: 'user', cmd: 'register' }, user1Data, function(err, data) {
         expect(err).to.not.exist()
         expect(data.user.nick).to.equal(user1Data.nick)
         user1Data.id = data.user.id
-        
+
         si.act(
           {
             role: 'user',
             cmd: 'login',
-              nick: user1Data.nick,
+            nick: user1Data.nick,
             password: user1Data.password
           },
           function(err, data) {
@@ -64,17 +62,16 @@ async function init() {
 
 suite('seneca-user default lock tests ', function() {
   lab.beforeEach(init)
-  
+
   it('No lock by default', function(done) {
     var si = Shared.seneca_instance()
-    
+
     si.act({ role: 'user', cmd: 'register' }, user1Data, function(err, data) {
       expect(err).to.not.exist()
 
       Async.timesSeries(
         failedCount + 5,
         function(n, next) {
-
           si.act(
             {
               role: 'user',
@@ -86,7 +83,7 @@ suite('seneca-user default lock tests ', function() {
               expect(err).to.not.exist()
               expect(data.ok).to.be.false()
               expect(data.why).to.equal('invalid-password')
-              
+
               next()
             }
           )
@@ -100,10 +97,8 @@ suite('seneca-user default lock tests ', function() {
   })
 })
 
-
 suite('seneca-user lock tests ', function() {
   lab.beforeEach(init)
-
 
   it('Lock after failedLoginCount attempts', function(done) {
     Async.timesSeries(

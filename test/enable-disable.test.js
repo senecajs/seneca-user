@@ -15,9 +15,6 @@ var suite = lab.suite
 var expect = Code.expect
 var it = Shared.make_it(lab)
 
-
-
-
 var user1Data = {
   nick: 'nick1',
   email: 'nick1@example.com',
@@ -34,30 +31,29 @@ var user2Data = {
   active: true
 }
 
-
-var si = Shared.seneca_instance({user:{test:true}})
+var si = Shared.seneca_instance({ user: { test: true } })
 
 suite('seneca-user activate/deactivate suite tests ', function() {
   it('user/register test', function(fin) {
-    si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function(
-      err,
-      data
-    ) {
-      expect(err).to.not.exist()
-      expect(data.user.nick).to.equal(user1Data.nick)
-      fin(err)
-    })
+    si.act(
+      Object.assign({ role: 'user', cmd: 'register' }, user1Data),
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.user.nick).to.equal(user1Data.nick)
+        fin(err)
+      }
+    )
   })
 
   it('user/register test', function(fin) {
-    si.act(Object.assign({ role: 'user', cmd: 'register' }, user2Data), function(
-      err,
-      data
-    ) {
-      expect(err).to.not.exist()
-      expect(data.user.nick).to.equal(user2Data.nick)
-      fin(err)
-    })
+    si.act(
+      Object.assign({ role: 'user', cmd: 'register' }, user2Data),
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.user.nick).to.equal(user2Data.nick)
+        fin(err)
+      }
+    )
   })
 
   it('user/login user test mark-0', function(fin) {

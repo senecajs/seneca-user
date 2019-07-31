@@ -6,10 +6,8 @@ var Crypto = require('crypto')
 var _ = require('lodash')
 var Uuid = require('uuid')
 
-
 const Hasher = require('./hasher.js')
 const Docs = require('./user-docs.js')
-
 
 // WARNING: this plugin is for *internal* use, DO NOT expose via an API.
 // See the seneca-auth plugin for an example of an API that uses this plugin.
@@ -20,37 +18,49 @@ module.exports.errors = {}
 
 module.exports.defaults = {
   test: false,
-  "role": "user",
-  "rounds": 11111,
-  "autopass": true,
-  "mustrepeat": false,
-  "resetperiod": 86400000,
-  "confirm": false,
-  "oldsha": true,
-  "pepper": "",
+  role: 'user',
+  rounds: 11111,
+  autopass: true,
+  mustrepeat: false,
+  resetperiod: 86400000,
+  confirm: false,
+  oldsha: true,
+  pepper: '',
   salt_strfmt: 'hex',
-  "failedLoginCount": null,
-  "user": {
-    "fields": [
+  failedLoginCount: null,
+  user: {
+    fields: [
       {
-        "name": "pass",
-        "hide": true
+        name: 'pass',
+        hide: true
       },
       {
-        "name": "salt",
-        "hide": true
+        name: 'salt',
+        hide: true
       }
     ]
   },
-  "login": {
-    "fields": []
+  login: {
+    fields: []
   },
-  "reset": {
-    "fields": []
+  reset: {
+    fields: []
   },
-  "updateUser": {
-    "omit": [
-      "role", "cmd", "nick", "email", "name", "active", "username", "password", "salt", "pass", "id", "confirmed", "confirmcode"
+  updateUser: {
+    omit: [
+      'role',
+      'cmd',
+      'nick',
+      'email',
+      'name',
+      'active',
+      'username',
+      'password',
+      'salt',
+      'pass',
+      'id',
+      'confirmed',
+      'confirmcode'
     ]
   }
 }
@@ -75,14 +85,11 @@ function user(options) {
   var role = options.role
   var pepper = options.pepper
 
-
   // # Action patterns
   // These define the pattern interface for this plugin.
-  seneca.add('role:'+role+',cmd:encrypt_password', cmd_encrypt_password)
-
+  seneca.add('role:' + role + ',cmd:encrypt_password', cmd_encrypt_password)
 
   Object.assign(cmd_encrypt_password, Docs.cmd_encrypt_password)
-
 
   // Encrypt password using a salt and multiple SHA512 rounds
   // Override for password strength checking
@@ -95,23 +102,20 @@ function user(options) {
     var salt = args.salt || create_salt()
     var password = args.password
 
-    
     // TODO: use a queue to rate limit
     Hasher(
       {
         test: options.test,
-        src:pepper + password + salt,
-        rounds:options.rounds
+        src: pepper + password + salt,
+        rounds: options.rounds
       },
       function(err, out) {
         var hashout = { ok: !err, pass: out.hash, salt: salt }
         done(err, hashout)
-      })
+      }
+    )
   }
-  
 
-  
-  
   // ### Verify a password string
   // Pattern: _**role**:user, **cmd**:verify_password_
   // Has the user entered the correct password?
@@ -328,18 +332,15 @@ function user(options) {
   // Action Implementations
 
   function cmd_load_user(args, done) {
-
     var q = {}
     if (args.id) q.id = args.id
     if (args.email) q.email = args.email
     if (args.nick) q.nick = args.nick
-   
-    seneca
-      .make(user_canon)
-      .load$(q, function(err, user) {
-        if (err) return done(err)
-        return done(null, { ok: true, user: user })
-      })
+
+    seneca.make(user_canon).load$(q, function(err, user) {
+      if (err) return done(err)
+      return done(null, { ok: true, user: user })
+    })
   }
 
   function resolve_user(cmd, fail) {
@@ -417,7 +418,6 @@ function user(options) {
     return outargs
   }
 
-
   /*
   function hasher(spec, done) {
     var out = spec.src
@@ -441,7 +441,6 @@ function user(options) {
     round()
   }
   */
-  
 
   function prepare_password_data(args, done) {
     var password = void 0 === args.password ? args.pass : args.password
@@ -484,7 +483,7 @@ function user(options) {
   }
 
   function create_salt() {
-    return Crypto.randomBytes(16).toString( options.salt_strfmt )
+    return Crypto.randomBytes(16).toString(options.salt_strfmt)
   }
 
   cmd_encrypt_password.descdata = function(args) {
@@ -591,7 +590,6 @@ function user(options) {
     var user = userent.make$()
     var when = new Date()
 
-    
     user.nick = args.nick || args.username || args.email
     user.email = args.email
     user.name = args.name || ''
@@ -599,7 +597,7 @@ function user(options) {
 
     user.when = when.toISOString()
     user.t_c = when.getTime()
-    
+
     user.failedLoginCount = 0
 
     if (options.confirm) {
@@ -1179,15 +1177,13 @@ function user(options) {
       delete args.orig_nick
       delete args.orig_email
 
-
-      return changepwd(function(){
+      return changepwd(function() {
         checknick(function() {
           checkemail(function() {
             updateuser(user)
           })
         })
       })
-
 
       function changepwd(next) {
         var pwd = args.password || ''
@@ -1208,10 +1204,8 @@ function user(options) {
           } else {
             return done(null, { ok: false, why: 'user/password_mismatch' })
           }
-        }
-        else next()
+        } else next()
       }
-
 
       // unsafe nick unique check, data store should also enforce !!
       function checknick(next) {
@@ -1360,9 +1354,8 @@ function user(options) {
   }
 }
 
-
-var intern = user.intern = {
-  conditional_extend: function (options, user, args) {
+var intern = (user.intern = {
+  conditional_extend: function(options, user, args) {
     var extra = _.omit(args, options.updateUser.omit)
     _.map(extra, function(val, key) {
       if (!key.match(/\$/)) {
@@ -1370,4 +1363,4 @@ var intern = user.intern = {
       }
     })
   }
-}
+})

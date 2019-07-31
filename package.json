@@ -62,7 +62,7 @@
     "prettier": "^1.18.2",
     "seneca": "plugin",
     "seneca-basic": "^0.6.0",
-    "seneca-doc": "^0.2.0",
+    "seneca-doc": "^0.2.2",
     "seneca-entity": "^4.1.0",
     "seneca-plugin-validator": "^0.1.1",
     "seneca-promisify": "^0.8.0"

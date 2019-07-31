@@ -13,7 +13,9 @@ var suite = lab.suite
 var expect = Code.expect
 var it = Shared.make_it(lab)
 
-var si = Shared.seneca_instance({user:{ test: true, pepper: 'Please generate your own pepper for production' }})
+var si = Shared.seneca_instance({
+  user: { test: true, pepper: 'Please generate your own pepper for production' }
+})
 
 var user1Data = {
   nick: 'nick1',
@@ -32,28 +34,27 @@ var user2Data = {
 }
 
 suite('seneca-user register-login suite tests ', function() {
-
   it('user/register test', function(done) {
-    si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function(
-      err,
-      data
-    ) {
-      expect(err).to.not.exist()
-      expect(data.user.repeat).to.not.exist()
-      expect(user1Data.nick, data.nick).to.exist()
-      done(err)
-    })
+    si.act(
+      Object.assign({ role: 'user', cmd: 'register' }, user1Data),
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.user.repeat).to.not.exist()
+        expect(user1Data.nick, data.nick).to.exist()
+        done(err)
+      }
+    )
   })
 
   it('user/register test', function(done) {
-    si.act(Object.assign({ role: 'user', cmd: 'register' }, user2Data), function(
-      err,
-      data
-    ) {
-      expect(err).to.not.exist()
-      expect(data.user.nick).to.equal(user2Data.nick)
-      done(err)
-    })
+    si.act(
+      Object.assign({ role: 'user', cmd: 'register' }, user2Data),
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.user.nick).to.equal(user2Data.nick)
+        done(err)
+      }
+    )
   })
 
   it('user/login test', function(done) {
@@ -79,15 +80,15 @@ suite('seneca-user register-login suite tests ', function() {
   })
 
   it('user/register unique nick test', function(done) {
-    si.act(Object.assign({ role: 'user', cmd: 'register' }, user1Data), function(
-      err,
-      data
-    ) {
-      expect(err).to.not.exist()
-      expect(data.ok).to.be.false()
-      expect(data.why).to.equal('nick-exists')
-      done(err)
-    })
+    si.act(
+      Object.assign({ role: 'user', cmd: 'register' }, user1Data),
+      function(err, data) {
+        expect(err).to.not.exist()
+        expect(data.ok).to.be.false()
+        expect(data.why).to.equal('nick-exists')
+        done(err)
+      }
+    )
   })
 
   it('user/register password mismatch test', function(done) {

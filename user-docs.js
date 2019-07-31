@@ -5,18 +5,20 @@ module.exports = {
     desc: 'Encrypt a plain text password string.',
     examples: {
       'password:foo,repeat:foo':
-      'Result: {ok:true,pass:_encrypted-string_, salt:_string_}'
+        'Result: {ok:true,pass:_encrypted-string_, salt:_string_}'
     },
     validate: {
-      password: Joi.string().required()
+      password: Joi.string()
+        .required()
         .description('Password plain text string.'),
-      repeat: Joi.string().required()
+      repeat: Joi.string()
+        .required()
         .description('Password plain text string, repeated.')
     },
     reply_desc: {
       ok: '_true_ if encryption succeeded',
       pass: 'encrypted password string',
-      salt: 'salt value string',
+      salt: 'salt value string'
     }
-  },
+  }
 }
