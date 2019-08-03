@@ -53,9 +53,9 @@ Encrypt a plain text password string.
 #### Parameters
 
 
-* _password_: string <i><small>{presence:required}</small></i>
+* _password_: string
   * Password plain text string.
-* _repeat_: string <i><small>{presence:required}</small></i>
+* _repeat_: string
   * Password plain text string, repeated.
 
 

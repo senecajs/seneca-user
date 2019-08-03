@@ -8,10 +8,8 @@ module.exports = {
         'Result: {ok:true,pass:_encrypted-string_, salt:_string_}'
     },
     validate: {
-      password: Joi.string()
-        .description('Password plain text string.'),
-      repeat: Joi.string()
-        .description('Password plain text string, repeated.')
+      password: Joi.string().description('Password plain text string.'),
+      repeat: Joi.string().description('Password plain text string, repeated.')
     },
     reply_desc: {
       ok: '_true_ if encryption succeeded',
