@@ -442,7 +442,7 @@ function user(options) {
   }
   */
 
-  function prepare_password_data(args, done) {
+  function prepare_password_data(seneca, args, done) {
     var password = void 0 === args.password ? args.pass : args.password
     var repeat = args.repeat
 
@@ -650,7 +650,7 @@ function user(options) {
     }
 
     function saveuser() {
-      prepare_password_data(args, function(err, data) {
+      prepare_password_data(seneca, args, function(err, data) {
         if (err) {
           return done(err)
         }

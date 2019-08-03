@@ -9,10 +9,8 @@ module.exports = {
     },
     validate: {
       password: Joi.string()
-        .required()
         .description('Password plain text string.'),
       repeat: Joi.string()
-        .required()
         .description('Password plain text string, repeated.')
     },
     reply_desc: {
