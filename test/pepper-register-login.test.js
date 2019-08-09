@@ -35,32 +35,32 @@ var user2Data = {
 
 suite('seneca-user register-login suite tests ', function() {
   it('user/register test', function(done) {
-    si.act(
-      Object.assign({ role: 'user', cmd: 'register' }, user1Data),
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.user.repeat).to.not.exist()
-        expect(user1Data.nick, data.nick).to.exist()
-        done(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'register', user: user1Data }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.user.repeat).to.not.exist()
+      expect(user1Data.nick, data.nick).to.exist()
+      done(err)
+    })
   })
 
   it('user/register test', function(done) {
-    si.act(
-      Object.assign({ role: 'user', cmd: 'register' }, user2Data),
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.user.nick).to.equal(user2Data.nick)
-        done(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'register', user: user2Data }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user2Data.nick)
+      done(err)
+    })
   })
 
   it('user/login test', function(done) {
     si.act(
       {
-        role: 'user',
+        sys: 'user',
         cmd: 'login',
         nick: user1Data.nick,
         password: user1Data.password
@@ -80,23 +80,24 @@ suite('seneca-user register-login suite tests ', function() {
   })
 
   it('user/register unique nick test', function(done) {
-    si.act(
-      Object.assign({ role: 'user', cmd: 'register' }, user1Data),
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.ok).to.be.false()
-        expect(data.why).to.equal('nick-exists')
-        done(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'register', user: user1Data }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.false()
+      expect(data.why).to.equal('nick-exists')
+      done(err)
+    })
   })
 
   it('user/register password mismatch test', function(done) {
     si.act(
-      Object.assign(
-        { role: 'user', cmd: 'register' },
-        { nick: 'npm', password: 'a', repeat: 'b' }
-      ),
+      {
+        sys: 'user',
+        cmd: 'register',
+        user: { nick: 'npm', password: 'a', repeat: 'b' }
+      },
       function(err, data) {
         expect(err).to.not.exist()
         expect(data.ok).to.be.false()
@@ -109,7 +110,7 @@ suite('seneca-user register-login suite tests ', function() {
   it('user/login invalid user test', function(done) {
     si.act(
       {
-        role: 'user',
+        sys: 'user',
         cmd: 'login',
         nick: user1Data.nick + 'x',
         password: user1Data.password
@@ -126,7 +127,7 @@ suite('seneca-user register-login suite tests ', function() {
   it('user/login invalid password test', function(done) {
     si.act(
       {
-        role: 'user',
+        sys: 'user',
         cmd: 'login',
         nick: user1Data.nick,
         password: user1Data.password + 'x'

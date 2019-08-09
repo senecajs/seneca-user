@@ -38,56 +38,56 @@ var user3Data = {
 
 suite('seneca-user reset suite tests ', function() {
   it('user/register test', function(done) {
-    si.act(
-      Object.assign({ role: 'user', cmd: 'register' }, user1Data),
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.user.nick).to.equal(user1Data.nick)
-        done(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'register', user: user1Data }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user1Data.nick)
+      done(err)
+    })
   })
 
   it('user/register test', function(done) {
-    si.act(
-      Object.assign({ role: 'user', cmd: 'register' }, user2Data),
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.user.nick).to.equal(user2Data.nick)
-        done(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'register', user: user2Data }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user2Data.nick)
+      done(err)
+    })
   })
 
   it('user/register test', function(done) {
-    si.act(
-      Object.assign({ role: 'user', cmd: 'register' }, user3Data),
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.user.nick).to.equal(user3Data.nick)
-        done(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'register', user: user3Data }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user3Data.nick)
+      done(err)
+    })
   })
 
   var resetId
   it('user/create_reset unknown user test', function(done) {
-    si.act(
-      { role: 'user', cmd: 'create_reset', nick: user1Data.nick },
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.ok).to.be.true()
-        expect(data.reset.id).to.exist()
-        resetId = data.reset.token
-        done(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'create_reset', nick: user1Data.nick }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.true()
+      expect(data.reset.id).to.exist()
+      resetId = data.reset.token
+      done(err)
+    })
   })
 
   it('user/create_reset unknown user test', function(done) {
     si.act(
       {
-        role: 'user',
+        sys: 'user',
         cmd: 'execute_reset',
         token: resetId,
         password: 'x',
@@ -103,7 +103,7 @@ suite('seneca-user reset suite tests ', function() {
 
   it('user/login user test', function(done) {
     si.act(
-      { role: 'user', cmd: 'login', nick: user1Data.nick, password: 'x' },
+      { sys: 'user', cmd: 'login', nick: user1Data.nick, password: 'x' },
       function(err, data) {
         expect(err).to.not.exist()
         expect(data.ok).to.be.true()
@@ -114,14 +114,14 @@ suite('seneca-user reset suite tests ', function() {
   })
 
   it('/user/create_reset fails if user inactive', function(done) {
-    si.act(
-      { role: 'user', cmd: 'create_reset', nick: user3Data.nick },
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.ok).to.be.false()
-        expect(data.why).to.equal('not-active')
-        done(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'create_reset', nick: user3Data.nick }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.ok).to.be.false()
+      expect(data.why).to.equal('not-active')
+      done(err)
+    })
   })
 })

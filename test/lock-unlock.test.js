@@ -36,14 +36,17 @@ async function init() {
     si.make(user_canon).remove$({ all$: true }, function(err) {
       expect(err).to.not.exist()
 
-      si.act({ role: 'user', cmd: 'register' }, user1Data, function(err, data) {
+      si.act({ sys: 'user', cmd: 'register', user: user1Data }, function(
+        err,
+        data
+      ) {
         expect(err).to.not.exist()
         expect(data.user.nick).to.equal(user1Data.nick)
         user1Data.id = data.user.id
 
         si.act(
           {
-            role: 'user',
+            sys: 'user',
             cmd: 'login',
             nick: user1Data.nick,
             password: user1Data.password
@@ -66,7 +69,10 @@ suite('seneca-user default lock tests ', function() {
   it('No lock by default', function(done) {
     var si = Shared.seneca_instance()
 
-    si.act({ role: 'user', cmd: 'register' }, user1Data, function(err, data) {
+    si.act({ sys: 'user', cmd: 'register', user: user1Data }, function(
+      err,
+      data
+    ) {
       expect(err).to.not.exist()
 
       Async.timesSeries(
@@ -74,7 +80,7 @@ suite('seneca-user default lock tests ', function() {
         function(n, next) {
           si.act(
             {
-              role: 'user',
+              sys: 'user',
               cmd: 'login',
               nick: data.user.nick,
               password: wrongPassword
@@ -106,7 +112,7 @@ suite('seneca-user lock tests ', function() {
       function(n, next) {
         si.act(
           {
-            role: 'user',
+            sys: 'user',
             cmd: 'login',
             nick: user1Data.nick,
             password: wrongPassword
@@ -126,7 +132,7 @@ suite('seneca-user lock tests ', function() {
 
         si.act(
           {
-            role: 'user',
+            sys: 'user',
             cmd: 'login',
             nick: user1Data.nick,
             password: user1Data.password
@@ -149,7 +155,7 @@ suite('seneca-user lock tests ', function() {
       function(n, next) {
         if (n === failedCount - 1) {
           si.act(
-            { role: 'user', cmd: 'create_reset', nick: user1Data.nick },
+            { sys: 'user', cmd: 'create_reset', nick: user1Data.nick },
             function(err, data) {
               expect(err).to.not.exist()
               expect(data.ok).to.be.true()
@@ -158,7 +164,7 @@ suite('seneca-user lock tests ', function() {
 
               si.act(
                 {
-                  role: 'user',
+                  sys: 'user',
                   cmd: 'execute_reset',
                   token: resetId,
                   password: resetPassword,
@@ -175,7 +181,7 @@ suite('seneca-user lock tests ', function() {
         } else {
           si.act(
             {
-              role: 'user',
+              sys: 'user',
               cmd: 'login',
               nick: user1Data.nick,
               password: wrongPassword
@@ -206,7 +212,7 @@ suite('seneca-user lock tests ', function() {
         var pass = loginSucceeds ? user1Data.password : wrongPassword
 
         si.act(
-          { role: 'user', cmd: 'login', nick: user1Data.nick, password: pass },
+          { sys: 'user', cmd: 'login', nick: user1Data.nick, password: pass },
           function(err, data) {
             expect(err).to.not.exist()
             expect(data.ok).to.equal(loginSucceeds)
@@ -230,7 +236,7 @@ suite('seneca-user lock tests ', function() {
       function(n, next) {
         si.act(
           {
-            role: 'user',
+            sys: 'user',
             cmd: 'login',
             nick: user1Data.nick,
             password: wrongPassword
@@ -247,7 +253,7 @@ suite('seneca-user lock tests ', function() {
       },
       function(err, results) {
         expect(err).to.not.exist()
-        si.act({ role: 'user', cmd: 'unlock', id: user1Data.id }, function(
+        si.act({ sys: 'user', cmd: 'unlock', id: user1Data.id }, function(
           err,
           data
         ) {
@@ -256,7 +262,7 @@ suite('seneca-user lock tests ', function() {
 
           si.act(
             {
-              role: 'user',
+              sys: 'user',
               cmd: 'login',
               nick: user1Data.nick,
               password: user1Data.password

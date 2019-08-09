@@ -35,32 +35,32 @@ var si = Shared.seneca_instance({ user: { test: true } })
 
 suite('seneca-user activate/deactivate suite tests ', function() {
   it('user/register test', function(fin) {
-    si.act(
-      Object.assign({ role: 'user', cmd: 'register' }, user1Data),
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.user.nick).to.equal(user1Data.nick)
-        fin(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'register', user: user1Data }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user1Data.nick)
+      fin(err)
+    })
   })
 
   it('user/register test', function(fin) {
-    si.act(
-      Object.assign({ role: 'user', cmd: 'register' }, user2Data),
-      function(err, data) {
-        expect(err).to.not.exist()
-        expect(data.user.nick).to.equal(user2Data.nick)
-        fin(err)
-      }
-    )
+    si.act({ sys: 'user', cmd: 'register', user: user2Data }, function(
+      err,
+      data
+    ) {
+      expect(err).to.not.exist()
+      expect(data.user.nick).to.equal(user2Data.nick)
+      fin(err)
+    })
   })
 
   it('user/login user test mark-0', function(fin) {
     // var si = seneca_instance().test(fin)
     si.act(
       {
-        role: 'user',
+        sys: 'user',
         cmd: 'login',
         nick: user1Data.nick,
         password: user1Data.password
@@ -74,7 +74,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
   })
 
   it('user/disable user test', function(fin) {
-    si.act({ role: 'user', cmd: 'deactivate', nick: user1Data.nick }, function(
+    si.act({ sys: 'user', cmd: 'deactivate', nick: user1Data.nick }, function(
       err,
       data
     ) {
@@ -87,7 +87,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
   it('user/login user test', function(fin) {
     si.act(
       {
-        role: 'user',
+        sys: 'user',
         cmd: 'login',
         nick: user1Data.nick,
         password: user1Data.password
@@ -102,7 +102,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
   })
 
   it('user/enable user test', function(fin) {
-    si.act({ role: 'user', cmd: 'activate', nick: user1Data.nick }, function(
+    si.act({ sys: 'user', cmd: 'activate', nick: user1Data.nick }, function(
       err,
       data
     ) {
@@ -115,7 +115,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
   it('user/verify password user test', function(fin) {
     si.act(
       {
-        role: 'user',
+        sys: 'user',
         cmd: 'login',
         nick: user1Data.nick,
         password: user1Data.password
@@ -127,7 +127,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
         expect(data.user.pass).to.exist()
         si.act(
           {
-            role: 'user',
+            sys: 'user',
             cmd: 'verify_password',
             proposed: user1Data.password,
             salt: user1Data.salt,
@@ -146,7 +146,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
   it('user/incorrect verify password user test', function(fin) {
     si.act(
       {
-        role: 'user',
+        sys: 'user',
         cmd: 'login',
         nick: user1Data.nick,
         password: user1Data.password
@@ -158,7 +158,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
         expect(data.user.pass).to.exist()
         si.act(
           {
-            role: 'user',
+            sys: 'user',
             cmd: 'verify_password',
             proposed: user1Data.password + '1',
             salt: user1Data.salt,
@@ -177,7 +177,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
   it('user/login user test', function(fin) {
     si.act(
       {
-        role: 'user',
+        sys: 'user',
         cmd: 'login',
         nick: user1Data.nick,
         password: user1Data.password
@@ -191,7 +191,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
   })
 
   it('user/disable unknown user test', function(fin) {
-    si.act({ role: 'user', cmd: 'deactivate' }, function(err, data) {
+    si.act({ sys: 'user', cmd: 'deactivate' }, function(err, data) {
       expect(err).to.not.exist()
       expect(data.ok).to.be.false()
       expect(data.why).to.equal('cannot-identify-user')
@@ -200,7 +200,7 @@ suite('seneca-user activate/deactivate suite tests ', function() {
   })
 
   it('user/enable unknown user test', function(fin) {
-    si.act({ role: 'user', cmd: 'activate' }, function(err, data) {
+    si.act({ sys: 'user', cmd: 'activate' }, function(err, data) {
       expect(err).to.not.exist()
       expect(data.ok).to.be.false()
       expect(data.why).to.equal('cannot-identify-user')

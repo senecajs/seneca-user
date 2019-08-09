@@ -5,29 +5,28 @@
 
 ## Action Patterns
 
-* [cmd:encrypt_password,role:user](#-cmdencrypt_passwordroleuser-)
-* [cmd:verify_password,role:user](#-cmdverify_passwordroleuser-)
-* [cmd:change_password,role:user](#-cmdchange_passwordroleuser-)
-* [cmd:register,role:user](#-cmdregisterroleuser-)
-* [cmd:login,role:user](#-cmdloginroleuser-)
-* [cmd:confirm,role:user](#-cmdconfirmroleuser-)
-* [cmd:auth,role:user](#-cmdauthroleuser-)
-* [cmd:logout,role:user](#-cmdlogoutroleuser-)
-* [cmd:clean,role:user](#-cmdcleanroleuser-)
-* [cmd:create_reset,role:user](#-cmdcreate_resetroleuser-)
-* [cmd:load_reset,role:user](#-cmdload_resetroleuser-)
-* [cmd:execute_reset,role:user](#-cmdexecute_resetroleuser-)
-* [cmd:update,role:user](#-cmdupdateroleuser-)
-* [cmd:unlock,role:user](#-cmdunlockroleuser-)
-* [cmd:enable,role:user](#-cmdenableroleuser-)
-* [cmd:activate,role:user](#-cmdactivateroleuser-)
-* [cmd:disable,role:user](#-cmddisableroleuser-)
-* [cmd:deactivate,role:user](#-cmddeactivateroleuser-)
-* [cmd:delete,role:user](#-cmddeleteroleuser-)
-* [cmd:remove,role:user](#-cmdremoveroleuser-)
-* [cmd:entity,role:user](#-cmdentityroleuser-)
-* [get:user,role:user](#-getuserroleuser-)
-* [init:user](#-inituser-)
+* [cmd:encrypt_password,sys:user](#-cmdencrypt_passwordsysuser-)
+* [cmd:register,sys:user](#-cmdregistersysuser-)
+* [cmd:login,sys:user](#-cmdloginsysuser-)
+* [cmd:verify_password,sys:user](#-cmdverify_passwordsysuser-)
+* [cmd:change_password,sys:user](#-cmdchange_passwordsysuser-)
+* [cmd:confirm,sys:user](#-cmdconfirmsysuser-)
+* [cmd:auth,sys:user](#-cmdauthsysuser-)
+* [cmd:logout,sys:user](#-cmdlogoutsysuser-)
+* [cmd:clean,sys:user](#-cmdcleansysuser-)
+* [cmd:create_reset,sys:user](#-cmdcreate_resetsysuser-)
+* [cmd:load_reset,sys:user](#-cmdload_resetsysuser-)
+* [cmd:execute_reset,sys:user](#-cmdexecute_resetsysuser-)
+* [cmd:update,sys:user](#-cmdupdatesysuser-)
+* [cmd:unlock,sys:user](#-cmdunlocksysuser-)
+* [cmd:enable,sys:user](#-cmdenablesysuser-)
+* [cmd:activate,sys:user](#-cmdactivatesysuser-)
+* [cmd:disable,sys:user](#-cmddisablesysuser-)
+* [cmd:deactivate,sys:user](#-cmddeactivatesysuser-)
+* [cmd:delete,sys:user](#-cmddeletesysuser-)
+* [cmd:remove,sys:user](#-cmdremovesysuser-)
+* [cmd:entity,sys:user](#-cmdentitysysuser-)
+* [get:user,sys:user](#-getusersysuser-)
 
 
 <!--END:action-list-->
@@ -37,7 +36,7 @@
 
 ## Action Descriptions
 
-### &laquo; `cmd:encrypt_password,role:user` &raquo;
+### &laquo; `cmd:encrypt_password,sys:user` &raquo;
 
 Encrypt a plain text password string.
 
@@ -48,7 +47,7 @@ Encrypt a plain text password string.
 
 
 
-* `cmd:encrypt_password,role:user,password:foo,repeat:foo`
+* `cmd:encrypt_password,sys:user,password:foo,repeat:foo`
   * Result: {ok:true,pass:_encrypted-string_, salt:_string_}
 #### Parameters
 
@@ -74,7 +73,21 @@ Encrypt a plain text password string.
 
 
 ----------
-### &laquo; `cmd:verify_password,role:user` &raquo;
+### &laquo; `cmd:register,sys:user` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `cmd:login,sys:user` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `cmd:verify_password,sys:user` &raquo;
 
 No description provided.
 
@@ -100,7 +113,7 @@ No description provided.
 
 
 ----------
-### &laquo; `cmd:change_password,role:user` &raquo;
+### &laquo; `cmd:change_password,sys:user` &raquo;
 
 No description provided.
 
@@ -131,71 +144,7 @@ No description provided.
 
 
 ----------
-### &laquo; `cmd:register,role:user` &raquo;
-
-No description provided.
-
-
-#### Parameters
-
-
-* _nick_: { 'string
-
-: true }
-* _email_: { 'string
-
-: true }
-* _username_: { 'string
-
-: true }
-* _password_: { 'string
-
-: true }
-* _repeat_: { 'string
-
-: true }
-* _name_: { 'string
-
-: true }
-* _active_: { 'boolean
-
-: true }
-* _confirm_: { 'boolean
-
-: true }
-
-
-----------
-### &laquo; `cmd:login,role:user` &raquo;
-
-No description provided.
-
-
-#### Parameters
-
-
-* _nick_: { 'string
-
-: true }
-* _email_: { 'string
-
-: true }
-* _username_: { 'string
-
-: true }
-* _user_: { 'object
-
-: true }
-* _password_: { 'string
-
-: true }
-* _auto_: { 'boolean
-
-: true }
-
-
-----------
-### &laquo; `cmd:confirm,role:user` &raquo;
+### &laquo; `cmd:confirm,sys:user` &raquo;
 
 No description provided.
 
@@ -211,7 +160,7 @@ No description provided.
 
 
 ----------
-### &laquo; `cmd:auth,role:user` &raquo;
+### &laquo; `cmd:auth,sys:user` &raquo;
 
 No description provided.
 
@@ -227,7 +176,7 @@ No description provided.
 
 
 ----------
-### &laquo; `cmd:logout,role:user` &raquo;
+### &laquo; `cmd:logout,sys:user` &raquo;
 
 No description provided.
 
@@ -243,7 +192,7 @@ No description provided.
 
 
 ----------
-### &laquo; `cmd:clean,role:user` &raquo;
+### &laquo; `cmd:clean,sys:user` &raquo;
 
 No description provided.
 
@@ -259,98 +208,91 @@ No description provided.
 
 
 ----------
-### &laquo; `cmd:create_reset,role:user` &raquo;
+### &laquo; `cmd:create_reset,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:load_reset,role:user` &raquo;
+### &laquo; `cmd:load_reset,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:execute_reset,role:user` &raquo;
+### &laquo; `cmd:execute_reset,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:update,role:user` &raquo;
+### &laquo; `cmd:update,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:unlock,role:user` &raquo;
+### &laquo; `cmd:unlock,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:enable,role:user` &raquo;
+### &laquo; `cmd:enable,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:activate,role:user` &raquo;
+### &laquo; `cmd:activate,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:disable,role:user` &raquo;
+### &laquo; `cmd:disable,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:deactivate,role:user` &raquo;
+### &laquo; `cmd:deactivate,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:delete,role:user` &raquo;
+### &laquo; `cmd:delete,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:remove,role:user` &raquo;
+### &laquo; `cmd:remove,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `cmd:entity,role:user` &raquo;
+### &laquo; `cmd:entity,sys:user` &raquo;
 
 No description provided.
 
 
 
 ----------
-### &laquo; `get:user,role:user` &raquo;
-
-No description provided.
-
-
-
-----------
-### &laquo; `init:user` &raquo;
+### &laquo; `get:user,sys:user` &raquo;
 
 No description provided.
 
