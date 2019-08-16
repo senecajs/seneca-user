@@ -1,6 +1,15 @@
 /* Copyright (c) 2012-2019 Richard Rodger, MIT License */
 'use strict'
 
+// CHANGES FROM OLD VERSION (seneca-user):
+// move user fields to `user` sub prop
+// all custom fields from `data`
+// use Joi via seneca-doc for validation
+
+// TODO:
+// - convention: msg.data provides custom fields merged at top level - can be used for all msgs
+
+
 var Crypto = require('crypto')
 
 var _ = require('lodash')
@@ -60,6 +69,10 @@ module.exports.defaults = {
       'confirmed',
       'confirmcode'
     ]
+  },
+  verify: {
+    expire: 10 * 60 * 1000, // 10 minutes
+    default_score: 0
   }
 }
 
@@ -70,7 +83,9 @@ function user(options) {
   var user_canon = 'sys/user'
   var login_canon = 'sys/login'
   var reset_canon = 'sys/reset'
+  var verify_canon = 'sys/verify'
 
+  
   // # Plugin options.
   // These are the defaults. You can override using the _options_ argument.
   // Example: `seneca.use("user",{mustrepeat:true})`.
@@ -88,13 +103,60 @@ function user(options) {
   seneca.add('sys:user,cmd:encrypt_password', cmd_encrypt_password)
   seneca.add('sys:user,cmd:register', cmd_register)
   seneca.add('sys:user,cmd:login', resolve_user(cmd_login))
-
+  seneca.add('sys:user,cmd:create_verify', cmd_create_verify)
+  
   cmd_encrypt_password.validate = {
     password: Joi.string().description('Password plain text string.'),
     repeat: Joi.string().description('Password plain text string, repeated.')
   }
 
-  /*
+  cmd_create_verify.validate = {
+    mode: Joi.string()
+      .description('Verification mode: verify: normal, else hellban.'),
+    user: Joi.object({
+      email: Joi.string(),
+    }).description('User details'),
+    score: Joi.number().optional(),
+    expire: Joi.number().optional()
+  }
+
+
+  // Create a verification entry. Additional user action needed (such as email
+  // link confirmation). Also records hell bans.
+  function cmd_create_verify(msg, reply) {
+    var seneca = this
+    var user = msg.user
+
+    var verifyent = seneca.make(verify_canon)
+
+    // if hell ban, don't create a token, as verication is not possible
+    // TODO: use a hash of salt+email+secret
+    var token = 'verify' === msg.mode ? Uuid() : void 0
+    var d = new Date()
+    
+    verifyent
+      .make$(this.util.deep({},msg.data,{
+        active: true, // false once used
+        token: token,
+        mode: msg.mode,
+        email: user.email,
+        score: msg.score || options.verify.default_score,
+        when: d.toISOString(),
+        t_c: d.now(),
+        expire: msg.expire || options.verify.expire
+      }))
+      .save$(function(err, verify) {
+        reply(err || {
+          ok: true,
+          verify: verify
+        })
+      })
+  }
+
+
+    /*
+
+
       // identify user, various options
       atleastone$: ['nick', 'email', 'user', 'username'],
       nick: { string$: true },

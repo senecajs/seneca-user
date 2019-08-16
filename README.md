@@ -1,3 +1,8 @@
+# @seneca/user
+
+
+Next version of seneca-user - work in progress!
+
 
 
 <!--START:action-list-->
