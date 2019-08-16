@@ -106,8 +106,6 @@ function user(options) {
   seneca.add('sys:user,cmd:verify', cmd_verify)
   seneca.add('sys:user,get:user', get_user)
 
-
-  
   cmd_encrypt_password.validate = {
     password: Joi.string().description('Password plain text string.'),
     repeat: Joi.string().description('Password plain text string, repeated.')
@@ -117,8 +115,9 @@ function user(options) {
     mode: Joi.string().description(
       'Verification mode: verify: normal, else hellban.'
     ),
-    user: Joi.object({
-    }).unknown().description('User details'),
+    user: Joi.object({})
+      .unknown()
+      .description('User details'),
     score: Joi.number().optional(),
     expire: Joi.number().optional()
   }
@@ -160,52 +159,50 @@ function user(options) {
       })
   }
 
-
   // Check verification link to allow registration. Typically after user has clicked
   // on link in email
   function cmd_verify(msg, reply) {
     var seneca = this
     var token = msg.token
 
-    if(null == token || '' == token) {
-      reply({ok:false, why:'bad-token'})
+    if (null == token || '' == token) {
+      reply({ ok: false, why: 'bad-token' })
     }
-    
+
     var verifyent = seneca.make(verify_canon)
 
-    verifyent.load$({token:token}, function(err, verify){
-      if(err) return reply(err)
-      
+    verifyent.load$({ token: token }, function(err, verify) {
+      if (err) return reply(err)
+
       // console.log('VERIFY LOAD',token, verify)
-    
-      if(null == verify) {
-        return reply({ok:false, why:'not-found'})
+
+      if (null == verify) {
+        return reply({ ok: false, why: 'not-found' })
       }
 
       var now = Date.now()
-      var expired = !( !isNaN(verify.t_c) &&
-                       !isNaN(verify.expire) &&
-                       0 < verify.t_c &&
-                       verify.t_c < now &&
-                       now - verify.t_c < verify.expire )
-      
+      var expired = !(
+        !isNaN(verify.t_c) &&
+        !isNaN(verify.expire) &&
+        0 < verify.t_c &&
+        verify.t_c < now &&
+        now - verify.t_c < verify.expire
+      )
+
       // one time use
       verify.active = false
       verify.t_closed = now
       verify.save$(function(err) {
-        if(err) {
-          return reply({ok:false, why:'active-err', user: verify.user})
-        }
-        else if(expired) {
-          return reply({ok:false, why:'expired', user: verify.user})
-        }
-        else {
-          return reply({ok:true, user: verify.user})
+        if (err) {
+          return reply({ ok: false, why: 'active-err', user: verify.user })
+        } else if (expired) {
+          return reply({ ok: false, why: 'expired', user: verify.user })
+        } else {
+          return reply({ ok: true, user: verify.user })
         }
       })
     })
   }
-
 
   /*
 
@@ -269,7 +266,6 @@ function user(options) {
     )
   }
 
-
   function get_user(msg, reply) {
     var q = msg.q || {} // allow use of `q` to specify query
 
@@ -282,19 +278,17 @@ function user(options) {
     if (msg.name) q.name = msg.name
 
     // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
-    if(0 == Object.keys(q)) {
-      reply({ok:false})
+    if (0 == Object.keys(q)) {
+      reply({ ok: false })
     }
-    
+
     this.make(user_canon).load$(q, function(err, user) {
-      reply(err, {ok:null==err && null!=user, user:user})
+      reply(err, { ok: null == err && null != user, user: user })
     })
   }
 
-
   // LEGACY IMPLEMENTATIONS BELOW
 
-  
   // ### Verify a password string
   // Pattern: _**sys**:user, **cmd**:verify_password_
   // Has the user entered the correct password?
@@ -382,7 +376,6 @@ function user(options) {
     cmd_clean
   )
 
-
   // ### Create a password reset entry
   // Pattern: _**sys**:user, **cmd**:create_reset_
   // Create an entry in _sys/reset_ that provides a reset token
@@ -453,7 +446,6 @@ function user(options) {
   })
 
   // Action Implementations
-
 
   // TODO: convert to async/await intern utility function
   function resolve_user(cmd, fail) {
