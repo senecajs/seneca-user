@@ -15,6 +15,6 @@ module.exports = {
     }
   },
   cmd_create_verify: {
-    desc: 'Create a onetime short-lived verification token.',
+    desc: 'Create a onetime short-lived verification token.'
   }
 }

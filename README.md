@@ -13,6 +13,7 @@ Next version of seneca-user - work in progress!
 * [cmd:encrypt_password,sys:user](#-cmdencrypt_passwordsysuser-)
 * [cmd:register,sys:user](#-cmdregistersysuser-)
 * [cmd:login,sys:user](#-cmdloginsysuser-)
+* [cmd:create_verify,sys:user](#-cmdcreate_verifysysuser-)
 * [cmd:verify_password,sys:user](#-cmdverify_passwordsysuser-)
 * [cmd:change_password,sys:user](#-cmdchange_passwordsysuser-)
 * [cmd:confirm,sys:user](#-cmdconfirmsysuser-)
@@ -89,6 +90,25 @@ No description provided.
 
 No description provided.
 
+
+
+----------
+### &laquo; `cmd:create_verify,sys:user` &raquo;
+
+Create a onetime short-lived verification token.
+
+
+#### Parameters
+
+
+* _mode_: string
+  * Verification mode: verify: normal, else hellban.
+* _user_: object
+  * User details
+* _score_: number <i><small>{unsafe:false,presence:optional}</small></i>
+  * undefined
+* _expire_: number <i><small>{unsafe:false,presence:optional}</small></i>
+  * undefined
 
 
 ----------

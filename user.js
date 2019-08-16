@@ -9,7 +9,6 @@
 // TODO:
 // - convention: msg.data provides custom fields merged at top level - can be used for all msgs
 
-
 var Crypto = require('crypto')
 
 var _ = require('lodash')
@@ -85,7 +84,6 @@ function user(options) {
   var reset_canon = 'sys/reset'
   var verify_canon = 'sys/verify'
 
-  
   // # Plugin options.
   // These are the defaults. You can override using the _options_ argument.
   // Example: `seneca.use("user",{mustrepeat:true})`.
@@ -104,22 +102,22 @@ function user(options) {
   seneca.add('sys:user,cmd:register', cmd_register)
   seneca.add('sys:user,cmd:login', resolve_user(cmd_login))
   seneca.add('sys:user,cmd:create_verify', cmd_create_verify)
-  
+
   cmd_encrypt_password.validate = {
     password: Joi.string().description('Password plain text string.'),
     repeat: Joi.string().description('Password plain text string, repeated.')
   }
 
   cmd_create_verify.validate = {
-    mode: Joi.string()
-      .description('Verification mode: verify: normal, else hellban.'),
+    mode: Joi.string().description(
+      'Verification mode: verify: normal, else hellban.'
+    ),
     user: Joi.object({
-      email: Joi.string(),
+      email: Joi.string()
     }).description('User details'),
     score: Joi.number().optional(),
     expire: Joi.number().optional()
   }
-
 
   // Create a verification entry. Additional user action needed (such as email
   // link confirmation). Also records hell bans.
@@ -133,28 +131,31 @@ function user(options) {
     // TODO: use a hash of salt+email+secret
     var token = 'verify' === msg.mode ? Uuid() : void 0
     var d = new Date()
-    
+
     verifyent
-      .make$(this.util.deep({},msg.data,{
-        active: true, // false once used
-        token: token,
-        mode: msg.mode,
-        email: user.email,
-        score: msg.score || options.verify.default_score,
-        when: d.toISOString(),
-        t_c: d.now(),
-        expire: msg.expire || options.verify.expire
-      }))
-      .save$(function(err, verify) {
-        reply(err || {
-          ok: true,
-          verify: verify
+      .make$(
+        this.util.deep({}, msg.data, {
+          active: true, // false once used
+          token: token,
+          mode: msg.mode,
+          email: user.email,
+          score: msg.score || options.verify.default_score,
+          when: d.toISOString(),
+          t_c: d.now(),
+          expire: msg.expire || options.verify.expire
         })
+      )
+      .save$(function(err, verify) {
+        reply(
+          err || {
+            ok: true,
+            verify: verify
+          }
+        )
       })
   }
 
-
-    /*
+  /*
 
 
       // identify user, various options
