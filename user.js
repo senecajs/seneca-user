@@ -73,6 +73,9 @@ module.exports.defaults = {
   verify: {
     expire: 10 * 60 * 1000, // 10 minutes
     default_score: 0
+  },
+  onetime: {
+    expire: 5 * 60 * 1000, // 5 minutes
   }
 }
 
@@ -102,6 +105,7 @@ function user(options) {
   seneca.add('sys:user,cmd:encrypt_password', cmd_encrypt_password)
   seneca.add('sys:user,cmd:register', cmd_register)
   seneca.add('sys:user,cmd:login', resolve_user(cmd_login))
+  seneca.add('sys:user,cmd:onetime_login', cmd_onetime_login)
   seneca.add('sys:user,cmd:create_verify', cmd_create_verify)
   seneca.add('sys:user,cmd:verify', cmd_verify)
   seneca.add('sys:user,get:user', get_user)
@@ -806,7 +810,10 @@ function user(options) {
   // - failure: {ok:false,why:,user:}
   function cmd_login(args, done) {
     var seneca = this
+
+    // NOTE: assumes user is resolved (see resolve_user)
     var user = args.user
+    var login_fields = args.login
     var why
     var loginent = seneca.make(login_canon)
 
@@ -823,7 +830,7 @@ function user(options) {
       return done(null, { ok: false, why: why })
     }
     if (args.auto) {
-      return make_login(user, 'auto')
+      return make_login(user, login_fields, 'auto')
     } else {
       seneca.act(
         {
@@ -841,12 +848,23 @@ function user(options) {
               if (err) return done(err)
               done(null, { ok: false, why: why })
             })
-          } else return make_login(user, 'password')
+          } else return make_login(user, login_fields, 'password')
         }
       )
     }
 
-    function make_login(user, why) {
+    function make_login(user, login_fields, why) {
+      var login_data = {
+        ...login_fields,
+        id$: Uuid(),
+        nick: user.nick,
+        user: user.id,
+        when: new Date().toISOString(),
+        active: true,
+        why: why
+      }
+
+      /*
       var cleanargs = seneca.util.clean(_.clone(args))
 
       var login = loginent.make$(
@@ -864,9 +882,19 @@ function user(options) {
           'sys,cmd,password'
         )
       )
+      */
 
-      login.token = login.id$ // DEPRECATED
+      login_data.token = login_data.id$ // DEPRECATED
 
+
+      if(args.onetime) {
+        login_data.onetime_code = Uuid()
+        login_data.onetime_active = true
+        login_data.onetime_expiry = Date.now()+options.onetime.expire
+      }
+
+      var login = loginent.make$(login_data)
+        
       login.save$(function(err, login) {
         if (err) return done(err)
         cmd_increment_lock(seneca, user.id, true, function(err) {
@@ -879,6 +907,53 @@ function user(options) {
     }
   }
 
+
+  function cmd_onetime_login(msg, reply) {
+    var seneca = this
+    var loginent = seneca.make(login_canon)
+    var userent = seneca.make(user_canon)
+    
+    var onetime_code = msg.onetime
+
+    loginent
+      .make$()
+      .load$(
+        {onetime_code:onetime_code,onetime_active:true},
+        function(err, login) {
+          if(err) return reply(err)
+
+          if(login) {
+            if( Date.now() <= login.onetime_expiry) {
+              login.onetime_active = false
+              login.save$(function(err, login) {
+                if(err) return reply(err)
+
+                userent
+                  .make$()
+                  .load$(login.user_id || login.user, function(err, user) {
+                    if(err) return reply(err)
+                    
+                    if(user) {
+                      reply({ok:true, login:login, user: user})
+                    }
+                    else {
+                      reply({ok:false, login:login, why:'no-user'})
+                    }
+                  })
+              })
+            }
+            else {
+              reply({ok:false, why:'expired'})
+            }
+          }
+          else {
+            reply({ok:false, why:'not-found'})
+          }
+        })
+  }
+
+
+  
   // Increments the number of failed login attempts
   // - id, user id to which to increment the failed attempts
   // - reset - boolean that says if the counter is reset to 0 or not
