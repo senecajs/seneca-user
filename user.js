@@ -75,7 +75,7 @@ module.exports.defaults = {
     default_score: 0
   },
   onetime: {
-    expire: 5 * 60 * 1000, // 5 minutes
+    expire: 5 * 60 * 1000 // 5 minutes
   }
 }
 
@@ -886,15 +886,14 @@ function user(options) {
 
       login_data.token = login_data.id$ // DEPRECATED
 
-
-      if(args.onetime) {
+      if (args.onetime) {
         login_data.onetime_code = Uuid()
         login_data.onetime_active = true
-        login_data.onetime_expiry = Date.now()+options.onetime.expire
+        login_data.onetime_expiry = Date.now() + options.onetime.expire
       }
 
       var login = loginent.make$(login_data)
-        
+
       login.save$(function(err, login) {
         if (err) return done(err)
         cmd_increment_lock(seneca, user.id, true, function(err) {
@@ -907,53 +906,48 @@ function user(options) {
     }
   }
 
-
   function cmd_onetime_login(msg, reply) {
     var seneca = this
     var loginent = seneca.make(login_canon)
     var userent = seneca.make(user_canon)
-    
+
     var onetime_code = msg.onetime
 
     loginent
       .make$()
-      .load$(
-        {onetime_code:onetime_code,onetime_active:true},
-        function(err, login) {
-          if(err) return reply(err)
+      .load$({ onetime_code: onetime_code, onetime_active: true }, function(
+        err,
+        login
+      ) {
+        if (err) return reply(err)
 
-          if(login) {
-            if( Date.now() <= login.onetime_expiry) {
-              login.onetime_active = false
-              login.save$(function(err, login) {
-                if(err) return reply(err)
+        if (login) {
+          if (Date.now() <= login.onetime_expiry) {
+            login.onetime_active = false
+            login.save$(function(err, login) {
+              if (err) return reply(err)
 
-                userent
-                  .make$()
-                  .load$(login.user_id || login.user, function(err, user) {
-                    if(err) return reply(err)
-                    
-                    if(user) {
-                      reply({ok:true, login:login, user: user})
-                    }
-                    else {
-                      reply({ok:false, login:login, why:'no-user'})
-                    }
-                  })
-              })
-            }
-            else {
-              reply({ok:false, why:'expired'})
-            }
+              userent
+                .make$()
+                .load$(login.user_id || login.user, function(err, user) {
+                  if (err) return reply(err)
+
+                  if (user) {
+                    reply({ ok: true, login: login, user: user })
+                  } else {
+                    reply({ ok: false, login: login, why: 'no-user' })
+                  }
+                })
+            })
+          } else {
+            reply({ ok: false, why: 'expired' })
           }
-          else {
-            reply({ok:false, why:'not-found'})
-          }
-        })
+        } else {
+          reply({ ok: false, why: 'not-found' })
+        }
+      })
   }
 
-
-  
   // Increments the number of failed login attempts
   // - id, user id to which to increment the failed attempts
   // - reset - boolean that says if the counter is reset to 0 or not

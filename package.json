@@ -1,7 +1,7 @@
 {
   "name": "@seneca/user",
   "description": "User management plugin for Seneca",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "keywords": [
     "seneca",
     "user",
@@ -22,7 +22,7 @@
     "clean-npm": "rm -rf node_modules package-lock.json",
     "clean-yarn": "rm -rf node_modules yarn.lock",
     "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
-    "repo-publish": "npm run prettier && npm test && npm run doc && npm run repo-tag && npm publish --access public"
+    "repo-publish": "npm run clean-npm && npm i --registry http://registry.npmjs.org && npm run prettier && npm test && npm run doc && npm run repo-tag && npm publish --access public --registry http://registry.npmjs.org"
   },
   "files": [
     "LICENSE",
@@ -63,10 +63,10 @@
     "prettier": "^1.18.2",
     "seneca": "plugin",
     "seneca-basic": "^0.6.0",
-    "seneca-doc": "^1.0.0",
-    "seneca-entity": "^4.1.0",
-    "seneca-plugin-validator": "^0.1.1",
-    "seneca-promisify": "^0.8.0"
+    "seneca-doc": "^1.4.0",
+    "seneca-entity": "^5.2.0",
+    "seneca-plugin-validator": "^0.3.0",
+    "seneca-promisify": "^1.1.0"
   },
   "repository": {
     "type": "git",

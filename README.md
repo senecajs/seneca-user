@@ -13,6 +13,7 @@ Next version of seneca-user - work in progress!
 * [cmd:encrypt_password,sys:user](#-cmdencrypt_passwordsysuser-)
 * [cmd:register,sys:user](#-cmdregistersysuser-)
 * [cmd:login,sys:user](#-cmdloginsysuser-)
+* [cmd:onetime_login,sys:user](#-cmdonetime_loginsysuser-)
 * [cmd:create_verify,sys:user](#-cmdcreate_verifysysuser-)
 * [cmd:verify,sys:user](#-cmdverifysysuser-)
 * [cmd:verify_password,sys:user](#-cmdverify_passwordsysuser-)
@@ -88,6 +89,13 @@ No description provided.
 
 ----------
 ### &laquo; `cmd:login,sys:user` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `cmd:onetime_login,sys:user` &raquo;
 
 No description provided.
 
