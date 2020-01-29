@@ -9,6 +9,8 @@
 
 // TODO:
 // - convention: msg.data provides custom fields merged at top level - can be used for all msgs
+// - support user_id arg at top level
+// - cmd patterns: change:password, change:handle, change:email - logic to handle
 
 var Crypto = require('crypto')
 
@@ -207,42 +209,6 @@ function user(options) {
       })
     })
   }
-
-  /*
-
-
-      // identify user, various options
-      atleastone$: ['nick', 'email', 'user', 'username'],
-      nick: { string$: true },
-      email: { string$: true },
-      username: { string$: true },
-      user: { object$: true },
-
-      password: { string$: true }, // password plain text
-      auto: { boolean$: true } // login without password
-    },
-    resolve_user(cmd_login, false)
-  )
-
-  
-
-      // identify user, various options
-      atleastone$: ['nick', 'email', 'username'],
-      nick: { string$: true },
-      email: { string$: true },
-      username: { string$: true },
-
-      password: { string$: true }, // password plain text string
-      repeat: { string$: true }, // password plain text string, repeated
-
-      name: { string$: true }, // full name, as one string
-      active: { boolean$: true }, // is user active?
-
-      confirm: { boolean$: true } // is user confirmed?
-    },
-    cmd_register
-  )
-  */
 
   // Encrypt password using a salt and multiple SHA512 rounds
   // Override for password strength checking
@@ -493,6 +459,8 @@ function user(options) {
           return done(null, { ok: false, why: 'nick_or_email_missing' })
         }
 
+        // TODO: check q is not empty and fail if so - Defense in depth
+
         userent.load$(q, function(err, user) {
           if (err) return done(err)
           if (!user) {
@@ -638,6 +606,7 @@ function user(options) {
     return hide(args, { proposed: 1 })
   }
 
+  // TODO: accept user_id
   // Change password using user's nick or email
   // - nick, email: to resolve user
   // - user: user entity
@@ -863,26 +832,6 @@ function user(options) {
         active: true,
         why: why
       }
-
-      /*
-      var cleanargs = seneca.util.clean(_.clone(args))
-
-      var login = loginent.make$(
-        seneca.util.argprops(
-          {},
-          cleanargs,
-          {
-            id$: Uuid(),
-            nick: user.nick,
-            user: user.id,
-            when: new Date().toISOString(),
-            active: true,
-            why: why
-          },
-          'sys,cmd,password'
-        )
-      )
-      */
 
       login_data.token = login_data.id$ // DEPRECATED
 
