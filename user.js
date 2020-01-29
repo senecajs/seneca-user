@@ -274,18 +274,15 @@ module.exports = function user(options) {
   // Action Implementations
 
   function cmd_load_user(args, done) {
-
     var q = {}
     if (args.id) q.id = args.id
     if (args.email) q.email = args.email
     if (args.nick) q.nick = args.nick
-   
-    seneca
-      .make(user_canon)
-      .load$(q, function(err, user) {
-        if (err) return done(err)
-        return done(null, { ok: true, user: user })
-      })
+
+    seneca.make(user_canon).load$(q, function(err, user) {
+      if (err) return done(err)
+      return done(null, { ok: true, user: user })
+    })
   }
 
   function resolve_user(cmd, fail) {

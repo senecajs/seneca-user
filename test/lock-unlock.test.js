@@ -18,8 +18,8 @@ var failedCount = 3
 
 var si = Seneca()
 var siDefault = Seneca({
-  log: 'silent'
-})
+  //log: 'silent'
+}).test()
 
 SenecaUse(si)
 SenecaUse(siDefault)

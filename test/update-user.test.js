@@ -116,7 +116,6 @@ suite('seneca-user update suite tests ', function() {
     })
   })
 
-
   // now update user based on orig_nick and also change its password
   test('user/update test new nick and password', function(done) {
     si.act(
