@@ -1,9 +1,9 @@
-/* Copyright (c) 2019 Richard Rodger and other contributors, MIT License */
+/* Copyright (c) 2019-2020 Richard Rodger and other contributors, MIT License */
 'use strict'
 
-var Util = require('util')
+const Util = require('util')
 
-var Seneca = require('seneca')
+const Seneca = require('seneca')
 
 module.exports = {
   seneca_instance: function(opts) {
@@ -11,7 +11,7 @@ module.exports = {
     return Seneca()
       .test(opts.fin)
       .use('promisify')
-      .use('basic')
+      //.use('basic')
       .use('entity')
       .use('..', opts.user)
   },
