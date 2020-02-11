@@ -14,7 +14,6 @@
 
 var Crypto = require('crypto')
 
-//var _ = require('lodash')
 var Uuid = require('uuid')
 
 const Hasher = require('./lib/hasher.js')
@@ -1462,8 +1461,6 @@ function user(options) {
 
 var intern = (user.intern = {
   conditional_extend: function(options, user, args) {
-    //var extra = _.omit(args, options.updateUser.omit)
-
     var extra = Object.assign({}, args)
     var omit = options.updateUser.omit || []
     omit.forEach(key=>delete extra[key])
