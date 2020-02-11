@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2019 Richard Rodger, MIT License */
+/* Copyright (c) 2012-2020 Richard Rodger and other contributors, MIT License. */
 'use strict'
 
 // CHANGES FROM OLD VERSION (seneca-user):
@@ -14,7 +14,7 @@
 
 var Crypto = require('crypto')
 
-var _ = require('lodash')
+//var _ = require('lodash')
 var Uuid = require('uuid')
 
 const Hasher = require('./lib/hasher.js')
@@ -475,7 +475,7 @@ function user(options) {
               })
           }
 
-          if (_.isBuffer(user.pass)) {
+          if (Buffer.isBuffer(user.pass)) {
             user.pass = user.pass.toString('utf8')
           }
 
@@ -527,7 +527,7 @@ function user(options) {
     var password = void 0 === args.password ? args.pass : args.password
     var repeat = args.repeat
 
-    if (_.isUndefined(password)) {
+    if (null== password) {
       if (options.autopass) {
         password = Uuid()
       } else
@@ -538,7 +538,7 @@ function user(options) {
         })
     }
 
-    if (_.isUndefined(repeat)) {
+    if (null == repeat) {
       if (options.mustrepeat) {
         return done(null, {
           ok: false,
@@ -1462,11 +1462,16 @@ function user(options) {
 
 var intern = (user.intern = {
   conditional_extend: function(options, user, args) {
-    var extra = _.omit(args, options.updateUser.omit)
-    _.map(extra, function(val, key) {
+    //var extra = _.omit(args, options.updateUser.omit)
+
+    var extra = Object.assign({}, args)
+    var omit = options.updateUser.omit || []
+    omit.forEach(key=>delete extra[key])
+    
+    for (let [key, val] of Object.entries(extra)) {
       if (!key.match(/\$/)) {
         user[key] = val
       }
-    })
+    }
   }
 })
