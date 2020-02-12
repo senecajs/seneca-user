@@ -53,6 +53,7 @@
     "node": ">=8"
   },
   "dependencies": {
+    "nid": "^0.3.2",
     "uuid": "3.4"
   },
   "devDependencies": {
@@ -62,6 +63,7 @@
     "seneca": "^3.20.1",
     "seneca-doc": "^2.1.0",
     "seneca-entity": "^7.1.0",
+    "seneca-msg-test": "^2.2.0",
     "seneca-plugin-validator": "^0.6.0",
     "seneca-promisify": "^1.2.0"
   },

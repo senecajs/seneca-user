@@ -13,8 +13,8 @@
 // - cmd patterns: change:password, change:handle, change:email - logic to handle
 
 var Crypto = require('crypto')
-
 var Uuid = require('uuid')
+var Nid = require('nid')
 
 const Hasher = require('./lib/hasher.js')
 
@@ -25,8 +25,17 @@ module.exports = user
 
 module.exports.errors = {}
 
+
+const intern = module.exports.intern = make_intern()
+
 module.exports.defaults = {
   test: false,
+
+  ensure_handle: intern.ensure_handle,
+  make_handle: intern.make_handle,
+  
+  // --- LEGACY BELOW ---
+  
   rounds: 11111,
   autopass: true,
   mustrepeat: false,
@@ -77,18 +86,99 @@ module.exports.defaults = {
   },
   onetime: {
     expire: 5 * 60 * 1000 // 5 minutes
-  }
+  },
+
+  
 }
 
 function user(options) {
   var seneca = this
-  var Joi = seneca.util.Joi
 
+  
+  var sys_user = 'sys/user'
+//  var sys_login = 'sys/login'
+//  var sys_reset = 'sys/reset'
+//  var sys_verify = 'sys/verify'
+
+
+  seneca
+    .fix('sys:user')
+    .message('register:user', register_user)
+    .message('get:user', get_user)
+  
+
+
+  // convenience query fields - msg.email etc
+  var convenience_fields = 'id,user_id,email,handle,name'.split(',')
+
+
+  async function register_user(msg) {
+    msg = intern.fix_nick_handle(msg)
+
+    var handle = options.ensure_handle(msg, options)
+
+    var sys_user_ent = this.entity(sys_user)
+    var handle_user = await sys_user_ent.load$({handle:handle})
+
+    if(handle_user) {
+      return {
+        ok: false,
+        why: 'handle-exists',
+        handle: handle
+      }
+    }
+
+    // has precedence
+    var convenience_data = {}
+    convenience_fields.forEach(f => null == msg[f] || (convenience_data[f]=msg[f]))
+
+    var user_data = msg.user || {}
+    
+    var combined_data = Object.assign(
+      user_data,
+      convenience_data,
+      {
+        handle: handle
+      }
+    )
+
+    var user = await this.entity(sys_user).data$(combined_data).save$()
+
+    return { ok: true, user:user }
+  }
+  
+  
+  async function get_user(msg) {
+    msg = intern.fix_nick_handle(msg)
+    
+    var q = msg.q || {} // allow use of `q` to specify query
+
+    convenience_fields.forEach(f => null != msg[f] && (q[f]=msg[f]))
+
+    console.log('Q',q)
+    
+    // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
+    var user
+    if (0 < Object.keys(q).length) {
+      user = await this.entity(sys_user).load$(q)
+    }
+
+    user = intern.fix_nick_handle(user)
+    return { ok: null != user, user: user }
+  }
+
+  
+
+  // --- LEGACY BELOW ---
+/*
   var user_canon = 'sys/user'
   var login_canon = 'sys/login'
   var reset_canon = 'sys/reset'
   var verify_canon = 'sys/verify'
 
+  var Joi = seneca.util.Joi
+
+  
   // # Plugin options.
   // These are the defaults. You can override using the _options_ argument.
   // Example: `seneca.use("user",{mustrepeat:true})`.
@@ -109,7 +199,6 @@ function user(options) {
   seneca.add('sys:user,cmd:onetime_login', cmd_onetime_login)
   seneca.add('sys:user,cmd:create_verify', cmd_create_verify)
   seneca.add('sys:user,cmd:verify', cmd_verify)
-  seneca.add('sys:user,get:user', get_user)
 
   cmd_encrypt_password.validate = {
     password: Joi.string().description('Password plain text string.'),
@@ -235,26 +324,6 @@ function user(options) {
     )
   }
 
-  function get_user(msg, reply) {
-    var q = msg.q || {} // allow use of `q` to specify query
-
-    // convenience query fields
-    if (msg.id) q.id = msg.id
-    if (msg.user_id) q.id = msg.user_id
-    if (msg.email) q.email = msg.email
-    if (msg.nick) q.nick = msg.nick
-    if (msg.handle) q.handle = msg.handle
-    if (msg.name) q.name = msg.name
-
-    // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
-    if (0 == Object.keys(q)) {
-      reply({ ok: false })
-    }
-
-    this.make(user_canon).load$(q, function(err, user) {
-      reply(err, { ok: null == err && null != user, user: user })
-    })
-  }
 
   // LEGACY IMPLEMENTATIONS BELOW
 
@@ -497,30 +566,6 @@ function user(options) {
     }
     return outargs
   }
-
-  /*
-  function hasher(spec, done) {
-    var out = spec.src
-    var i = 0
-
-    // don't chew up the CPU
-    function round() {
-      i++
-      var shasum = Crypto.createHash('sha512')
-      shasum.update(out, 'utf8')
-      out = shasum.digest('hex')
-      if (spec.rounds <= i) {
-        return done(null,out)
-      }
-      if (0 === i % 88) {
-        return process.nextTick(round)
-      }
-      round()
-    }
-
-    round()
-  }
-  */
 
   function prepare_password_data(seneca, args, done) {
     var password = void 0 === args.password ? args.pass : args.password
@@ -1457,18 +1502,80 @@ function user(options) {
     delete user.$
     done(null, user)
   }
+  */
 }
 
-var intern = (user.intern = {
-  conditional_extend: function(options, user, args) {
-    var extra = Object.assign({}, args)
-    var omit = options.updateUser.omit || []
-    omit.forEach(key=>delete extra[key])
-    
-    for (let [key, val] of Object.entries(extra)) {
-      if (!key.match(/\$/)) {
-        user[key] = val
+function make_intern() {
+  return {
+    // Automate migration of nick->handle. Removes nick.
+    // Assume update value will be saved elsewhere in due course.
+    fix_nick_handle: function(data) {
+      if(null == data) {
+        return data
+      }
+
+      if(null != data.nick) {
+        data.handle = null != data.handle ? data.handle : data.nick
+        delete data.nick
+      }
+      
+      if(null != data.user && null != data.user.nick) {
+        data.user.handle = null != data.user.handle ? data.user.handle : data.user.nick
+        delete data.user.nick
+      }
+
+      if(null != data.q && null != data.q.nick) {
+        data.q.handle = null != data.q.handle ? data.q.handle : data.q.nick
+        delete data.q.nick
+      }
+      
+      return data
+    },
+
+    // NOTE: modifies msg if needed to ensure consistency
+    ensure_handle: function(msg, options) {
+      var handle = null == msg.handle ? (msg.user && msg.user.handle) : msg.handle
+
+      if('string' != typeof(handle) || 0 === handle.length) {
+        var email = msg.email || (msg.user && msg.user.email) || null
+
+        if('string' == typeof(email) && email.includes('@')) {
+          handle = email.split('@')[0].toLowerCase() +
+            ('' + Math.random()).substring(2, 6)
+        }
+        else {
+          handle = options.make_handle()
+        }
+
+        // there was nothing before the @
+        if(4 === handle.length) {
+          handle = options.make_handle()
+        }
+      }
+
+      msg.handle = handle
+      if(msg.user) {
+        msg.user.handle = handle
+      }
+      
+      return handle
+    },
+
+    make_handle: Nid({length:'12',alphabet:'abcdefghijklmnopqrstuvwxyz'})
+
+/*
+    conditional_extend: function(options, user, args) {
+      var extra = Object.assign({}, args)
+      var omit = options.updateUser.omit || []
+      omit.forEach(key=>delete extra[key])
+      
+      for (let [key, val] of Object.entries(extra)) {
+        if (!key.match(/\$/)) {
+          user[key] = val
+        }
       }
     }
+*/
   }
-})
+}
+
