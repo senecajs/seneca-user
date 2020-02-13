@@ -15,7 +15,7 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab -v -L -P test -r console -m 3000 -t 70",
+    "test": "lab -v -L  -t 70 -P test -r console -o stdout -r html -o test/coverage.html",
     "doc": "seneca-doc",
     "coveralls": "lab -s -P test -r lcov | coveralls",
     "prettier": "prettier --write --no-semi --single-quote *.js lib/*.js test/*.js",
@@ -63,6 +63,7 @@
     "seneca": "^3.20.1",
     "seneca-doc": "^2.1.0",
     "seneca-entity": "^7.1.0",
+    "seneca-joi": "^7.0.1",
     "seneca-msg-test": "^2.2.0",
     "seneca-plugin-validator": "^0.6.0",
     "seneca-promisify": "^1.2.0"

@@ -13,7 +13,7 @@
 // - cmd patterns: change:password, change:handle, change:email - logic to handle
 
 var Crypto = require('crypto')
-var Uuid = require('uuid')
+//var Uuid = require('uuid')
 var Nid = require('nid')
 
 const Hasher = require('./lib/hasher.js')
@@ -31,9 +31,17 @@ const intern = module.exports.intern = make_intern()
 module.exports.defaults = {
   test: false,
 
+  salt: {
+    bytelen: 16,
+    format: 'hex'
+  },
+
+  rounds: 11111,
+  
   ensure_handle: intern.ensure_handle,
   make_handle: intern.make_handle,
-  
+
+/*  
   // --- LEGACY BELOW ---
   
   rounds: 11111,
@@ -87,7 +95,7 @@ module.exports.defaults = {
   onetime: {
     expire: 5 * 60 * 1000 // 5 minutes
   },
-
+*/
   
 }
 
@@ -105,6 +113,7 @@ function user(options) {
     .fix('sys:user')
     .message('register:user', register_user)
     .message('get:user', get_user)
+    .message('hook:password,cmd:encrypt', cmd_encrypt)
   
 
 
@@ -155,8 +164,6 @@ function user(options) {
 
     convenience_fields.forEach(f => null != msg[f] && (q[f]=msg[f]))
 
-    console.log('Q',q)
-    
     // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
     var user
     if (0 < Object.keys(q).length) {
@@ -167,6 +174,40 @@ function user(options) {
     return { ok: null != user, user: user }
   }
 
+  
+  async function cmd_encrypt(msg) {
+    var seneca = this
+    var salt = msg.salt || intern.generate_salt(options)
+    var pass = null != msg.password ? msg.password : msg.pass
+    var pepper = options.pepper
+    var rounds = options.rounds
+    var fail = true === msg.fail ? true : false
+    
+    if(null == pass || 'string' != typeof(pass) || '' === pass) {
+      return seneca.fail('no-pass')
+    }
+    
+    // TODO: use a queue to rate limit
+    return new Promise((resolve, reject)=>{
+      Hasher(
+        seneca,
+        {
+          fail: fail,
+          test: options.test,
+          src: pepper + pass + salt,
+          rounds: rounds
+        },
+        function(err, out) {
+          if(err) {
+            return reject(err)
+          }
+          else {
+            return resolve({ ok: !err, pass: out.hash, salt: salt })
+          }
+        }
+      )
+    })
+  }
   
 
   // --- LEGACY BELOW ---
@@ -306,7 +347,7 @@ function user(options) {
   // use why if password too weak
   function cmd_encrypt_password(args, done) {
     // 128 bits of salt
-    var salt = args.salt || create_salt()
+    var salt = args.salt || generate_salt()
     var password = args.password
 
     // TODO: use a queue to rate limit
@@ -607,7 +648,7 @@ function user(options) {
     )
   }
 
-  function create_salt() {
+  function generate_salt() {
     return Crypto.randomBytes(16).toString(options.salt_strfmt)
   }
 
@@ -1507,6 +1548,12 @@ function user(options) {
 
 function make_intern() {
   return {
+    generate_salt: function (options) {
+      return Crypto
+        .randomBytes(options.salt.bytelen)
+        .toString(options.salt.format)
+    },
+
     // Automate migration of nick->handle. Removes nick.
     // Assume update value will be saved elsewhere in due course.
     fix_nick_handle: function(data) {
