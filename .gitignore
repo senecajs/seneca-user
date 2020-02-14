@@ -20,5 +20,6 @@ README.html
 *~
 coverage
 
-doc/coverage.html
 doc/annotated
+
+*.off

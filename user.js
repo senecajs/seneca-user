@@ -102,31 +102,29 @@ module.exports.defaults = {
 function user(options) {
   var seneca = this
 
+
+  // TODO: @seneca/audit - record user modifications - e.g activate
   
-  var sys_user = 'sys/user'
-//  var sys_login = 'sys/login'
-//  var sys_reset = 'sys/reset'
-//  var sys_verify = 'sys/verify'
-
-
   seneca
     .fix('sys:user')
     .message('register:user', register_user)
     .message('get:user', get_user)
     .message('hook:password,cmd:encrypt', cmd_encrypt)
+    .message('adjust:user', adjust_user)
+
+  // NEXT
+  //.message('login:user', login_user)
+  //.message('logout:user', logout_user)
+
+  var ctx = intern.make_ctx()
   
-
-
-  // convenience query fields - msg.email etc
-  var convenience_fields = 'id,user_id,email,handle,name'.split(',')
-
 
   async function register_user(msg) {
     msg = intern.fix_nick_handle(msg)
 
     var handle = options.ensure_handle(msg, options)
 
-    var sys_user_ent = this.entity(sys_user)
+    var sys_user_ent = this.entity(ctx.sys_user)
     var handle_user = await sys_user_ent.load$({handle:handle})
 
     if(handle_user) {
@@ -139,7 +137,8 @@ function user(options) {
 
     // has precedence
     var convenience_data = {}
-    convenience_fields.forEach(f => null == msg[f] || (convenience_data[f]=msg[f]))
+    ctx.convenience_fields
+      .forEach(f => null == msg[f] || (convenience_data[f]=msg[f]))
 
     var user_data = msg.user || {}
     
@@ -151,29 +150,45 @@ function user(options) {
       }
     )
 
-    var user = await this.entity(sys_user).data$(combined_data).save$()
+    var user = await this.entity(ctx.sys_user).data$(combined_data).save$()
 
     return { ok: true, user:user }
   }
   
   
   async function get_user(msg) {
-    msg = intern.fix_nick_handle(msg)
-    
-    var q = msg.q || {} // allow use of `q` to specify query
-
-    convenience_fields.forEach(f => null != msg[f] && (q[f]=msg[f]))
-
-    // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
-    var user
-    if (0 < Object.keys(q).length) {
-      user = await this.entity(sys_user).load$(q)
-    }
-
-    user = intern.fix_nick_handle(user)
-    return { ok: null != user, user: user }
+    return await intern.find_user(this, msg, ctx)
   }
 
+
+  // Adjustments: activate/deactivate
+  async function adjust_user(msg) {
+    var seneca = this
+
+    var update_user = false
+    var has_activate = 'boolean' === typeof(msg.activate)
+    
+    var found = await intern.find_user(seneca, msg, ctx)
+    if(!found.ok) {
+      return found
+    }
+    
+    var user = found.user
+
+    // idempotent
+    if(has_activate) {
+      user.activate = msg.activate
+      update_user = true
+    }
+
+    if(update_user) {
+      await user.save$()
+    }
+
+    return {ok:true, user:user}
+  }
+
+  
   
   async function cmd_encrypt(msg) {
     var seneca = this
@@ -183,8 +198,8 @@ function user(options) {
     var rounds = options.rounds
     var fail = true === msg.fail ? true : false
     
-    if(null == pass || 'string' != typeof(pass) || '' === pass) {
-      return seneca.fail('no-pass')
+    if(null == pass) {
+      return seneca.fail('no_pass')
     }
     
     // TODO: use a queue to rate limit
@@ -208,8 +223,109 @@ function user(options) {
       )
     })
   }
-  
 
+
+
+
+  // async function login_user(msg) {
+  //   var seneca = this
+
+  //   var user = null
+  //   var login_fields = msg.login // Optional extra fields to save with login.
+    
+  //   // Find the user.
+  //   var found_user = get_user(this,msg)
+
+  //   if(!found_user.ok) {
+  //     return { ok: false, why: 'user-not-found' }
+  //   } else {
+  //     user = found_user.user
+  //   }
+
+  //   if(!user.active) {
+      
+  //   }
+    
+    /*
+    // NOTE: assumes user is resolved (see resolve_user)
+    var user = args.user
+    var login_fields = args.login
+    var why
+    var loginent = seneca.make(login_canon)
+
+    if (!user.active) {
+      seneca.log.debug('login/fail', (why = 'not-active'), user)
+      return done(null, { ok: false, why: why, user: user })
+    }
+
+    if (
+      options.failedLoginCount &&
+      user.failedLoginCount >= options.failedLoginCount
+    ) {
+      seneca.log.debug('login/fail', (why = 'locked-out'), user)
+      return done(null, { ok: false, why: why })
+    }
+    if (args.auto) {
+      return make_login(user, login_fields, 'auto')
+    } else {
+      seneca.act(
+        {
+          sys: 'user',
+          cmd: 'verify_password',
+          proposed: args.password,
+          pass: user.pass,
+          salt: user.salt
+        },
+        function(err, out) {
+          if (err) return done(err)
+          if (!out.ok) {
+            seneca.log.debug('login/fail', (why = 'invalid-password'), user)
+            cmd_increment_lock(seneca, user.id, false, function(err) {
+              if (err) return done(err)
+              done(null, { ok: false, why: why })
+            })
+          } else return make_login(user, login_fields, 'password')
+        }
+      )
+    }
+
+    function make_login(user, login_fields, why) {
+      var login_data = {
+        ...login_fields,
+        id$: Uuid(),
+        nick: user.nick,
+        user: user.id,
+        when: new Date().toISOString(),
+        active: true,
+        why: why
+      }
+
+      login_data.token = login_data.id$ // DEPRECATED
+
+      if (args.onetime) {
+        login_data.onetime_code = Uuid()
+        login_data.onetime_active = true
+        login_data.onetime_expiry = Date.now() + options.onetime.expire
+      }
+
+      var login = loginent.make$(login_data)
+
+      login.save$(function(err, login) {
+        if (err) return done(err)
+        cmd_increment_lock(seneca, user.id, true, function(err) {
+          if (err) return done(err)
+
+          seneca.log.debug('login/ok', why, user, login)
+          done(null, { ok: true, user: user, login: login, why: why })
+        })
+      })
+    }
+
+    */
+//  }
+
+
+  
   // --- LEGACY BELOW ---
 /*
   var user_canon = 'sys/user'
@@ -1548,6 +1664,65 @@ function user(options) {
 
 function make_intern() {
   return {
+    make_ctx: function(ctx) {
+      return Object.assign({
+        // Standard entity canons
+        sys_user: 'sys/user',
+        sys_login: 'sys/login',
+        sys_reset: 'sys/reset',
+        sys_verify: 'sys/verify',
+  
+        // Standard user fields to load - keep data volume low by default
+        standard_user_fields: ['active','handle','email','name'],
+        
+        // Convenience query fields - msg.email etc.
+        convenience_fields: 'id,user_id,email,handle,name'.split(',')
+      },ctx||{})
+    },
+    find_user: async function(seneca, msg, ctx) {
+      msg = intern.fix_nick_handle(msg)
+
+      var why = null
+      var q = msg.q || {} // allow use of `q` to specify query
+    
+      ctx.convenience_fields.forEach(f => null != msg[f] && (q[f]=msg[f]))
+
+      // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
+      var user
+      if (0 < Object.keys(seneca.util.clean(q)).length) {
+        // Add additional fields to standard fields.
+        q.fields$ = [...new Set((q.fields$ || msg.fields || [])
+                                .concat(ctx.standard_user_fields))]
+
+        // These are the unique fields
+        if(null == q.id && null == q.handle && null == q.email ) {
+
+          var users = await seneca.entity(ctx.sys_user).list$(q)
+          if(1 === users.length) {
+            user = intern.fix_nick_handle(user)
+          }
+          else if(1 < users.length) {
+            // This is bad, as you could operate on another user
+            why = 'multiple-matching-users'
+          }
+        }
+        else {
+          // Use load$ to trigger entity cache
+          user = await seneca.entity(ctx.sys_user).load$(q)
+        }
+      }
+      else {
+        why = 'no-query'
+      }
+      
+      var out = { ok: null != user, user: user || null }
+      if(null == user) {
+        out.why = why || 'user-not-found'
+      }
+
+      return out
+    },
+
     generate_salt: function (options) {
       return Crypto
         .randomBytes(options.salt.bytelen)
@@ -1583,7 +1758,7 @@ function make_intern() {
     ensure_handle: function(msg, options) {
       var handle = null == msg.handle ? (msg.user && msg.user.handle) : msg.handle
 
-      if('string' != typeof(handle) || 0 === handle.length) {
+      if('string' != typeof(handle)) {
         var email = msg.email || (msg.user && msg.user.email) || null
 
         if('string' == typeof(email) && email.includes('@')) {
