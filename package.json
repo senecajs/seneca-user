@@ -16,7 +16,7 @@
   "main": "user.js",
   "scripts": {
     "test": "lab -v -L  -t 70 -P test -r console -o stdout -r html -o test/coverage.html",
-    "test-msgs": "lab -t 100 --coverage-exclude lib -P messages.test -r console -o stdout -r html -o test/coverage.html",
+    "test-msgs": "lab -t 100 --coverage-exclude lib/hasher.js -P messages.test -r console -o stdout -r html -o test/coverage.html",
     "doc": "seneca-doc",
     "coveralls": "lab -s -P test -r lcov | coveralls",
     "prettier": "prettier --write --no-semi --single-quote *.js lib/*.js test/*.js",

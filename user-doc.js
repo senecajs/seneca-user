@@ -3,6 +3,17 @@
 
 const Joi = require('@hapi/joi')
 
+
+const query_user = {
+  id: Joi.string().min(1).optional(),
+  email: Joi.string().email().optional(),
+  handle: Joi.string().min(1).optional(),
+  nick: Joi.string().min(1).optional(),
+  q: Joi.object().optional(),
+  fields: Joi.array().items(Joi.string()).optional()
+}
+
+                              
 module.exports = {
   cmd_encrypt: {
     desc: 'Encrypt a plain text password string.',
@@ -29,11 +40,7 @@ module.exports = {
       ok: '_true_ if user found',
       user: 'user entity',
     },
-    validate: {
-      handle: Joi.string().min(1).optional(),
-      nick: Joi.string().min(1).optional(),
-      q: Joi.object().optional()
-    }
+    validate: query_user
   },
   
   register_user: {
@@ -52,8 +59,19 @@ module.exports = {
         nick: Joi.string().optional(), // legacy
       }).unknown()
     }
-  }
+  },
 
+  adjust_user: {
+    desc: 'Adjust user status idempotently (activated, etc.).',
+    reply_desc: {
+      ok: '_true_ if user found',
+      user: 'user entity',
+    },
+    validate: Object.assign({
+      active: Joi.boolean().optional()
+    },query_user)
+  },
 
+  
       //desc: 'Create a onetime short-lived verification token.'
 }

@@ -77,11 +77,12 @@ lab.test('find_user', async ()=>{
   var bob = await si.post('sys:user,register:user', {
     user: {
       handle: 'bob',
-      foo: 1
+      foo: 1,
+      bar: 2
     }
   })
 
-  var ctx = intern.make_ctx()
+  var ctx = intern.make_ctx({},{fields:{standard:['handle']}})
 
   var msg0 = { handle:'alice'}
   var found = await intern.find_user(si,msg0,ctx)
@@ -130,6 +131,19 @@ lab.test('find_user', async ()=>{
   expect(found.ok).false()
   expect(found.user).equal(null)
   expect(found.why).equals('no-query')
+
+  // unique field works
+  var msg5 = { q:{bar:2} }
+  found = await intern.find_user(si,msg5,ctx)
+  expect(found.ok).true()
+  expect(found.user.handle).equal('bob')
+
+
+  // nobody matches
+  var msg5 = { q:{'not-a-field':3} }
+  found = await intern.find_user(si,msg5,ctx)
+  expect(found.ok).false()
+  expect(found.why).equals('user-not-found')
 
 })
 
