@@ -1,5 +1,7 @@
 const Joi = require('@hapi/joi')
 
+var print_register = true
+
 module.exports = [
   {
     // can register with just an email
@@ -51,7 +53,23 @@ module.exports = [
 
 
   {
+    // can't register with short handle
+    print: print_register,
+    pattern: 'register:user',
+    params: {
+      handle:'al',
+    },
+    out: {
+      ok:false,
+      why: 'handle-too-short',
+      handle: 'al',
+      details: { handle_length: 2, minimum: 3 }
+    }
+  },
+
+  {
     // can register with just handle
+    name: 'ar0',
     pattern: 'register:user',
     params: {
       handle:'alice',

@@ -25,12 +25,12 @@ lab.test('happy-real', {timeout:5555}, async ()=>{
   var seneca = Seneca().test()
   return new Promise((resolve)=>{
     setTimeout(function() {
-      Hasher(seneca,{src:'foo',interval:111},function(err,out1) {
+      Hasher(seneca,{src:'foo',interval:1111},function(err,out1) {
         //console.log('AAA',err,out1)
         expect(err).not.exists()
         expect(out1.hash).string()
         
-        Hasher(seneca,{src:'bar',interval:111},function(err,out2) {
+        Hasher(seneca,{src:'bar',interval:1111},function(err,out2) {
           //console.log('BBB',err,out2)
           expect(err).not.exists()
           expect(out1.hash).string()
@@ -38,7 +38,7 @@ lab.test('happy-real', {timeout:5555}, async ()=>{
           seneca.close(resolve)
         })
       })
-    }, 1111)
+    }, 555)
   })         
 })
 

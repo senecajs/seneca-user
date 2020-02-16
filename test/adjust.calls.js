@@ -40,7 +40,20 @@ module.exports = [
     }
   }),
   
-  // TODO: confirm can login
+
+  {
+    print: print_adjust,
+    pattern: 'login:user',
+    params: {
+      handle: 'alice',
+      auto: true
+    },
+    out: {
+      ok: true, 
+      user: {handle: 'alice', active: true}
+    }
+  },
+
 
 
   // do nothing
@@ -76,7 +89,19 @@ module.exports = [
     }
   },
 
-  // TODO: confirm cannot login
+  // confirm cannot login
+  {
+    print: print_adjust,
+    pattern: 'login:user',
+    params: {
+      handle: 'alice',
+      auto: true
+    },
+    out: {
+      ok: false,
+      why:'user-not-active'
+    }
+  },
 
 
   // idempotent

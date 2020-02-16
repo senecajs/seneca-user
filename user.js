@@ -17,6 +17,7 @@ const Assert = require('assert')
 
 const Crypto = require('crypto')
 const Nid = require('nid')
+const Uuid = require('uuid')
 
 // WARNING: this plugin is for *internal* use, DO NOT expose via an API.
 // See the seneca-auth plugin for an example of an API that uses this plugin.
@@ -41,9 +42,22 @@ module.exports.defaults = {
   fields: {
     standard: ['active','handle','email','name'],
   },
-  
+
+  onetime: {
+    expire: 15 * 60 * 1000 // 15 minutes
+  },
+
+  password: {
+    minlen: 8
+  },
+
+  handle: {
+    minlen: 3
+  },
+
   ensure_handle: intern.ensure_handle,
   make_handle: intern.make_handle,
+  make_token: intern.make_token,
 
 /*  
   // --- LEGACY BELOW ---
@@ -113,11 +127,13 @@ function user(options) {
     .fix('sys:user')
     .message('register:user', intern.make_msg('register_user', ctx))
     .message('get:user', get_user)
-    .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
     .message('adjust:user', intern.make_msg('adjust_user', ctx))
+    .message('login:user', intern.make_msg('login_user', ctx))
+    .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
+    .message('hook:password,cmd:verify', intern.make_msg('cmd_verify', ctx))
 
+  
   // NEXT
-  //.message('login:user', login_user)
   //.message('logout:user', logout_user)
 
 
@@ -132,7 +148,13 @@ function user(options) {
 
 
   
-  
+  return {
+    exports: {
+      find_user: async function(seneca, msg, special_ctx) {
+        return intern.find_user(seneca, msg, Object.assign({},ctx,special_ctx||{}))
+      }
+    }
+  }
 
 
 
@@ -1601,39 +1623,47 @@ function make_intern() {
     },
 
     find_user: async function(seneca, msg, ctx) {
-      msg = intern.fix_nick_handle(msg)
+      // User may already be provided in parameters.
+      var user = msg.user && msg.user.entity$ ? msg.user : null
+      
+      if(null == user) {
+        msg = intern.fix_nick_handle(msg)
 
-      var why = null
-      var q = msg.q || {} // allow use of `q` to specify query
-    
-      ctx.convenience_fields.forEach(f => null != msg[f] && (q[f]=msg[f]))
+        var why = null
 
-      // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
-      var user
-      if (0 < Object.keys(seneca.util.clean(q)).length) {
-        // Add additional fields to standard fields.
-        q.fields$ = [...new Set((q.fields$ || msg.fields || [])
-                                .concat(ctx.standard_user_fields))]
+        // allow use of `q` to specify query, or `user` prop (q has precedence)
+        var q = Object.assign({},msg.user||{},msg.q||{})
+        
+        ctx.convenience_fields.forEach(f => null != msg[f] && (q[f]=msg[f]))
 
-        // These are the unique fields
-        if(null == q.id && null == q.handle && null == q.email ) {
-          var users = await seneca.entity(ctx.sys_user).list$(q)
+        // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
 
-          if(1 === users.length) {
-            user = intern.fix_nick_handle(users[0])
+        if (0 < Object.keys(seneca.util.clean(q)).length) {
+          // Add additional fields to standard fields.
+          var fields = Array.isArray(msg.fields) ? msg.fields : []
+          q.fields$ = [...new Set((q.fields$ || fields)
+                                  .concat(ctx.standard_user_fields))]
+
+          // These are the unique fields
+          if(null == q.id && null == q.handle && null == q.email ) {
+            var users = await seneca.entity(ctx.sys_user).list$(q)
+
+            if(1 === users.length) {
+              user = intern.fix_nick_handle(users[0])
+            }
+            else if(1 < users.length) {
+              // This is bad, as you could operate on another user
+              why = 'multiple-matching-users'
+            }
           }
-          else if(1 < users.length) {
-            // This is bad, as you could operate on another user
-            why = 'multiple-matching-users'
+          else {
+            // Use load$ to trigger entity cache
+            user = await seneca.entity(ctx.sys_user).load$(q)
           }
         }
         else {
-          // Use load$ to trigger entity cache
-          user = await seneca.entity(ctx.sys_user).load$(q)
+          why = 'no-query'
         }
-      }
-      else {
-        why = 'no-query'
       }
       
       var out = { ok: null != user, user: user || null }
@@ -1644,6 +1674,32 @@ function make_intern() {
       return out
     },
 
+
+    build_pass_fields: async function(seneca,msg,ctx) {
+      var pass = null != msg.pass ? msg.pass : msg.password
+      var repeat = msg.repeat // optional
+      var salt = msg.salt
+      
+      if('string'===typeof(repeat) && repeat !== pass) {
+        return {ok:false,why:'repeat-password-mismatch'}
+      }
+
+      var res = await seneca.post('sys:user,hook:password,cmd:encrypt', {
+        pass: pass,
+        salt: salt
+      })
+
+      if(res.ok) {
+        return {ok:true, fields:{
+          pass: res.pass,
+          salt: res.salt
+        }}
+      }
+      else {
+        return {ok:false,why:res.why,details:res.details||{}}
+      }
+    },
+    
     generate_salt: function (options) {
       return Crypto
         .randomBytes(options.salt.bytelen)
@@ -1704,8 +1760,56 @@ function make_intern() {
       return handle
     },
 
-    make_handle: Nid({length:'12',alphabet:'abcdefghijklmnopqrstuvwxyz'})
+    make_handle: Nid({length:'12',alphabet:'abcdefghijklmnopqrstuvwxyz'}),
 
+    
+    make_token: Uuid.v4,  // Random! Don't leak things.
+    
+    
+    make_login: async function(spec) {
+
+      /* $lab:coverage:off$ */
+      var seneca = Assert(spec.seneca) || spec.seneca
+      var user = Assert(spec.user) || spec.user
+      var why = Assert(spec.why) || spec.why
+      var ctx = Assert(spec.ctx) || spec.ctx
+      var options = Assert(ctx.options) || ctx.options
+      /* $lab:coverage:on$ */
+
+      var fields = spec.fields || {}
+      var onetime = !!spec.onetime
+
+      var login_data = {
+        // custom fields
+        ...fields,
+
+        // token field should be indexed for quick lookups
+        token: options.make_token(),
+
+        // deliberately copied
+        handle: user.handle,
+        email: user.email,
+        
+        user_id: user.id,
+
+        when: new Date().toISOString(),
+
+        active: true,
+        why: why
+      }
+
+      if (onetime) {
+        login_data.onetime_active = true
+        login_data.onetime_token = options.make_token(),
+        login_data.onetime_expiry = Date.now() + options.onetime.expire
+      }
+
+      var login = await seneca.entity(ctx.sys_login).data$(login_data).save$()
+
+      return login
+    }
+
+    
 /*
     conditional_extend: function(options, user, args) {
       var extra = Object.assign({}, args)

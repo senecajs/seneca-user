@@ -1,13 +1,15 @@
+/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+'use strict'
 
 const Code = require('@hapi/code')
 const Lab = require('@hapi/lab')
 const Joi = require('@hapi/joi')
+const expect = Code.expect
+const lab = (exports.lab = Lab.script())
 
 const SenecaMsgTest = require('seneca-msg-test')
 const Seneca = require('seneca')
 
-var expect = Code.expect
-var lab = (exports.lab = Lab.script())
 
 
 lab.test('messages', async ()=>{
@@ -17,7 +19,11 @@ lab.test('messages', async ()=>{
       .use('doc')
       .use('joi')
       .use('entity')
-      .use('..')
+      .use('..', {
+        password: {
+          minlen: 3
+        }
+      })
 
   var run = SenecaMsgTest(seneca,{
     print: false,
@@ -25,10 +31,13 @@ lab.test('messages', async ()=>{
       missing: true
     },
     pattern:'sys:user',
+
+    // NOTE: order is significant
     calls: []
       .concat(require('./register_get.calls.js'))
       .concat(require('./password.calls.js'))
       .concat(require('./adjust.calls.js'))
+      .concat(require('./login.calls.js'))
   })
 
   try {
