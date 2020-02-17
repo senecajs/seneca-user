@@ -1828,6 +1828,11 @@ function make_intern() {
 
 
     load_user_fields: function(msg,...rest) {
+      /* $lab:coverage:off$ */
+      // Seventh Circle of Hell, aka node < 12
+      rest.flat = ('function' == typeof(rest.flat) ? rest.flat : (function(){return this.reduce((a,y)=>{return Array.isArray(y)?a.concat(y):(a.push(y),a)},[])}).bind(rest))
+      /* $lab:coverage:on$ */
+
       var fields = rest.flat().filter(f=>'string'===typeof(f)&&0<f.length)
       msg.q = msg.q||{}
       msg.q.fields$ = (msg.q.fields$||[])

@@ -583,7 +583,7 @@
           <div class="failures">0</div>
           <div class="skipped">0</div>
           <div class="test-count">19</div>
-          <div class="duration">3204</div>
+          <div class="duration">3268</div>
       </div>
       <div id="filters">
           <input type="checkbox" checked="" onchange="filter(this)" value="success" id="show-success">
@@ -606,28 +606,28 @@
               <td class="test-title">happy-test
                   
               </td>
-              <td class="test-duration">216</td>
+              <td class="test-duration">218</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">2</td>
               <td class="test-title">happy-real
                   
               </td>
-              <td class="test-duration">796</td>
+              <td class="test-duration">801</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">3</td>
               <td class="test-title">close
                   
               </td>
-              <td class="test-duration">1</td>
+              <td class="test-duration">0</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">4</td>
               <td class="test-title">accept_msg
                   
               </td>
-              <td class="test-duration">3</td>
+              <td class="test-duration">4</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">5</td>
@@ -641,14 +641,14 @@
               <td class="test-title">clean_waiting
                   
               </td>
-              <td class="test-duration">1</td>
+              <td class="test-duration">2</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">7</td>
               <td class="test-title">handle_exit
                   
               </td>
-              <td class="test-duration">10</td>
+              <td class="test-duration">11</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">8</td>
@@ -662,7 +662,7 @@
               <td class="test-title">make_handle
                   
               </td>
-              <td class="test-duration">7</td>
+              <td class="test-duration">6</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">10</td>
@@ -683,21 +683,21 @@
               <td class="test-title">find_user
                   
               </td>
-              <td class="test-duration">276</td>
+              <td class="test-duration">277</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">13</td>
               <td class="test-title">make_login
                   
               </td>
-              <td class="test-duration">133</td>
+              <td class="test-duration">135</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">14</td>
               <td class="test-title">build_pass_fields
                   
               </td>
-              <td class="test-duration">376</td>
+              <td class="test-duration">380</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">15</td>
@@ -711,7 +711,7 @@
               <td class="test-title">messages
                   
               </td>
-              <td class="test-duration">1097</td>
+              <td class="test-duration">1143</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">17</td>
@@ -725,14 +725,14 @@
               <td class="test-title">happy
                   
               </td>
-              <td class="test-duration">128</td>
+              <td class="test-duration">127</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">19</td>
               <td class="test-title">export
                   
               </td>
-              <td class="test-duration">133</td>
+              <td class="test-duration">136</td>
           </tr>
           </tbody>
       </table>
@@ -741,8 +741,8 @@
         <h1>Code Coverage Report</h1>
         <div class="stats high">
             <div class="percentage">100%</div>
-            <div class="sloc">732</div>
-            <div class="hits">732</div>
+            <div class="sloc">733</div>
+            <div class="hits">733</div>
             <div class="misses">0</div>
         </div>
         <div id="filters">
@@ -1346,8 +1346,8 @@
                 <h2 id="user.js">user.js </h2>
                 <div class="stats high">
                     <div class="percentage">100%</div>
-                    <div class="sloc">221</div>
-                    <div class="hits">221</div>
+                    <div class="sloc">222</div>
+                    <div class="hits">222</div>
                     <div class="misses">0</div>
                 </div>
                 <table>
@@ -12345,148 +12345,178 @@
                           <td class="line" data-tooltip>1831</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      var fields &#x3D; rest.flat().filter(f&#x3D;&gt;&#x27;string&#x27;&#x3D;&#x3D;&#x3D;typeof(f)&amp;&amp;0&lt;f.length)</td>
+                          <td class="source">      /* $lab:coverage:off$ */</td>
                           
                         </tr>            <tr id="user.js__1832" class="hit">
                           <td class="line" data-tooltip>1832</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>22</td>
-                          <td class="source">      msg.q &#x3D; msg.q||{}</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      // Seventh Circle of Hell, aka node &lt; 12</td>
                           
                         </tr>            <tr id="user.js__1833" class="hit">
                           <td class="line" data-tooltip>1833</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>22</td>
-                          <td class="source">      msg.q.fields$ &#x3D; (msg.q.fields$||[])</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      rest.flat &#x3D; (&#x27;function&#x27; &#x3D;&#x3D; typeof(rest.flat) ? rest.flat : (function(){return this.reduce((a,y)&#x3D;&gt;{return Array.isArray(y)?a.concat(y):(a.push(y),a)},[])}).bind(rest))</td>
                           
                         </tr>            <tr id="user.js__1834" class="hit">
                           <td class="line" data-tooltip>1834</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>22</td>
-                          <td class="source">      msg.q.fields$ &#x3D; msg.q.fields$.concat(fields)</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      /* $lab:coverage:on$ */</td>
                           
                         </tr>            <tr id="user.js__1835" class="hit">
                           <td class="line" data-tooltip>1835</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>22</td>
-                          <td class="source">      msg.q.fields$ &#x3D; [...new Set(msg.q.fields$)] // remove dups</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="user.js__1836" class="hit">
                           <td class="line" data-tooltip>1836</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip>22</td>
-                          <td class="source">      return msg</td>
+                          <td class="source">      var fields &#x3D; rest.flat().filter(f&#x3D;&gt;&#x27;string&#x27;&#x3D;&#x3D;&#x3D;typeof(f)&amp;&amp;0&lt;f.length)</td>
                           
                         </tr>            <tr id="user.js__1837" class="hit">
                           <td class="line" data-tooltip>1837</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    },</td>
+                          <td class="hits" data-tooltip>22</td>
+                          <td class="source">      msg.q &#x3D; msg.q||{}</td>
                           
                         </tr>            <tr id="user.js__1838" class="hit">
                           <td class="line" data-tooltip>1838</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    </td>
+                          <td class="hits" data-tooltip>22</td>
+                          <td class="source">      msg.q.fields$ &#x3D; (msg.q.fields$||[])</td>
                           
                         </tr>            <tr id="user.js__1839" class="hit">
                           <td class="line" data-tooltip>1839</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">/*</td>
+                          <td class="hits" data-tooltip>22</td>
+                          <td class="source">      msg.q.fields$ &#x3D; msg.q.fields$.concat(fields)</td>
                           
                         </tr>            <tr id="user.js__1840" class="hit">
                           <td class="line" data-tooltip>1840</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    conditional_extend: function(options, user, args) {</td>
+                          <td class="hits" data-tooltip>22</td>
+                          <td class="source">      msg.q.fields$ &#x3D; [...new Set(msg.q.fields$)] // remove dups</td>
                           
                         </tr>            <tr id="user.js__1841" class="hit">
                           <td class="line" data-tooltip>1841</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">      var extra &#x3D; Object.assign({}, args)</td>
+                          <td class="hits" data-tooltip>22</td>
+                          <td class="source">      return msg</td>
                           
                         </tr>            <tr id="user.js__1842" class="hit">
                           <td class="line" data-tooltip>1842</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      var omit &#x3D; options.updateUser.omit || []</td>
+                          <td class="source">    },</td>
                           
                         </tr>            <tr id="user.js__1843" class="hit">
                           <td class="line" data-tooltip>1843</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      omit.forEach(key&#x3D;&gt;delete extra[key])</td>
+                          <td class="source">    </td>
                           
                         </tr>            <tr id="user.js__1844" class="hit">
                           <td class="line" data-tooltip>1844</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      </td>
+                          <td class="source">/*</td>
                           
                         </tr>            <tr id="user.js__1845" class="hit">
                           <td class="line" data-tooltip>1845</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      for (let [key, val] of Object.entries(extra)) {</td>
+                          <td class="source">    conditional_extend: function(options, user, args) {</td>
                           
                         </tr>            <tr id="user.js__1846" class="hit">
                           <td class="line" data-tooltip>1846</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">        if (!key.match(/\$/)) {</td>
+                          <td class="source">      var extra &#x3D; Object.assign({}, args)</td>
                           
                         </tr>            <tr id="user.js__1847" class="hit">
                           <td class="line" data-tooltip>1847</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">          user[key] &#x3D; val</td>
+                          <td class="source">      var omit &#x3D; options.updateUser.omit || []</td>
                           
                         </tr>            <tr id="user.js__1848" class="hit">
                           <td class="line" data-tooltip>1848</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">        }</td>
+                          <td class="source">      omit.forEach(key&#x3D;&gt;delete extra[key])</td>
                           
                         </tr>            <tr id="user.js__1849" class="hit">
                           <td class="line" data-tooltip>1849</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      }</td>
+                          <td class="source">      </td>
                           
                         </tr>            <tr id="user.js__1850" class="hit">
                           <td class="line" data-tooltip>1850</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    }</td>
+                          <td class="source">      for (let [key, val] of Object.entries(extra)) {</td>
                           
                         </tr>            <tr id="user.js__1851" class="hit">
                           <td class="line" data-tooltip>1851</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">*/</td>
+                          <td class="source">        if (!key.match(/\$/)) {</td>
                           
                         </tr>            <tr id="user.js__1852" class="hit">
                           <td class="line" data-tooltip>1852</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">  }</td>
+                          <td class="source">          user[key] &#x3D; val</td>
                           
                         </tr>            <tr id="user.js__1853" class="hit">
                           <td class="line" data-tooltip>1853</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">}</td>
+                          <td class="source">        }</td>
                           
                         </tr>            <tr id="user.js__1854" class="hit">
                           <td class="line" data-tooltip>1854</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">      }</td>
                           
                         </tr>            <tr id="user.js__1855" class="hit">
                           <td class="line" data-tooltip>1855</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
+                          
+                        </tr>            <tr id="user.js__1856" class="hit">
+                          <td class="line" data-tooltip>1856</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">*/</td>
+                          
+                        </tr>            <tr id="user.js__1857" class="hit">
+                          <td class="line" data-tooltip>1857</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">  }</td>
+                          
+                        </tr>            <tr id="user.js__1858" class="hit">
+                          <td class="line" data-tooltip>1858</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">}</td>
+                          
+                        </tr>            <tr id="user.js__1859" class="hit">
+                          <td class="line" data-tooltip>1859</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="user.js__1860" class="hit">
+                          <td class="line" data-tooltip>1860</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
                           <td class="source"></td>
