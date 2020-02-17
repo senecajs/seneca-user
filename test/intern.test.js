@@ -309,6 +309,43 @@ lab.test('build_pass_fields', async () => {
   })
 })
 
+lab.test('load_user_field', () => {
+  expect(intern.load_user_fields({})).equal({q:{fields$:[]}})
+  expect(intern.load_user_fields({a:1})).equal({a:1,q:{fields$:[]}})
+  expect(intern.load_user_fields({a:1})).equal({a:1,q:{fields$:[]}})
+  expect(intern.load_user_fields({a:1},null)).equal({a:1,q:{fields$:[]}})
+  expect(intern.load_user_fields({a:1},'')).equal({a:1,q:{fields$:[]}})
+  expect(intern.load_user_fields({a:1},1)).equal({a:1,q:{fields$:[]}})
+  expect(intern.load_user_fields({a:1},'x')).equal({a:1,q:{fields$:['x']}})
+  expect(intern.load_user_fields({a:1},'x','y')).equal({a:1,q:{fields$:['x','y']}})
+  expect(intern.load_user_fields({a:1},['x','y'])).equal({a:1,q:{fields$:['x','y']}})
+  expect(intern.load_user_fields({a:1},'x',['y','z']))
+    .equal({a:1,q:{fields$:['x','y','z']}})
+
+  expect(intern.load_user_fields({a:1,q:{}},'x',['y','z']))
+    .equal({a:1,q:{fields$:['x','y','z']}})
+  expect(intern.load_user_fields({a:1,q:{k:1}},'x',['y','z']))
+    .equal({a:1,q:{k:1,fields$:['x','y','z']}})
+
+  expect(intern.load_user_fields({a:1,q:{fields$:[]}},'x',['y','z']))
+    .equal({a:1,q:{fields$:['x','y','z']}})
+  expect(intern.load_user_fields({a:1,q:{k:1,fields$:[]}},'x',['y','z']))
+    .equal({a:1,q:{k:1,fields$:['x','y','z']}})
+
+  expect(intern.load_user_fields({a:1,q:{fields$:['q']}},'x',['y','z']))
+    .equal({a:1,q:{fields$:['q','x','y','z']}})
+  expect(intern.load_user_fields({a:1,q:{k:1,fields$:['q']}},'x',['y','z']))
+    .equal({a:1,q:{k:1,fields$:['q','x','y','z']}})
+
+  expect(intern.load_user_fields({a:1,q:{fields$:['q','x']}},'x',['y','z']))
+    .equal({a:1,q:{fields$:['q','x','y','z']}})
+  expect(intern.load_user_fields({a:1,q:{k:1,fields$:['q','x']}},'x',['y','z']))
+    .equal({a:1,q:{k:1,fields$:['q','x','y','z']}})
+
+})
+
+
+
 function make_seneca() {
   var seneca = Seneca({ legacy: false })
     .test()

@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi')
 
-var print_register = true
+var print_register = false
 
 module.exports = [
   {

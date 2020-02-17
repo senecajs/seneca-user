@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi')
 
-var print_login = true
+var print_login = false
 
 var call = {}
 
