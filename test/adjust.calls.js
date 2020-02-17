@@ -5,15 +5,13 @@ var print_adjust = true
 var call = {}
 
 module.exports = [
-
   // user not found
   {
     print: print_adjust,
     pattern: 'adjust:user',
     params: {},
-    out: {ok:false, why:'no-query'}
+    out: { ok: false, why: 'no-query' }
   },
-
 
   // user not found
   {
@@ -27,7 +25,7 @@ module.exports = [
       user: null
     }
   },
-  
+
   (call.get_alice_active = {
     print: print_adjust,
     pattern: 'get:user',
@@ -41,8 +39,6 @@ module.exports = [
       user: { handle: 'alice', custom_field0: 'value0', active: true }
     }
   }),
-  
-
   {
     print: print_adjust,
     pattern: 'login:user',
@@ -51,12 +47,10 @@ module.exports = [
       auto: true
     },
     out: {
-      ok: true, 
-      user: {handle: 'alice', active: true}
+      ok: true,
+      user: { handle: 'alice', active: true }
     }
   },
-
-
 
   // do nothing
   {
@@ -64,7 +58,7 @@ module.exports = [
     pattern: 'adjust:user',
     params: {
       q: {
-        handle: 'alice',
+        handle: 'alice'
       }
     },
     out: {
@@ -74,7 +68,6 @@ module.exports = [
 
   call.get_alice_active,
 
-
   {
     print: print_adjust,
     pattern: 'list:login',
@@ -82,18 +75,18 @@ module.exports = [
       handle: 'alice'
     },
     out: {
-      ok:true,
-      items:Joi.array().length(1)
+      ok: true,
+      items: Joi.array().length(1)
     }
   },
-  
+
   // deactivate
   {
     print: print_adjust,
     pattern: 'adjust:user',
     params: {
       q: {
-        handle: 'alice',
+        handle: 'alice'
       },
       active: false,
       fields: ['custom_field0'] // test retrieval of custom fields
@@ -113,7 +106,7 @@ module.exports = [
     },
     out: {
       ok: false,
-      why:'user-not-active'
+      why: 'user-not-active'
     }
   },
 
@@ -125,11 +118,10 @@ module.exports = [
       handle: 'alice'
     },
     out: {
-      ok:true,
-      items:Joi.array().length(0)
+      ok: true,
+      items: Joi.array().length(0)
     }
   },
-
 
   // idempotent
   {
@@ -137,7 +129,7 @@ module.exports = [
     pattern: 'adjust:user',
     params: {
       q: {
-        handle: 'alice',
+        handle: 'alice'
       },
       active: false,
       fields: ['custom_field0']
@@ -146,7 +138,6 @@ module.exports = [
       user: { handle: 'alice', custom_field0: 'value0', active: false }
     }
   },
-  
 
   {
     print: print_adjust,
@@ -161,13 +152,13 @@ module.exports = [
       user: { handle: 'alice', custom_field0: 'value0', active: false }
     }
   },
-  
+
   {
     print: print_adjust,
     pattern: 'adjust:user',
     params: {
       q: {
-        handle: 'alice',
+        handle: 'alice'
       },
       active: true,
       fields: ['custom_field0']

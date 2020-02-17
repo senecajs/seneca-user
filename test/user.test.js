@@ -10,18 +10,15 @@ const Seneca = require('seneca')
 const Plugin = require('..')
 const PluginValidator = require('seneca-plugin-validator')
 
-
-
 lab.test('validate', PluginValidator(Plugin, module))
 
-lab.test('happy', async ()=>{
+lab.test('happy', async () => {
   var si = make_seneca()
   await si.ready()
   expect(si.find_plugin('user')).exists()
 })
 
-
-lab.test('export', async ()=>{
+lab.test('export', async () => {
   var si = make_seneca()
   await si.ready()
 
@@ -29,30 +26,32 @@ lab.test('export', async ()=>{
   expect(find_user).function()
 
   var alice = await si.post('sys:user,register:user', {
-    handle: 'alice',
+    handle: 'alice'
   })
 
-  var found = await find_user(si,{handle:'alice'})
+  var found = await find_user(si, { handle: 'alice' })
   expect(found.ok).true()
   expect(found.why).not.exists()
   expect(alice.user.data$()).contains(found.user.data$())
 
-  found = await find_user(si,{handle:'alice'},{standard_user_fields:['name']})
+  found = await find_user(
+    si,
+    { handle: 'alice' },
+    { standard_user_fields: ['name'] }
+  )
   expect(found.ok).true()
   expect(found.why).not.exists()
   expect(found.user.handle).not.exists()
   expect(alice.user.data$()).contains(found.user.data$())
-
 })
 
-
 function make_seneca() {
-  var seneca = Seneca({legacy:false})
-      .test()
-      .use('promisify')
-      .use('doc')
-      .use('joi')
-      .use('entity')
-      .use('..')
+  var seneca = Seneca({ legacy: false })
+    .test()
+    .use('promisify')
+    .use('doc')
+    .use('joi')
+    .use('entity')
+    .use('..')
   return seneca
 }

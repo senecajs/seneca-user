@@ -7,7 +7,6 @@ var call = {}
 // NOTE: assumes register_get.calls
 
 module.exports = [
-
   // test setting: options.password.minlen = 2
   {
     print: print_login,
@@ -32,7 +31,7 @@ module.exports = [
       salt: 'bar'
     },
     out: {
-      ok: true, 
+      ok: true,
       salt: 'bar'
     }
   },
@@ -46,7 +45,7 @@ module.exports = [
       salt: 'bar'
     },
     out: {
-      ok: true, 
+      ok: true
     }
   },
 
@@ -59,7 +58,8 @@ module.exports = [
       salt: 'bar'
     },
     out: {
-      ok: false, why: 'password-too-short'
+      ok: false,
+      why: 'password-too-short'
     }
   },
 
@@ -95,12 +95,12 @@ module.exports = [
     print: print_login,
     pattern: 'login:user',
     params: {
-      handle: 'not-a-user',
+      handle: 'not-a-user'
     },
     out: {
-      ok: false, 
+      ok: false,
       user: null,
-      why:'user-not-found'
+      why: 'user-not-found'
     }
   },
 
@@ -113,9 +113,9 @@ module.exports = [
       auto: true
     },
     out: {
-      ok: true, 
-      user: {handle:'alice'},
-      login: {handle:'alice'}
+      ok: true,
+      user: { handle: 'alice' },
+      login: { handle: 'alice' }
     }
   },
 
@@ -132,12 +132,11 @@ module.exports = [
       }
     },
     out: {
-      ok: true, 
-      user: {handle:'bob'},
-      login: {handle:'bob', foo:1}
+      ok: true,
+      user: { handle: 'bob' },
+      login: { handle: 'bob', foo: 1 }
     }
   },
-
 
   {
     print: print_login,
@@ -161,11 +160,11 @@ module.exports = [
       handle: 'edward',
       email: 'edward@example.com',
       password: 'edward123',
-      repeat: 'edward123',
+      repeat: 'edward123'
     },
     out: {
       ok: true,
-      user: {handle:'edward', email: 'edward@example.com'}
+      user: { handle: 'edward', email: 'edward@example.com' }
     }
   },
 
@@ -174,10 +173,10 @@ module.exports = [
     print: print_login,
     pattern: 'login:user',
     params: {
-      handle: 'edward',
+      handle: 'edward'
     },
     out: {
-      ok: false, 
+      ok: false,
       why: 'no-login-method'
     }
   },
@@ -188,18 +187,17 @@ module.exports = [
     pattern: 'login:user',
     params: {
       handle: 'edward',
-      password:'edward123',
+      password: 'edward123',
       login_data: {
         foo: 1 // add extra login fields
       }
     },
     out: {
-      ok: true, 
-      user: {handle:'edward', email: 'edward@example.com'},
-      login: {handle:'edward', email: 'edward@example.com', foo:1}
+      ok: true,
+      user: { handle: 'edward', email: 'edward@example.com' },
+      login: { handle: 'edward', email: 'edward@example.com', foo: 1 }
     }
   },
-
 
   {
     print: print_login,
@@ -209,12 +207,12 @@ module.exports = [
       email: 'frank@example.com',
       pass: 'frank123', // repeat is optional
       user_data: {
-        foo:1
+        foo: 1
       }
     },
     out: {
       ok: true,
-      user: {foo:1, handle:'frank', email: 'frank@example.com'}
+      user: { foo: 1, handle: 'frank', email: 'frank@example.com' }
     }
   },
 
@@ -224,18 +222,17 @@ module.exports = [
     pattern: 'login:user',
     params: {
       handle: 'frank',
-      password:'frank123',
-      q:{
-        fields$:['foo'] // load extra fields from user
+      password: 'frank123',
+      q: {
+        fields$: ['foo'] // load extra fields from user
       }
     },
     out: {
-      ok: true, 
-      user: {handle:'frank', email: 'frank@example.com',foo:1},
-      login: {handle:'frank', email: 'frank@example.com'}
+      ok: true,
+      user: { handle: 'frank', email: 'frank@example.com', foo: 1 },
+      login: { handle: 'frank', email: 'frank@example.com' }
     }
   },
-
 
   // multiple active logins
   {
@@ -243,49 +240,46 @@ module.exports = [
     pattern: 'login:user',
     params: {
       handle: 'frank',
-      pass:'frank123',
-      q:{
-        fields$:['foo'] // load extra fields from user
+      pass: 'frank123',
+      q: {
+        fields$: ['foo'] // load extra fields from user
       },
       login_data: {
-        bar:1
+        bar: 1
       }
     },
     out: {
-      ok: true, 
-      user: {handle:'frank', email: 'frank@example.com',foo:1},
-      login: {handle:'frank', email: 'frank@example.com'}
+      ok: true,
+      user: { handle: 'frank', email: 'frank@example.com', foo: 1 },
+      login: { handle: 'frank', email: 'frank@example.com' }
     }
   },
-
 
   {
     print: print_login,
     pattern: 'login:user',
     params: {
       handle: 'frank',
-      password:'not-franks-password',
+      password: 'not-franks-password'
     },
     out: {
-      ok: false, 
+      ok: false,
       why: 'invalid-password'
     }
   },
-
 
   {
     print: print_login,
     pattern: 'list:login',
     params: {
       handle: 'frank',
-      active: true,
+      active: true
     },
     out: {
-      ok:true,
-      items:Joi.array().length(2) // 2 active logins
+      ok: true,
+      items: Joi.array().length(2) // 2 active logins
     }
   },
-
 
   {
     print: print_login,
@@ -298,8 +292,8 @@ module.exports = [
       }
     },
     out: {
-      ok:true,
-      items:Joi.array().length(1) // 1 matching active login
+      ok: true,
+      items: Joi.array().length(1) // 1 matching active login
     }
   },
 
@@ -307,11 +301,11 @@ module.exports = [
     print: print_login,
     pattern: 'list:login',
     params: {
-      handle: 'not-frank',
+      handle: 'not-frank'
     },
     out: {
-      ok:false,
-      why:'user-not-found'
+      ok: false,
+      why: 'user-not-found'
     }
   },
 
@@ -323,9 +317,8 @@ module.exports = [
       active: false
     },
     out: {
-      ok:true,
-      items:Joi.array().length(0) // 0 non-active logins
+      ok: true,
+      items: Joi.array().length(0) // 0 non-active logins
     }
-  },
-
+  }
 ]

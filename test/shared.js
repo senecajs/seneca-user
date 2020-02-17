@@ -8,12 +8,14 @@ const Seneca = require('seneca')
 module.exports = {
   seneca_instance: function(opts) {
     opts = opts || {}
-    return Seneca()
-      .test(opts.fin)
-      .use('promisify')
-      //.use('basic')
-      .use('entity')
-      .use('..', opts.user)
+    return (
+      Seneca()
+        .test(opts.fin)
+        .use('promisify')
+        //.use('basic')
+        .use('entity')
+        .use('..', opts.user)
+    )
   },
 
   make_it: function(lab) {

@@ -12,7 +12,6 @@
 // - support user_id arg at top level
 // - cmd patterns: change:password, change:handle, change:email - logic to handle
 
-
 const Assert = require('assert')
 
 const Crypto = require('crypto')
@@ -26,8 +25,7 @@ module.exports = user
 
 module.exports.errors = {}
 
-
-const intern = module.exports.intern = make_intern()
+const intern = (module.exports.intern = make_intern())
 
 module.exports.defaults = {
   test: false,
@@ -40,7 +38,7 @@ module.exports.defaults = {
   rounds: 11111,
 
   fields: {
-    standard: ['active','handle','email','name'],
+    standard: ['active', 'handle', 'email', 'name']
   },
 
   onetime: {
@@ -56,12 +54,12 @@ module.exports.defaults = {
   },
 
   limit: 111, // default result limit
-  
+
   ensure_handle: intern.ensure_handle,
   make_handle: intern.make_handle,
-  make_token: intern.make_token,
+  make_token: intern.make_token
 
-/*  
+  /*  
   // --- LEGACY BELOW ---
   
   rounds: 11111,
@@ -116,7 +114,6 @@ module.exports.defaults = {
     expire: 5 * 60 * 1000 // 5 minutes
   },
 */
-  
 }
 
 function user(options) {
@@ -124,13 +121,13 @@ function user(options) {
   var ctx = intern.make_ctx({}, options)
 
   // TODO: @seneca/audit - record user modifications - e.g activate
-  
+
   seneca
     .fix('sys:user')
     .message('register:user', intern.make_msg('register_user', ctx))
     .message('get:user', get_user)
 
-  // TODO: verified status
+    // TODO: verified status
     .message('adjust:user', intern.make_msg('adjust_user', ctx))
 
     .message('login:user', intern.make_msg('login_user', ctx))
@@ -138,42 +135,34 @@ function user(options) {
     .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
     .message('hook:password,cmd:verify', intern.make_msg('cmd_verify', ctx))
 
-  
   // NEXT
   //.message('logout:user', logout_user)
   //.message('change:password', change_password)
   //.message('change:handle', change_handle)
   //.message('change:email', change_email)
 
-
-  
-
-  
-  
   async function get_user(msg) {
     return await intern.find_user(this, msg, ctx)
   }
 
-
-
-  
   return {
     exports: {
       find_user: async function(seneca, msg, special_ctx) {
-        return intern.find_user(seneca, msg, Object.assign({},ctx,special_ctx||{}))
+        return intern.find_user(
+          seneca,
+          msg,
+          Object.assign({}, ctx, special_ctx || {})
+        )
       }
     }
   }
-
-
-
 
   // async function login_user(msg) {
   //   var seneca = this
 
   //   var user = null
   //   var login_fields = msg.login // Optional extra fields to save with login.
-    
+
   //   // Find the user.
   //   var found_user = get_user(this,msg)
 
@@ -184,10 +173,10 @@ function user(options) {
   //   }
 
   //   if(!user.active) {
-      
+
   //   }
-    
-    /*
+
+  /*
     // NOTE: assumes user is resolved (see resolve_user)
     var user = args.user
     var login_fields = args.login
@@ -263,12 +252,10 @@ function user(options) {
     }
 
     */
-//  }
+  //  }
 
-
-  
   // --- LEGACY BELOW ---
-/*
+  /*
   var user_canon = 'sys/user'
   var login_canon = 'sys/login'
   var reset_canon = 'sys/reset'
@@ -1604,97 +1591,102 @@ function user(options) {
 function make_intern() {
   return {
     make_msg: function(msg_fn, ctx) {
-      return require('./lib/'+msg_fn)(ctx)
+      return require('./lib/' + msg_fn)(ctx)
     },
-    
+
     make_ctx: function(initial_ctx, options) {
       Assert(initial_ctx)
       Assert(options)
 
-      return Object.assign({
-        intern: intern,
-        options: options,
+      return Object.assign(
+        {
+          intern: intern,
+          options: options,
 
-        // Standard entity canons
-        sys_user: 'sys/user',
-        sys_login: 'sys/login',
-        sys_reset: 'sys/reset',
-        sys_verify: 'sys/verify',
-  
-        // Standard user fields to load - keep data volume low by default
-        standard_user_fields: options.fields.standard,
-        
-        // Convenience query fields - msg.email etc.
-        convenience_fields: 'id,user_id,email,handle,name'.split(',')
-      },initial_ctx)
+          // Standard entity canons
+          sys_user: 'sys/user',
+          sys_login: 'sys/login',
+          sys_reset: 'sys/reset',
+          sys_verify: 'sys/verify',
+
+          // Standard user fields to load - keep data volume low by default
+          standard_user_fields: options.fields.standard,
+
+          // Convenience query fields - msg.email etc.
+          convenience_fields: 'id,user_id,email,handle,name'.split(',')
+        },
+        initial_ctx
+      )
     },
 
     find_user: async function(seneca, msg, ctx) {
       // User may already be provided in parameters.
       var user = msg.user && msg.user.entity$ ? msg.user : null
-      
-      if(null == user) {
+
+      if (null == user) {
         msg = intern.fix_nick_handle(msg)
 
         var why = null
 
         // allow use of `q` to specify query, or `user` prop (q has precedence)
-        var q = Object.assign({},msg.user||{},msg.user_data||{},msg.q||{})
-        
-        ctx.convenience_fields.forEach(f => null != msg[f] && (q[f]=msg[f]))
+        var q = Object.assign(
+          {},
+          msg.user || {},
+          msg.user_data || {},
+          msg.q || {}
+        )
+
+        ctx.convenience_fields.forEach(f => null != msg[f] && (q[f] = msg[f]))
 
         // `user_id` is an alias for `id`
-        if(null == q.id && null != q.user_id) {
+        if (null == q.id && null != q.user_id) {
           q.id = q.user_id
         }
         delete q.user_id
-        
+
         // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
 
         if (0 < Object.keys(seneca.util.clean(q)).length) {
           // Add additional fields to standard fields.
           var fields = Array.isArray(msg.fields) ? msg.fields : []
-          q.fields$ = [...new Set((q.fields$ || fields)
-                                  .concat(ctx.standard_user_fields))]
+          q.fields$ = [
+            ...new Set((q.fields$ || fields).concat(ctx.standard_user_fields))
+          ]
 
           // These are the unique fields
-          if(null == q.id && null == q.handle && null == q.email ) {
+          if (null == q.id && null == q.handle && null == q.email) {
             var users = await seneca.entity(ctx.sys_user).list$(q)
 
-            if(1 === users.length) {
+            if (1 === users.length) {
               user = intern.fix_nick_handle(users[0])
-            }
-            else if(1 < users.length) {
+            } else if (1 < users.length) {
               // This is bad, as you could operate on another user
               why = 'multiple-matching-users'
             }
-          }
-          else {
+          } else {
             // Use load$ to trigger entity cache
             user = await seneca.entity(ctx.sys_user).load$(q)
           }
-        }
-        else {
+        } else {
           why = 'no-query'
         }
       }
-      
+
       var out = { ok: null != user, user: user || null }
-      if(null == user) {
+      if (null == user) {
         out.why = why || 'user-not-found'
       }
 
       return out
     },
 
-
-    build_pass_fields: async function(seneca,msg,ctx) {
+    build_pass_fields: async function(seneca, msg, ctx) {
       var pass = null != msg.pass ? msg.pass : msg.password
       var repeat = msg.repeat // optional
       var salt = msg.salt
-      
-      if('string'===typeof(repeat) && repeat !== pass) {
-        return {ok:false,why:'repeat-password-mismatch'}
+
+      if ('string' === typeof repeat && repeat !== pass) {
+        return { ok: false, why: 'repeat-password-mismatch' }
       }
 
       var res = await seneca.post('sys:user,hook:password,cmd:encrypt', {
@@ -1702,59 +1694,63 @@ function make_intern() {
         salt: salt
       })
 
-      if(res.ok) {
-        return {ok:true, fields:{
-          pass: res.pass,
-          salt: res.salt
-        }}
-      }
-      else {
+      if (res.ok) {
         return {
-          ok:false,
-          why:res.why,
+          ok: true,
+          fields: {
+            pass: res.pass,
+            salt: res.salt
+          }
+        }
+      } else {
+        return {
+          ok: false,
+          why: res.why,
 
           /* $lab:coverage:off$ */
-          details:res.details||{}
+          details: res.details || {}
           /* $lab:coverage:on$ */
         }
       }
     },
-    
-    generate_salt: function (options) {
-      return Crypto
-        .randomBytes(options.salt.bytelen)
-        .toString(options.salt.format)
+
+    generate_salt: function(options) {
+      return Crypto.randomBytes(options.salt.bytelen).toString(
+        options.salt.format
+      )
     },
 
     // Automate migration of nick->handle. Removes nick.
     // Assume update value will be saved elsewhere in due course.
     fix_nick_handle: function(data) {
-      if(null == data) {
+      if (null == data) {
         return data
       }
 
-      if(null != data.nick) {
+      if (null != data.nick) {
         data.handle = null != data.handle ? data.handle : data.nick
         delete data.nick
       }
-      
-      if(null != data.user && null != data.user.nick) {
+
+      if (null != data.user && null != data.user.nick) {
         data.user.handle =
           null != data.user.handle ? data.user.handle : data.user.nick
         delete data.user.nick
       }
 
-      if(null != data.user_data && null != data.user_data.nick) {
+      if (null != data.user_data && null != data.user_data.nick) {
         data.user_data.handle =
-          null != data.user_data.handle ? data.user_data.handle : data.user_data.nick
+          null != data.user_data.handle
+            ? data.user_data.handle
+            : data.user_data.nick
         delete data.user_data.nick
       }
 
-      if(null != data.q && null != data.q.nick) {
+      if (null != data.q && null != data.q.nick) {
         data.q.handle = null != data.q.handle ? data.q.handle : data.q.nick
         delete data.q.nick
       }
-      
+
       return data
     },
 
@@ -1763,37 +1759,34 @@ function make_intern() {
       var user_data = msg.user_data || msg.user || {}
       var handle = null == msg.handle ? user_data.handle : msg.handle
 
-      if('string' != typeof(handle)) {
+      if ('string' != typeof handle) {
         var email = msg.email || user_data.email || null
 
-        if('string' == typeof(email) && email.includes('@')) {
-          handle = email.split('@')[0].toLowerCase() +
+        if ('string' == typeof email && email.includes('@')) {
+          handle =
+            email.split('@')[0].toLowerCase() +
             ('' + Math.random()).substring(2, 6)
-        }
-        else {
+        } else {
           handle = options.make_handle()
         }
 
         // there was nothing before the @
-        if(4 === handle.length) {
+        if (4 === handle.length) {
           handle = options.make_handle()
         }
       }
 
       msg.handle = handle
       user_data.handle = handle
-      
+
       return handle
     },
 
-    make_handle: Nid({length:'12',alphabet:'abcdefghijklmnopqrstuvwxyz'}),
+    make_handle: Nid({ length: '12', alphabet: 'abcdefghijklmnopqrstuvwxyz' }),
 
-    
-    make_token: Uuid.v4,  // Random! Don't leak things.
-    
-    
+    make_token: Uuid.v4, // Random! Don't leak things.
+
     make_login: async function(spec) {
-
       /* $lab:coverage:off$ */
       var seneca = Assert(spec.seneca) || spec.seneca
       var user = Assert(spec.user) || spec.user
@@ -1815,7 +1808,7 @@ function make_intern() {
         // deliberately copied
         handle: user.handle,
         email: user.email,
-        
+
         user_id: user.id,
 
         when: new Date().toISOString(),
@@ -1826,17 +1819,19 @@ function make_intern() {
 
       if (onetime) {
         full_login_data.onetime_active = true
-        full_login_data.onetime_token = options.make_token(),
-        full_login_data.onetime_expiry = Date.now() + options.onetime.expire
+        ;(full_login_data.onetime_token = options.make_token()),
+          (full_login_data.onetime_expiry = Date.now() + options.onetime.expire)
       }
 
-      var login = await seneca.entity(ctx.sys_login).data$(full_login_data).save$()
+      var login = await seneca
+        .entity(ctx.sys_login)
+        .data$(full_login_data)
+        .save$()
 
       return login
     }
 
-    
-/*
+    /*
     conditional_extend: function(options, user, args) {
       var extra = Object.assign({}, args)
       var omit = options.updateUser.omit || []
@@ -1851,4 +1846,3 @@ function make_intern() {
 */
   }
 }
-

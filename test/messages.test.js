@@ -10,27 +10,25 @@ const lab = (exports.lab = Lab.script())
 const SenecaMsgTest = require('seneca-msg-test')
 const Seneca = require('seneca')
 
+lab.test('messages', async () => {
+  var seneca = Seneca({ legacy: false })
+    .test()
+    .use('promisify')
+    .use('doc')
+    .use('joi')
+    .use('entity')
+    .use('..', {
+      password: {
+        minlen: 3
+      }
+    })
 
-
-lab.test('messages', async ()=>{
-  var seneca = Seneca({legacy:false})
-      .test()
-      .use('promisify')
-      .use('doc')
-      .use('joi')
-      .use('entity')
-      .use('..', {
-        password: {
-          minlen: 3
-        }
-      })
-
-  var run = SenecaMsgTest(seneca,{
+  var run = SenecaMsgTest(seneca, {
     print: false,
     allow: {
       missing: true
     },
-    pattern:'sys:user',
+    pattern: 'sys:user',
 
     // NOTE: order is significant
     calls: []
@@ -42,9 +40,7 @@ lab.test('messages', async ()=>{
 
   try {
     await run()
-  }
-  finally {
+  } finally {
     await seneca.close()
   }
 })
-

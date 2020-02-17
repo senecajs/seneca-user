@@ -1,16 +1,14 @@
 const Joi = require('@hapi/joi')
 
-
 module.exports = [
-
   {
     pattern: 'hook:password,cmd:encrypt',
     params: {
       pass: 'foo',
       test: true,
-      rounds: 2,
+      rounds: 2
     },
-    out: { ok:true, salt:Joi.string().length(32), pass:Joi.string().min(32) }
+    out: { ok: true, salt: Joi.string().length(32), pass: Joi.string().min(32) }
   },
 
   {
@@ -19,17 +17,15 @@ module.exports = [
       password: 'foo',
       salt: 'bar',
       test: true,
-      rounds: 2,
+      rounds: 2
     },
-    out: { ok:true, salt:'bar', pass:Joi.string().min(32) }
+    out: { ok: true, salt: 'bar', pass: Joi.string().min(32) }
   },
 
-
-  
   {
     pattern: 'hook:password,cmd:encrypt',
     params: {
-      test: true,
+      test: true
     },
     err: { code: 'no_pass' }
   },
@@ -51,13 +47,13 @@ module.exports = [
     },
     err: { code: 'act_invalid_msg' }
   },
-  
+
   {
     pattern: 'hook:password,cmd:encrypt',
     params: {
       fail: true,
-      pass: 'zed',
+      pass: 'zed'
     },
     err: {}
-  },
+  }
 ]
