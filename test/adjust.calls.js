@@ -1,3 +1,5 @@
+const Joi = require('@hapi/joi')
+
 var print_adjust = true
 
 var call = {}
@@ -71,7 +73,19 @@ module.exports = [
   },
 
   call.get_alice_active,
-  
+
+
+  {
+    print: print_adjust,
+    pattern: 'list:login',
+    params: {
+      handle: 'alice'
+    },
+    out: {
+      ok:true,
+      items:Joi.array().length(1)
+    }
+  },
   
   // deactivate
   {
@@ -100,6 +114,19 @@ module.exports = [
     out: {
       ok: false,
       why:'user-not-active'
+    }
+  },
+
+  // confirm no active logins
+  {
+    print: print_adjust,
+    pattern: 'list:login',
+    params: {
+      handle: 'alice'
+    },
+    out: {
+      ok:true,
+      items:Joi.array().length(0)
     }
   },
 

@@ -6,6 +6,7 @@ const Joi = require('@hapi/joi')
 
 const query_user = {
   id: Joi.string().min(1).optional(),
+  user_id: Joi.string().min(1).optional(),
   email: Joi.string().email().optional(),
   handle: Joi.string().min(1).optional(),
   nick: Joi.string().min(1).optional(),

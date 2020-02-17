@@ -33,8 +33,17 @@ module.exports = [
   
   // use convenience params
   {
+    print: print_register,
     pattern: 'get:user',
     params: { id:'`uf0:out.user.id`' },
+    out: { ok:true, user:{ email:'foo@example.com' } }
+  },
+
+  // `user_id` is an alias for `id`
+  {
+    print: print_register,
+    pattern: 'get:user',
+    params: { user_id:'`uf0:out.user.id`' },
     out: { ok:true, user:{ email:'foo@example.com' } }
   },
 
@@ -48,6 +57,20 @@ module.exports = [
   {
     pattern: 'get:user',
     params: { q: { email:'foo@example.com' } },
+    out: { ok:true, user:{ email:'foo@example.com' } }
+  },
+
+  // use query-by-example
+  {
+    pattern: 'get:user',
+    params: { user: { email:'foo@example.com' } },
+    out: { ok:true, user:{ email:'foo@example.com' } }
+  },
+
+  // use query-by-example
+  {
+    pattern: 'get:user',
+    params: { user_data: { email:'foo@example.com' } },
     out: { ok:true, user:{ email:'foo@example.com' } }
   },
 
@@ -73,7 +96,7 @@ module.exports = [
     pattern: 'register:user',
     params: {
       handle:'alice',
-      user: {
+      user_data: {
         custom_field0: 'value0'
       }
     },
@@ -117,7 +140,7 @@ module.exports = [
     pattern: 'register:user',
     params: {
       handle:'bob',
-      user: {
+      user_data: {
         email: 'bob@example.com',
         foo: 1
       }
@@ -160,7 +183,7 @@ module.exports = [
     pattern: 'register:user',
     params: {
       nick:'cathy',
-      user: {
+      user_data: {
         nick:'cathy-overridden',
       }
     },
@@ -173,7 +196,7 @@ module.exports = [
     params: {
       nick:'derek-nope',
       handle:'derek',
-      user: {
+      user_data: {
         nick:'derek-nope-nope',
         handle:'derek-overridden',
       }
@@ -201,7 +224,7 @@ module.exports = [
     // always generate a handle
     pattern: 'register:user',
     params: {
-      user: {
+      user_data: {
       }
     },
     out: { ok:true, user:{ handle:Joi.string().length(12) } }
@@ -212,7 +235,7 @@ module.exports = [
     // always generate a handle
     pattern: 'register:user',
     params: {
-      user: {
+      user_data: {
         email: 'example.com'
       }
     },
@@ -223,7 +246,7 @@ module.exports = [
     // always generate a handle
     pattern: 'register:user',
     params: {
-      user: {
+      user_data: {
         email: '@example.com'
       }
     },

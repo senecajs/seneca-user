@@ -1,3 +1,5 @@
+const Joi = require('@hapi/joi')
+
 var print_login = true
 
 var call = {}
@@ -124,7 +126,8 @@ module.exports = [
     params: {
       handle: 'bob',
       auto: true,
-      fields: {
+      login_data: {
+        handle: 'wrong', // will get overridden
         foo: 1
       }
     },
@@ -186,8 +189,7 @@ module.exports = [
     params: {
       handle: 'edward',
       password:'edward123',
-      // TODO: rename to login for consistency with register
-      fields: {
+      login_data: {
         foo: 1 // add extra login fields
       }
     },
@@ -206,7 +208,7 @@ module.exports = [
       handle: 'frank',
       email: 'frank@example.com',
       pass: 'frank123', // repeat is optional
-      user: {
+      user_data: {
         foo:1
       }
     },
@@ -231,6 +233,98 @@ module.exports = [
       ok: true, 
       user: {handle:'frank', email: 'frank@example.com',foo:1},
       login: {handle:'frank', email: 'frank@example.com'}
+    }
+  },
+
+
+  // multiple active logins
+  {
+    print: print_login,
+    pattern: 'login:user',
+    params: {
+      handle: 'frank',
+      pass:'frank123',
+      q:{
+        fields$:['foo'] // load extra fields from user
+      },
+      login_data: {
+        bar:1
+      }
+    },
+    out: {
+      ok: true, 
+      user: {handle:'frank', email: 'frank@example.com',foo:1},
+      login: {handle:'frank', email: 'frank@example.com'}
+    }
+  },
+
+
+  {
+    print: print_login,
+    pattern: 'login:user',
+    params: {
+      handle: 'frank',
+      password:'not-franks-password',
+    },
+    out: {
+      ok: false, 
+      why: 'invalid-password'
+    }
+  },
+
+
+  {
+    print: print_login,
+    pattern: 'list:login',
+    params: {
+      handle: 'frank',
+      active: true,
+    },
+    out: {
+      ok:true,
+      items:Joi.array().length(2) // 2 active logins
+    }
+  },
+
+
+  {
+    print: print_login,
+    pattern: 'list:login',
+    params: {
+      handle: 'frank',
+      login_q: {
+        // specify a subset of logins
+        bar: 1
+      }
+    },
+    out: {
+      ok:true,
+      items:Joi.array().length(1) // 1 matching active login
+    }
+  },
+
+  {
+    print: print_login,
+    pattern: 'list:login',
+    params: {
+      handle: 'not-frank',
+    },
+    out: {
+      ok:false,
+      why:'user-not-found'
+    }
+  },
+
+  {
+    print: print_login,
+    pattern: 'list:login',
+    params: {
+      handle: 'frank',
+      active: false
+    },
+    out: {
+      ok:true,
+      items:Joi.array().length(0) // 0 non-active logins
     }
   },
 

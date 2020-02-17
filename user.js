@@ -55,6 +55,8 @@ module.exports.defaults = {
     minlen: 3
   },
 
+  limit: 111, // default result limit
+  
   ensure_handle: intern.ensure_handle,
   make_handle: intern.make_handle,
   make_token: intern.make_token,
@@ -127,14 +129,21 @@ function user(options) {
     .fix('sys:user')
     .message('register:user', intern.make_msg('register_user', ctx))
     .message('get:user', get_user)
+
+  // TODO: verified status
     .message('adjust:user', intern.make_msg('adjust_user', ctx))
+
     .message('login:user', intern.make_msg('login_user', ctx))
+    .message('list:login', intern.make_msg('list_login', ctx))
     .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
     .message('hook:password,cmd:verify', intern.make_msg('cmd_verify', ctx))
 
   
   // NEXT
   //.message('logout:user', logout_user)
+  //.message('change:password', change_password)
+  //.message('change:handle', change_handle)
+  //.message('change:email', change_email)
 
 
   
@@ -356,8 +365,6 @@ function user(options) {
 
     verifyent.load$({ token: token }, function(err, verify) {
       if (err) return reply(err)
-
-      // console.log('VERIFY LOAD',token, verify)
 
       if (null == verify) {
         return reply({ ok: false, why: 'not-found' })
@@ -1632,10 +1639,16 @@ function make_intern() {
         var why = null
 
         // allow use of `q` to specify query, or `user` prop (q has precedence)
-        var q = Object.assign({},msg.user||{},msg.q||{})
+        var q = Object.assign({},msg.user||{},msg.user_data||{},msg.q||{})
         
         ctx.convenience_fields.forEach(f => null != msg[f] && (q[f]=msg[f]))
 
+        // `user_id` is an alias for `id`
+        if(null == q.id && null != q.user_id) {
+          q.id = q.user_id
+        }
+        delete q.user_id
+        
         // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
 
         if (0 < Object.keys(seneca.util.clean(q)).length) {
@@ -1696,7 +1709,14 @@ function make_intern() {
         }}
       }
       else {
-        return {ok:false,why:res.why,details:res.details||{}}
+        return {
+          ok:false,
+          why:res.why,
+
+          /* $lab:coverage:off$ */
+          details:res.details||{}
+          /* $lab:coverage:on$ */
+        }
       }
     },
     
@@ -1719,8 +1739,15 @@ function make_intern() {
       }
       
       if(null != data.user && null != data.user.nick) {
-        data.user.handle = null != data.user.handle ? data.user.handle : data.user.nick
+        data.user.handle =
+          null != data.user.handle ? data.user.handle : data.user.nick
         delete data.user.nick
+      }
+
+      if(null != data.user_data && null != data.user_data.nick) {
+        data.user_data.handle =
+          null != data.user_data.handle ? data.user_data.handle : data.user_data.nick
+        delete data.user_data.nick
       }
 
       if(null != data.q && null != data.q.nick) {
@@ -1733,10 +1760,11 @@ function make_intern() {
 
     // NOTE: modifies msg if needed to ensure consistency
     ensure_handle: function(msg, options) {
-      var handle = null == msg.handle ? (msg.user && msg.user.handle) : msg.handle
+      var user_data = msg.user_data || msg.user || {}
+      var handle = null == msg.handle ? user_data.handle : msg.handle
 
       if('string' != typeof(handle)) {
-        var email = msg.email || (msg.user && msg.user.email) || null
+        var email = msg.email || user_data.email || null
 
         if('string' == typeof(email) && email.includes('@')) {
           handle = email.split('@')[0].toLowerCase() +
@@ -1753,9 +1781,7 @@ function make_intern() {
       }
 
       msg.handle = handle
-      if(msg.user) {
-        msg.user.handle = handle
-      }
+      user_data.handle = handle
       
       return handle
     },
@@ -1776,12 +1802,12 @@ function make_intern() {
       var options = Assert(ctx.options) || ctx.options
       /* $lab:coverage:on$ */
 
-      var fields = spec.fields || {}
+      var login_data = spec.login_data || {} // custom data fields
       var onetime = !!spec.onetime
 
-      var login_data = {
-        // custom fields
-        ...fields,
+      var full_login_data = {
+        // custom data fields for login entry
+        ...login_data,
 
         // token field should be indexed for quick lookups
         token: options.make_token(),
@@ -1799,12 +1825,12 @@ function make_intern() {
       }
 
       if (onetime) {
-        login_data.onetime_active = true
-        login_data.onetime_token = options.make_token(),
-        login_data.onetime_expiry = Date.now() + options.onetime.expire
+        full_login_data.onetime_active = true
+        full_login_data.onetime_token = options.make_token(),
+        full_login_data.onetime_expiry = Date.now() + options.onetime.expire
       }
 
-      var login = await seneca.entity(ctx.sys_login).data$(login_data).save$()
+      var login = await seneca.entity(ctx.sys_login).data$(full_login_data).save$()
 
       return login
     }

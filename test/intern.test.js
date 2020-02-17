@@ -28,26 +28,33 @@ lab.test('ensure_handle', async ()=>{
   expect(msg0.handle).equal('foo')
   expect(msg0.user).not.exists()
 
-  var msg1 = {user:{handle:'foo'}} 
+  var msg1 = {user_data:{handle:'foo'}} 
   expect(intern.ensure_handle(msg1,opts0)).equal('foo')
   expect(msg1.handle).equal('foo')
-  expect(msg1.user.handle).equal('foo')
+  expect(msg1.user_data.handle).equal('foo')
 
   var msg2 = {email:'foo@example.com'} 
   expect(intern.ensure_handle(msg2,opts0)).startsWith('foo')
   expect(msg2.handle).startsWith('foo')
   expect(msg2.handle.length).equal(7)
 
-  var msg3 = {user:{email:'foo@example.com'}} 
+  var msg3 = {user_data:{email:'foo@example.com'}} 
   expect(intern.ensure_handle(msg3,opts0)).startsWith('foo')
   expect(msg3.handle).startsWith('foo')
   expect(msg3.handle.length).equal(7)
 
   // convenience fields have precedence, and override
-  var msg4 = {handle:'bar',user:{handle:'foo'}} 
+  var msg4 = {handle:'bar',user_data:{handle:'foo'}} 
   expect(intern.ensure_handle(msg4,opts0)).equal('bar')
   expect(msg4.handle).equal('bar')
-  expect(msg4.user.handle).equal('bar')  
+  expect(msg4.user_data.handle).equal('bar')  
+
+  // user shortcut prop
+  var msg5 = {handle:'bar',user:{handle:'foo'}} 
+  expect(intern.ensure_handle(msg5,opts0)).equal('bar')
+  expect(msg5.handle).equal('bar')
+  expect(msg5.user.handle).equal('bar')  
+
 })
 
 
@@ -56,13 +63,17 @@ lab.test('fix_nick_handle', async ()=>{
   expect(intern.fix_nick_handle({})).equal({})
 
   expect(intern.fix_nick_handle({handle:'foo'})).equal({handle:'foo'})
+  expect(intern.fix_nick_handle({user_data:{handle:'foo'}})).equal({user_data:{handle:'foo'}})
   expect(intern.fix_nick_handle({user:{handle:'foo'}})).equal({user:{handle:'foo'}})
   expect(intern.fix_nick_handle({q:{handle:'foo'}})).equal({q:{handle:'foo'}})
 
   expect(intern.fix_nick_handle({nick:'foo'})).equal({handle:'foo'})
+  expect(intern.fix_nick_handle({user_data:{nick:'foo'}})).equal({user_data:{handle:'foo'}})
   expect(intern.fix_nick_handle({user:{nick:'foo'}})).equal({user:{handle:'foo'}})
+  expect(intern.fix_nick_handle({user:{nick:'bar',handle:'foo'}})).equal({user:{handle:'foo'}})
   expect(intern.fix_nick_handle({q:{nick:'foo'}})).equal({q:{handle:'foo'}})
 
+  expect(intern.fix_nick_handle({user_data:{}})).equal({user_data:{}})
   expect(intern.fix_nick_handle({user:{}})).equal({user:{}})
   expect(intern.fix_nick_handle({q:{}})).equal({q:{}})
 })
@@ -71,13 +82,14 @@ lab.test('fix_nick_handle', async ()=>{
 lab.test('find_user', async ()=>{
   var si = make_seneca()
   var alice = await si.post('sys:user,register:user', {
-    user: {
+    user_data: {
       handle: 'alice',
       foo: 1
     }
   })
+  
   var bob = await si.post('sys:user,register:user', {
-    user: {
+    user_data: {
       handle: 'bob',
       foo: 1,
       bar: 2
@@ -176,7 +188,7 @@ lab.test('make_login', async ()=>{
   var si = await make_seneca().ready()
   
   var alice = await si.post('sys:user,register:user', {
-    user: {
+    user_data: {
       handle: 'alice',
       email: 'alice@example.com',
     }
@@ -188,10 +200,9 @@ lab.test('make_login', async ()=>{
     user: alice.user,
     ctx: intern.make_ctx({},si.find_plugin('user').options),
     why: 'onetime-test-0',
-    fields: { foo:1 },
+    login_data: { foo:1 },
     onetime: true
   }
-  //console.log(spec)
   
   var login = await intern.make_login(spec)
   expect(login.data$()).contains({
@@ -221,9 +232,6 @@ lab.test('make_login', async ()=>{
   expect(login.onetime_expiry).above(Date.now())
   //onetime_expiry: 1581857265303,
   
-  //console.log(login.data$())
-
-
   // auto login
   spec = {
     seneca: si,
@@ -231,7 +239,6 @@ lab.test('make_login', async ()=>{
     ctx: intern.make_ctx({},si.find_plugin('user').options),
     why: 'auto-test-0',
   }
-  //console.log(spec)
   
   var login = await intern.make_login(spec)
   expect(login.data$()).contains({
