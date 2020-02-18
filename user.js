@@ -131,13 +131,14 @@ function user(options) {
     .message('get:user', intern.make_msg('get_user', ctx))
     .message('adjust:user', intern.make_msg('adjust_user', ctx))
     .message('login:user', intern.make_msg('login_user', ctx))
+    .message('logout:user', intern.make_msg('logout_user', ctx))
     .message('list:login', intern.make_msg('list_login', ctx))
     .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
     .message('hook:password,cmd:verify', intern.make_msg('cmd_verify', ctx))
 
   
   // NEXT
-  //.message('logout:user', logout_user)
+  // JOI VALIDATE EXISTING
   //.message('change:password', change_password)
   //.message('change:handle', change_handle)
   //.message('change:email', change_email)
@@ -1815,6 +1816,7 @@ function make_intern() {
         why: why
       }
 
+      
       if (onetime) {
         full_login_data.onetime_active = true
         full_login_data.onetime_token = options.make_token(),

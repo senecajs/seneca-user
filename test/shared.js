@@ -1,11 +1,17 @@
 /* Copyright (c) 2019-2020 Richard Rodger and other contributors, MIT License */
 'use strict'
 
-const Util = require('util')
+//const Util = require('util')
 
-const Seneca = require('seneca')
+//const Seneca = require('seneca')
 
 module.exports = {
+  LN: ()=>(',LN:'+new Error().stack.split('\n')[2]
+           .match(/\/([^.\/]+)[^\/]*\.js:(\d+):/)
+           .filter((x,i)=>i==1||i==2).join('~'))
+
+
+  /*
   seneca_instance: function(opts) {
     opts = opts || {}
     return (
@@ -34,4 +40,5 @@ module.exports = {
       )
     }
   }
+  */
 }

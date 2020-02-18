@@ -36,6 +36,7 @@ lab.test('messages', async () => {
       .concat(require('./password.calls.js'))
       .concat(require('./adjust.calls.js'))
       .concat(require('./login.calls.js'))
+      .concat(require('./logout.calls.js'))
   })
 
   try {
