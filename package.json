@@ -62,7 +62,7 @@
     "coveralls": "^3.0.9",
     "prettier": "^1.19.1",
     "seneca": "^3.20.1",
-    "seneca-doc": "^2.1.1",
+    "seneca-doc": "^2.1.2",
     "seneca-entity": "^7.1.0",
     "seneca-joi": "^7.0.1",
     "seneca-msg-test": "^2.2.0",
