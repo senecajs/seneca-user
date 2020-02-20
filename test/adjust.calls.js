@@ -15,7 +15,7 @@ module.exports = [
     print: print_adjust,
     pattern: 'adjust:user'+LN(),
     params: {},
-    out: { ok: false, why: 'no-query' }
+    out: { ok: false, why: 'no-user-query' }
   },
 
   // user not found
@@ -178,7 +178,7 @@ module.exports = [
   call.get_alice_active,
 
   
-
+/*
   // no verifications by default
   // get:user just has boolean verified flag
   {
@@ -542,5 +542,5 @@ module.exports = [
     }
   }
 
-
+*/
 ]

@@ -133,10 +133,13 @@ function user(options) {
     .message('login:user', intern.make_msg('login_user', ctx))
     .message('logout:user', intern.make_msg('logout_user', ctx))
     .message('list:login', intern.make_msg('list_login', ctx))
+    .message('make:verify', intern.make_msg('make_verify', ctx))
+    .message('list:verify', intern.make_msg('list_verify', ctx))
+    .message('check:verify', intern.make_msg('check_verify', ctx))
     .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
     .message('hook:password,cmd:pass', intern.make_msg('cmd_pass', ctx))
-    //.message('hook:password,cmd:verify', intern.make_msg('cmd_verify', ctx))
-    //.message('change:password', change_password)
+    .message('change:pass', intern.make_msg('change_pass', ctx))
+    .message('change:password', intern.make_msg('change_pass', ctx))
   
   // NEXT
   // JOI VALIDATE EXISTING
@@ -1618,23 +1621,34 @@ function make_intern() {
         standard_user_fields: options.fields.standard,
         
         // Convenience query fields - msg.email etc.
-        convenience_fields: 'id,user_id,email,handle,name'.split(',')
+        convenience_fields: 'id,user_id,handle,email,name'.split(',')
       },initial_ctx)
     },
 
     find_user: async function(seneca, msg, ctx) {
       // User may already be provided in parameters.
       var user = msg.user && msg.user.entity$ ? msg.user : null
+
+      // user_q when q used for caller's query
+      var msg_user_query = msg.user_q || msg.q || {}
       
       if(null == user) {
         msg = intern.fix_nick_handle(msg)
 
         var why = null
 
-        // allow use of `q` to specify query, or `user` prop (q has precedence)
-        var q = Object.assign({},msg.user||{},msg.user_data||{},msg.q||{})
-        
-        ctx.convenience_fields.forEach(f => null != msg[f] && (q[f]=msg[f]))
+        // allow use of `q` (or `user_q`) to specify query, or `user` prop (q has precedence)
+        var q = Object.assign({},msg.user||{},msg.user_data||{},msg_user_query)
+
+        // can only use one convenience field - they are ordered by decreasing
+        // precedence
+        for(var cfI = 0; cfI < ctx.convenience_fields.length; cfI++) {
+          var f = ctx.convenience_fields[cfI]
+          if(null != msg[f]) {
+            q[f]=msg[f]
+            break
+          }
+        }
 
         // `user_id` is an alias for `id`
         if(null == q.id && null != q.user_id) {
@@ -1668,7 +1682,7 @@ function make_intern() {
           }
         }
         else {
-          why = 'no-query'
+          why = 'no-user-query'
         }
       }
       

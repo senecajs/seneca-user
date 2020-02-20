@@ -185,6 +185,7 @@ module.exports = [
     pattern: 'register:user'+LN(),
     params: {
       nick: 'cathy',
+      email: 'cathy@example.com',
       user_data: {
         nick: 'cathy-overridden'
       }

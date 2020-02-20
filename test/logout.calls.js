@@ -4,7 +4,7 @@ const Shared = require('./shared')
 
 const LN = Shared.LN
 
-var print_logout = true
+var print_logout = false
 
 module.exports = [
   {
@@ -15,7 +15,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(1)
+      items: Joi.array().length(2)
     }
   },
 
@@ -40,7 +40,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      count: 1,
+      count: 2,
       batch: Joi.string().min(1),
     }
   },
@@ -54,7 +54,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(2)
+      items: Joi.array().length(3)
     }
   },
 

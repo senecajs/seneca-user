@@ -10,7 +10,7 @@ const lab = (exports.lab = Lab.script())
 const SenecaMsgTest = require('seneca-msg-test')
 const Seneca = require('seneca')
 
-lab.test('messages', async () => {
+lab.test('messages', {timeout:5555}, async () => {
   var seneca = Seneca({ legacy: false })
     .test()
     .use('promisify')
@@ -35,8 +35,10 @@ lab.test('messages', async () => {
       .concat(require('./register_get.calls.js'))
       .concat(require('./password.calls.js'))
       .concat(require('./adjust.calls.js'))
+      .concat(require('./verify.calls.js'))
       .concat(require('./login.calls.js'))
       .concat(require('./logout.calls.js'))
+      .concat(require('./change.calls.js'))
   })
 
   try {

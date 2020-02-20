@@ -155,7 +155,7 @@ lab.test('find_user', async () => {
   found = await intern.find_user(si, msg4, ctx)
   expect(found.ok).false()
   expect(found.user).equal(null)
-  expect(found.why).equals('no-query')
+  expect(found.why).equals('no-user-query')
 
   // unique field works
   var msg5 = { q: { bar: 2 } }

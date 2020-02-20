@@ -88,7 +88,27 @@ module.exports = {
       },
       query_user
     )
+  },
+
+
+  make_verify: {
+    desc: 'Create a verification entry (multiple use cases).',
+    reply_desc: {
+      ok: '_true_ if user found',
+      verify: 'verify entity'
+    },
+    validate: Object.assign(
+      {
+        kind: Joi.string().min(1),
+        code: Joi.string().min(1).optional(),
+        once: Joi.boolean().optional(),
+        valid: Joi.boolean().optional(),
+        custom: Joi.object().optional(),
+        expire_point: Joi.number().optional(),
+        expire_duration: Joi.number().optional(),
+      },
+      query_user
+    )
   }
 
-  //desc: 'Create a onetime short-lived verification token.'
 }
