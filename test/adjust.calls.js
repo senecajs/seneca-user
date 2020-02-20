@@ -4,9 +4,10 @@ var print_adjust = false
 
 var call = {}
 
-var LN = ()=>(',LN:'+new Error().stack.split('\n')[2]
-              .match(/\/([^.\/]+)[^\/]*\.js:(\d+):/)
-              .filter((x,i)=>i==1||i==2).join('~'))
+const Shared = require('./shared')
+
+const LN = Shared.LN
+
 
 module.exports = [
   // user not found

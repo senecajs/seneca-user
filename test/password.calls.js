@@ -1,8 +1,13 @@
 const Joi = require('@hapi/joi')
 
+const Shared = require('./shared')
+
+const LN = Shared.LN
+
+
 module.exports = [
   {
-    pattern: 'hook:password,cmd:encrypt',
+    pattern: 'hook:password,cmd:encrypt'+LN(),
     params: {
       pass: 'foo',
       test: true,
@@ -12,7 +17,7 @@ module.exports = [
   },
 
   {
-    pattern: 'hook:password,cmd:encrypt',
+    pattern: 'hook:password,cmd:encrypt'+LN(),
     params: {
       password: 'foo',
       salt: 'bar',
@@ -23,7 +28,7 @@ module.exports = [
   },
 
   {
-    pattern: 'hook:password,cmd:encrypt',
+    pattern: 'hook:password,cmd:encrypt'+LN(),
     params: {
       test: true
     },
@@ -31,7 +36,7 @@ module.exports = [
   },
 
   {
-    pattern: 'hook:password,cmd:encrypt',
+    pattern: 'hook:password,cmd:encrypt'+LN(),
     params: {
       test: true,
       pass: {}
@@ -40,7 +45,7 @@ module.exports = [
   },
 
   {
-    pattern: 'hook:password,cmd:encrypt',
+    pattern: 'hook:password,cmd:encrypt'+LN(),
     params: {
       test: true,
       pass: ''
@@ -49,7 +54,7 @@ module.exports = [
   },
 
   {
-    pattern: 'hook:password,cmd:encrypt',
+    pattern: 'hook:password,cmd:encrypt'+LN(),
     params: {
       fail: true,
       pass: 'zed'

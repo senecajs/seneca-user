@@ -134,12 +134,13 @@ function user(options) {
     .message('logout:user', intern.make_msg('logout_user', ctx))
     .message('list:login', intern.make_msg('list_login', ctx))
     .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
-    .message('hook:password,cmd:verify', intern.make_msg('cmd_verify', ctx))
-
+    .message('hook:password,cmd:pass', intern.make_msg('cmd_pass', ctx))
+    //.message('hook:password,cmd:verify', intern.make_msg('cmd_verify', ctx))
+    //.message('change:password', change_password)
   
   // NEXT
   // JOI VALIDATE EXISTING
-  //.message('change:password', change_password)
+
   //.message('change:handle', change_handle)
   //.message('change:email', change_email)
 
