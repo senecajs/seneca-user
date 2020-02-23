@@ -54,7 +54,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "nid": "^0.3.2",
+    "nid": "^1.1.0",
     "uuid": "^3.4.0"
   },
   "devDependencies": {

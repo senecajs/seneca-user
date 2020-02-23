@@ -9,7 +9,7 @@ var print_logout = false
 module.exports = [
   {
     print: print_logout,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'alice'
     },
@@ -21,10 +21,10 @@ module.exports = [
 
   {
     print: print_logout,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'alice',
-      active:false
+      active: false
     },
     out: {
       ok: true,
@@ -34,30 +34,29 @@ module.exports = [
 
   {
     print: print_logout,
-    pattern: 'logout:user'+LN(),
+    pattern: 'logout:user' + LN(),
     params: {
-      handle: 'alice',
+      handle: 'alice'
     },
     out: {
       ok: true,
       count: 2,
-      batch: Joi.string().min(1),
+      batch: Joi.string().min(1)
     }
   },
 
   {
     print: print_logout,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'alice',
-      active:false
+      active: false
     },
     out: {
       ok: true,
       items: Joi.array().length(3)
     }
   },
-
 
   // another foo:1 login
   {
@@ -76,7 +75,6 @@ module.exports = [
       login: { handle: 'bob', foo: 1 }
     }
   },
-
 
   // a foo:2 login
   {
@@ -98,7 +96,7 @@ module.exports = [
 
   {
     print: print_logout,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'bob'
     },
@@ -110,11 +108,11 @@ module.exports = [
 
   {
     print: print_logout,
-    pattern: 'logout:user'+LN(),
+    pattern: 'logout:user' + LN(),
     params: {
       handle: 'bob',
       q: {
-        foo:1
+        foo: 1
       },
       load_logins: true
     },
@@ -122,30 +120,32 @@ module.exports = [
       ok: true,
       count: 2,
       batch: Joi.string().min(1),
-      items:[
-        {handle:'bob',foo:1},
-        {handle:'bob',foo:1}
+      items: [
+        { handle: 'bob', foo: 1 },
+        { handle: 'bob', foo: 1 }
       ]
     }
   },
 
   {
     print: print_logout,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'bob'
     },
     out: {
       ok: true,
-      items: Joi.array().ordered(Joi.object({foo:2}).unknown()).length(1)
+      items: Joi.array()
+        .ordered(Joi.object({ foo: 2 }).unknown())
+        .length(1)
     }
   },
 
   {
     print: print_logout,
-    pattern: 'logout:user'+LN(),
+    pattern: 'logout:user' + LN(),
     params: {
-      handle: 'not-bob',
+      handle: 'not-bob'
     },
     out: {
       ok: false,
@@ -173,7 +173,7 @@ module.exports = [
   // logs out all active
   {
     print: print_logout,
-    pattern: 'logout:user'+LN(),
+    pattern: 'logout:user' + LN(),
     params: {
       handle: 'bob',
       load_logins: true
@@ -182,13 +182,12 @@ module.exports = [
       ok: true,
       count: 2,
       batch: Joi.string().min(1),
-      items:[
-        {handle:'bob',foo:2},
-        {handle:'bob',foo:3}
+      items: [
+        { handle: 'bob', foo: 2 },
+        { handle: 'bob', foo: 3 }
       ]
     }
   },
-
 
   {
     print: print_logout,
@@ -228,7 +227,7 @@ module.exports = [
 
   {
     print: print_logout,
-    pattern: 'logout:user'+LN(),
+    pattern: 'logout:user' + LN(),
     params: {
       handle: 'bob',
       token: '`bob-login-foo4:out.login.token`',
@@ -238,15 +237,13 @@ module.exports = [
       ok: true,
       count: 1,
       batch: Joi.string().min(1),
-      items:[
-        {handle:'bob',foo:4},
-      ]
+      items: [{ handle: 'bob', foo: 4 }]
     }
   },
 
   {
     print: print_logout,
-    pattern: 'logout:user'+LN(),
+    pattern: 'logout:user' + LN(),
     params: {
       handle: 'bob',
       login_id: '`bob-login-foo5:out.login.id`',
@@ -256,10 +253,7 @@ module.exports = [
       ok: true,
       count: 1,
       batch: Joi.string().min(1),
-      items:[
-        {handle:'bob',foo:5},
-      ]
+      items: [{ handle: 'bob', foo: 5 }]
     }
-  },
-
+  }
 ]

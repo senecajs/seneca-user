@@ -6,10 +6,13 @@
 //const Seneca = require('seneca')
 
 module.exports = {
-  LN: ()=>(',LN:'+new Error().stack.split('\n')[2]
-           .match(/\/([^.\/]+)[^\/]*\.js:(\d+):/)
-           .filter((x,i)=>i==1||i==2).join('~'))
-
+  LN: () =>
+    ',LN:' +
+    new Error().stack
+      .split('\n')[2]
+      .match(/\/([^.\/]+)[^\/]*\.js:(\d+):/)
+      .filter((x, i) => i == 1 || i == 2)
+      .join('~')
 
   /*
   seneca_instance: function(opts) {

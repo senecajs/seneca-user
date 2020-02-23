@@ -21,12 +21,18 @@ lab.test('make_handle', async () => {
 })
 
 lab.test('ensure_handle', async () => {
-  var opts0 = { make_handle: intern.make_handle }
+  var opts0 = User.defaults
 
   var msg0 = { handle: 'foo' }
   expect(intern.ensure_handle(msg0, opts0)).equal('foo')
   expect(msg0.handle).equal('foo')
   expect(msg0.user).not.exists()
+
+  // downcasing
+  var msg0D = { handle: 'Foo' }
+  expect(intern.ensure_handle(msg0D, opts0)).equal('foo')
+  expect(msg0D.handle).equal('foo')
+  expect(msg0D.user).not.exists()
 
   var msg1 = { user_data: { handle: 'foo' } }
   expect(intern.ensure_handle(msg1, opts0)).equal('foo')
@@ -54,40 +60,62 @@ lab.test('ensure_handle', async () => {
   expect(intern.ensure_handle(msg5, opts0)).equal('bar')
   expect(msg5.handle).equal('bar')
   expect(msg5.user.handle).equal('bar')
+
+  var opts1 = Seneca.util.deep({}, User.defaults, {
+    handle: { downcase: false }
+  })
+
+  var msg6 = { handle: 'Foo' }
+  expect(intern.ensure_handle(msg6, opts1)).equal('Foo')
 })
 
 lab.test('fix_nick_handle', async () => {
-  expect(intern.fix_nick_handle(null)).equal(null)
-  expect(intern.fix_nick_handle({})).equal({})
+  var o = { handle: { downcase: true } }
 
-  expect(intern.fix_nick_handle({ handle: 'foo' })).equal({ handle: 'foo' })
-  expect(intern.fix_nick_handle({ user_data: { handle: 'foo' } })).equal({
+  expect(intern.fix_nick_handle(null, o)).equal(null)
+  expect(intern.fix_nick_handle({}, o)).equal({})
+
+  expect(intern.fix_nick_handle({ handle: 'foo' }, o)).equal({ handle: 'foo' })
+  expect(intern.fix_nick_handle({ user_data: { handle: 'foo' } }, o)).equal({
     user_data: { handle: 'foo' }
   })
-  expect(intern.fix_nick_handle({ user: { handle: 'foo' } })).equal({
+  expect(intern.fix_nick_handle({ user: { handle: 'foo' } }, o)).equal({
     user: { handle: 'foo' }
   })
-  expect(intern.fix_nick_handle({ q: { handle: 'foo' } })).equal({
+  expect(intern.fix_nick_handle({ q: { handle: 'foo' } }, o)).equal({
     q: { handle: 'foo' }
   })
 
-  expect(intern.fix_nick_handle({ nick: 'foo' })).equal({ handle: 'foo' })
-  expect(intern.fix_nick_handle({ user_data: { nick: 'foo' } })).equal({
+  expect(intern.fix_nick_handle({ nick: 'foo' }, o)).equal({ handle: 'foo' })
+  expect(intern.fix_nick_handle({ nick: 'Foo' }, o)).equal({ handle: 'foo' })
+  expect(intern.fix_nick_handle({ user_data: { nick: 'foo' } }, o)).equal({
     user_data: { handle: 'foo' }
   })
-  expect(intern.fix_nick_handle({ user: { nick: 'foo' } })).equal({
+  expect(intern.fix_nick_handle({ user: { nick: 'foo' } }, o)).equal({
     user: { handle: 'foo' }
   })
   expect(
-    intern.fix_nick_handle({ user: { nick: 'bar', handle: 'foo' } })
+    intern.fix_nick_handle({ user: { nick: 'bar', handle: 'foo' } }, o)
   ).equal({ user: { handle: 'foo' } })
-  expect(intern.fix_nick_handle({ q: { nick: 'foo' } })).equal({
+  expect(intern.fix_nick_handle({ q: { nick: 'foo' } }, o)).equal({
     q: { handle: 'foo' }
   })
 
-  expect(intern.fix_nick_handle({ user_data: {} })).equal({ user_data: {} })
-  expect(intern.fix_nick_handle({ user: {} })).equal({ user: {} })
-  expect(intern.fix_nick_handle({ q: {} })).equal({ q: {} })
+  expect(intern.fix_nick_handle({ user_data: {} }, o)).equal({ user_data: {} })
+  expect(intern.fix_nick_handle({ user: {} }, o)).equal({ user: {} })
+  expect(intern.fix_nick_handle({ q: {} }, o)).equal({ q: {} })
+
+  var o2 = { handle: { downcase: false } }
+  expect(intern.fix_nick_handle({ nick: 'Foo' }, o2)).equal({ handle: 'Foo' })
+  expect(intern.fix_nick_handle({ user: { nick: 'Foo' } }, o2)).equal({
+    user: { handle: 'Foo' }
+  })
+  expect(intern.fix_nick_handle({ user_data: { nick: 'Foo' } }, o2)).equal({
+    user_data: { handle: 'Foo' }
+  })
+  expect(intern.fix_nick_handle({ q: { nick: 'Foo' } }, o2)).equal({
+    q: { handle: 'Foo' }
+  })
 })
 
 lab.test('find_user', async () => {
@@ -107,7 +135,7 @@ lab.test('find_user', async () => {
     }
   })
 
-  var ctx = intern.make_ctx({}, { fields: { standard: ['handle'] } })
+  var ctx = intern.make_ctx({}, User.defaults)
 
   var msg0 = { handle: 'alice' }
   var found = await intern.find_user(si, msg0, ctx)
@@ -120,7 +148,9 @@ lab.test('find_user', async () => {
       zone: undefined
     },
     handle: 'alice',
-    id: alice.user.id
+    id: alice.user.id,
+    active: true,
+    name: 'alice'
   })
   expect(found.why).undefined()
 
@@ -135,7 +165,9 @@ lab.test('find_user', async () => {
       zone: undefined
     },
     handle: 'bob',
-    id: bob.user.id
+    id: bob.user.id,
+    active: true,
+    name: 'bob'
   })
   expect(found.why).undefined()
 
@@ -262,7 +294,7 @@ lab.test('make_login', async () => {
 lab.test('build_pass_fields', async () => {
   var si = make_seneca()
 
-  var ctx = intern.make_ctx({}, { fields: { standard: ['handle'] } })
+  var ctx = intern.make_ctx({}, User.defaults)
 
   var msg0 = { pass: 'abcabcabc' }
   var pf0 = await intern.build_pass_fields(si, msg0, ctx)
@@ -310,41 +342,173 @@ lab.test('build_pass_fields', async () => {
 })
 
 lab.test('load_user_field', () => {
-  expect(intern.load_user_fields({})).equal({q:{fields$:[]}})
-  expect(intern.load_user_fields({a:1})).equal({a:1,q:{fields$:[]}})
-  expect(intern.load_user_fields({a:1})).equal({a:1,q:{fields$:[]}})
-  expect(intern.load_user_fields({a:1},null)).equal({a:1,q:{fields$:[]}})
-  expect(intern.load_user_fields({a:1},'')).equal({a:1,q:{fields$:[]}})
-  expect(intern.load_user_fields({a:1},1)).equal({a:1,q:{fields$:[]}})
-  expect(intern.load_user_fields({a:1},'x')).equal({a:1,q:{fields$:['x']}})
-  expect(intern.load_user_fields({a:1},'x','y')).equal({a:1,q:{fields$:['x','y']}})
-  expect(intern.load_user_fields({a:1},['x','y'])).equal({a:1,q:{fields$:['x','y']}})
-  expect(intern.load_user_fields({a:1},'x',['y','z']))
-    .equal({a:1,q:{fields$:['x','y','z']}})
+  expect(intern.load_user_fields({})).equal({ q: { fields$: [] } })
+  expect(intern.load_user_fields({ a: 1 })).equal({ a: 1, q: { fields$: [] } })
+  expect(intern.load_user_fields({ a: 1 })).equal({ a: 1, q: { fields$: [] } })
+  expect(intern.load_user_fields({ a: 1 }, null)).equal({
+    a: 1,
+    q: { fields$: [] }
+  })
+  expect(intern.load_user_fields({ a: 1 }, '')).equal({
+    a: 1,
+    q: { fields$: [] }
+  })
+  expect(intern.load_user_fields({ a: 1 }, 1)).equal({
+    a: 1,
+    q: { fields$: [] }
+  })
+  expect(intern.load_user_fields({ a: 1 }, 'x')).equal({
+    a: 1,
+    q: { fields$: ['x'] }
+  })
+  expect(intern.load_user_fields({ a: 1 }, 'x', 'y')).equal({
+    a: 1,
+    q: { fields$: ['x', 'y'] }
+  })
+  expect(intern.load_user_fields({ a: 1 }, ['x', 'y'])).equal({
+    a: 1,
+    q: { fields$: ['x', 'y'] }
+  })
+  expect(intern.load_user_fields({ a: 1 }, 'x', ['y', 'z'])).equal({
+    a: 1,
+    q: { fields$: ['x', 'y', 'z'] }
+  })
 
-  expect(intern.load_user_fields({a:1,q:{}},'x',['y','z']))
-    .equal({a:1,q:{fields$:['x','y','z']}})
-  expect(intern.load_user_fields({a:1,q:{k:1}},'x',['y','z']))
-    .equal({a:1,q:{k:1,fields$:['x','y','z']}})
+  expect(intern.load_user_fields({ a: 1, q: {} }, 'x', ['y', 'z'])).equal({
+    a: 1,
+    q: { fields$: ['x', 'y', 'z'] }
+  })
+  expect(
+    intern.load_user_fields({ a: 1, q: { k: 1 } }, 'x', ['y', 'z'])
+  ).equal({ a: 1, q: { k: 1, fields$: ['x', 'y', 'z'] } })
 
-  expect(intern.load_user_fields({a:1,q:{fields$:[]}},'x',['y','z']))
-    .equal({a:1,q:{fields$:['x','y','z']}})
-  expect(intern.load_user_fields({a:1,q:{k:1,fields$:[]}},'x',['y','z']))
-    .equal({a:1,q:{k:1,fields$:['x','y','z']}})
+  expect(
+    intern.load_user_fields({ a: 1, q: { fields$: [] } }, 'x', ['y', 'z'])
+  ).equal({ a: 1, q: { fields$: ['x', 'y', 'z'] } })
+  expect(
+    intern.load_user_fields({ a: 1, q: { k: 1, fields$: [] } }, 'x', ['y', 'z'])
+  ).equal({ a: 1, q: { k: 1, fields$: ['x', 'y', 'z'] } })
 
-  expect(intern.load_user_fields({a:1,q:{fields$:['q']}},'x',['y','z']))
-    .equal({a:1,q:{fields$:['q','x','y','z']}})
-  expect(intern.load_user_fields({a:1,q:{k:1,fields$:['q']}},'x',['y','z']))
-    .equal({a:1,q:{k:1,fields$:['q','x','y','z']}})
+  expect(
+    intern.load_user_fields({ a: 1, q: { fields$: ['q'] } }, 'x', ['y', 'z'])
+  ).equal({ a: 1, q: { fields$: ['q', 'x', 'y', 'z'] } })
+  expect(
+    intern.load_user_fields({ a: 1, q: { k: 1, fields$: ['q'] } }, 'x', [
+      'y',
+      'z'
+    ])
+  ).equal({ a: 1, q: { k: 1, fields$: ['q', 'x', 'y', 'z'] } })
 
-  expect(intern.load_user_fields({a:1,q:{fields$:['q','x']}},'x',['y','z']))
-    .equal({a:1,q:{fields$:['q','x','y','z']}})
-  expect(intern.load_user_fields({a:1,q:{k:1,fields$:['q','x']}},'x',['y','z']))
-    .equal({a:1,q:{k:1,fields$:['q','x','y','z']}})
-
+  expect(
+    intern.load_user_fields({ a: 1, q: { fields$: ['q', 'x'] } }, 'x', [
+      'y',
+      'z'
+    ])
+  ).equal({ a: 1, q: { fields$: ['q', 'x', 'y', 'z'] } })
+  expect(
+    intern.load_user_fields({ a: 1, q: { k: 1, fields$: ['q', 'x'] } }, 'x', [
+      'y',
+      'z'
+    ])
+  ).equal({ a: 1, q: { k: 1, fields$: ['q', 'x', 'y', 'z'] } })
 })
 
+lab.test('valid_handle', async () => {
+  var si = make_seneca()
 
+  await si.ready()
+
+  var ctx = intern.make_ctx({}, si.find_plugin('user').options)
+
+  // console.dir(ctx)
+
+  // naughty naughty
+  expect(await intern.valid_handle(si, '\x73\x68\x69\x74', ctx)).equals({
+    ok: false,
+    why: 'disallowed',
+    details: {
+      handle_base64: 'c2hpdA=='
+    }
+  })
+
+  expect(await intern.valid_handle(si, 'guest', ctx)).equals({
+    ok: false,
+    why: 'reserved',
+    details: {
+      handle: 'guest'
+    }
+  })
+
+  expect(await intern.valid_handle(si, 'aa', ctx)).equals({
+    ok: false,
+    why: 'handle-too-short',
+    details: {
+      handle: 'aa',
+      handle_length: 2,
+      minimum: 3
+    }
+  })
+
+  expect(await intern.valid_handle(si, '0123456789123456', ctx)).equals({
+    ok: false,
+    why: 'handle-too-long',
+    details: {
+      handle: '0123456789123456',
+      handle_length: 16,
+      maximum: 15
+    }
+  })
+
+  expect(await intern.valid_handle(si, 'aaa', ctx)).equals({
+    handle: 'aaa',
+    ok: true
+  })
+
+  expect(await intern.valid_handle(si, '012345678912345', ctx)).equals({
+    handle: '012345678912345',
+    ok: true
+  })
+
+  expect(await intern.valid_handle(si, null, ctx)).equals({
+    ok: false,
+    why: 'not-string',
+    details: {
+      handle: null
+    }
+  })
+
+  expect(await intern.valid_handle(si, {}, ctx)).equals({
+    ok: false,
+    why: 'not-string',
+    details: {
+      handle: {}
+    }
+  })
+
+
+  expect(await intern.valid_handle(si, 'AAA', ctx)).equals({
+    handle: 'aaa',
+    ok: true
+  })
+
+  expect(await intern.valid_handle(si, '***', ctx)).equals({
+    ok: false,
+    why: 'invalid-chars',
+    details: { handle: '***' }
+  })
+
+  
+  var ctx0 = ctx
+  ctx0.options = si.util.deep({},ctx.options,{handle:{
+    must_match: (handle)=>handle.match(/^[A-Za-z0-9_]+$/),
+    downcase:false
+  }})
+  expect(await intern.valid_handle(si, 'AAA', ctx0)).equals({
+    handle: 'AAA',
+    ok: true
+  })
+
+})
 
 function make_seneca() {
   var seneca = Seneca({ legacy: false })

@@ -90,7 +90,6 @@ module.exports = {
     )
   },
 
-
   make_verify: {
     desc: 'Create a verification entry (multiple use cases).',
     reply_desc: {
@@ -100,15 +99,29 @@ module.exports = {
     validate: Object.assign(
       {
         kind: Joi.string().min(1),
-        code: Joi.string().min(1).optional(),
+        code: Joi.string()
+          .min(1)
+          .optional(),
         once: Joi.boolean().optional(),
         valid: Joi.boolean().optional(),
         custom: Joi.object().optional(),
         expire_point: Joi.number().optional(),
-        expire_duration: Joi.number().optional(),
+        expire_duration: Joi.number().optional()
+      },
+      query_user
+    )
+  },
+  change_handle: {
+    desc: 'Change user handle.',
+    reply_desc: {
+      ok: '_true_ if changed',
+      user: 'user entity'
+    },
+    validate: Object.assign(
+      {
+        new_handle: Joi.string().min(1)
       },
       query_user
     )
   }
-
 }

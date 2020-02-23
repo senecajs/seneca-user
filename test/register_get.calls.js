@@ -10,7 +10,7 @@ module.exports = [
   {
     // can register with just an email
     name: 'uf0',
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       email: 'foo@example.com'
     },
@@ -25,14 +25,15 @@ module.exports = [
 
   // get:user without query returns nothing
   {
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: {},
     out: { ok: false }
   },
 
   //
   {
-    pattern: 'get:user'+LN(),
+    print: print_register,
+    pattern: 'get:user' + LN(),
     params: { handle: '' },
     err: { code: 'act_invalid_msg' }
   },
@@ -40,7 +41,7 @@ module.exports = [
   // use convenience params
   {
     print: print_register,
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { id: '`uf0:out.user.id`' },
     out: { ok: true, user: { email: 'foo@example.com' } }
   },
@@ -48,34 +49,34 @@ module.exports = [
   // `user_id` is an alias for `id`
   {
     print: print_register,
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { user_id: '`uf0:out.user.id`' },
     out: { ok: true, user: { email: 'foo@example.com' } }
   },
 
   {
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { email: 'foo@example.com' },
     out: { ok: true, user: { email: 'foo@example.com' } }
   },
 
   // use a proper query
   {
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { q: { email: 'foo@example.com' } },
     out: { ok: true, user: { email: 'foo@example.com' } }
   },
 
   // use query-by-example
   {
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { user: { email: 'foo@example.com' } },
     out: { ok: true, user: { email: 'foo@example.com' } }
   },
 
   // use query-by-example
   {
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { user_data: { email: 'foo@example.com' } },
     out: { ok: true, user: { email: 'foo@example.com' } }
   },
@@ -83,22 +84,25 @@ module.exports = [
   {
     // can't register with short handle
     print: print_register,
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       handle: 'al'
     },
     out: {
       ok: false,
       why: 'handle-too-short',
-      handle: 'al',
-      details: { handle_length: 2, minimum: 3 }
+      details: {
+        handle: 'al',
+        handle_length: 2,
+        minimum: 3
+      }
     }
   },
 
   {
     // can register with just handle
     name: 'ar0',
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       handle: 'alice',
       user_data: {
@@ -110,37 +114,38 @@ module.exports = [
 
   {
     // handle must be unique
-    pattern: 'register:user'+LN(),
+    print: print_register,
+    pattern: 'register:user' + LN(),
     params: {
       handle: 'alice'
     },
-    out: { ok: false, why: 'handle-exists', handle: 'alice' }
+    out: { ok: false, why: 'handle-exists', details: { handle: 'alice' } }
   },
 
   // use convenience params
   {
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { handle: 'alice' },
     out: { ok: true, user: { handle: 'alice' } }
   },
 
   // legacy
   {
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { q: { nick: 'alice' } },
     out: { ok: true, user: { handle: 'alice' } }
   },
 
   // use a proper query
   {
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { q: { handle: 'alice' } },
     out: { ok: true, user: { handle: 'alice' } }
   },
 
   {
     // convenience and user, custom fields
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       handle: 'bob',
       user_data: {
@@ -154,35 +159,35 @@ module.exports = [
   // custom fields query
   {
     print: false,
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { handle: 'bob', fields: ['foo'] },
     out: { ok: true, user: { handle: 'bob', email: 'bob@example.com', foo: 1 } }
   },
 
   {
     print: false,
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { q: { handle: 'bob', fields$: ['foo'] } },
     out: { ok: true, user: { handle: 'bob', email: 'bob@example.com', foo: 1 } }
   },
 
   {
     print: false,
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { q: { handle: 'not-bob', fields$: ['foo'] } },
     out: { ok: false, user: null }
   },
 
   {
     print: false,
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: { q: { fields$: ['foo'] } },
     out: { ok: false, user: null }
   },
 
   {
     // legacy nick->handle
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       nick: 'cathy',
       email: 'cathy@example.com',
@@ -195,7 +200,7 @@ module.exports = [
 
   {
     // legacy nick->handle
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       nick: 'derek-nope',
       handle: 'derek',
@@ -209,7 +214,7 @@ module.exports = [
 
   // convenience params nick->handle
   {
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: {
       nick: 'alice',
       q: { handle: 'alice-nope', nick: 'alice-overridden' }
@@ -219,14 +224,14 @@ module.exports = [
 
   {
     // always generate a handle
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {},
     out: { ok: true, user: { handle: Joi.string().length(12) } }
   },
 
   {
     // always generate a handle
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       user_data: {}
     },
@@ -235,7 +240,7 @@ module.exports = [
 
   {
     // always generate a handle
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       user_data: {
         email: 'example.com'
@@ -246,7 +251,7 @@ module.exports = [
 
   {
     // always generate a handle
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       user_data: {
         email: '@example.com'
@@ -256,7 +261,7 @@ module.exports = [
   },
 
   {
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       handle: ''
     },

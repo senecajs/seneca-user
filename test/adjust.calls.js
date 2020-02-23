@@ -8,12 +8,11 @@ const Shared = require('./shared')
 
 const LN = Shared.LN
 
-
 module.exports = [
   // user not found
   {
     print: print_adjust,
-    pattern: 'adjust:user'+LN(),
+    pattern: 'adjust:user' + LN(),
     params: {},
     out: { ok: false, why: 'no-user-query' }
   },
@@ -21,7 +20,7 @@ module.exports = [
   // user not found
   {
     print: print_adjust,
-    pattern: 'adjust:user'+LN(),
+    pattern: 'adjust:user' + LN(),
     params: {
       handle: 'not-a-user'
     },
@@ -33,7 +32,7 @@ module.exports = [
 
   (call.get_alice_active = {
     print: print_adjust,
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: {
       q: {
         handle: 'alice',
@@ -46,7 +45,7 @@ module.exports = [
   }),
   {
     print: print_adjust,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'alice',
       auto: true
@@ -60,7 +59,7 @@ module.exports = [
   // do nothing
   {
     print: print_adjust,
-    pattern: 'adjust:user'+LN(),
+    pattern: 'adjust:user' + LN(),
     params: {
       q: {
         handle: 'alice'
@@ -75,7 +74,7 @@ module.exports = [
 
   {
     print: print_adjust,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'alice'
     },
@@ -88,7 +87,7 @@ module.exports = [
   // deactivate
   {
     print: print_adjust,
-    pattern: 'adjust:user'+LN(),
+    pattern: 'adjust:user' + LN(),
     params: {
       q: {
         handle: 'alice'
@@ -104,7 +103,7 @@ module.exports = [
   // confirm cannot login
   {
     print: print_adjust,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'alice',
       auto: true
@@ -118,7 +117,7 @@ module.exports = [
   // confirm no active logins
   {
     print: print_adjust,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'alice'
     },
@@ -131,7 +130,7 @@ module.exports = [
   // idempotent
   {
     print: print_adjust,
-    pattern: 'adjust:user'+LN(),
+    pattern: 'adjust:user' + LN(),
     params: {
       q: {
         handle: 'alice'
@@ -147,7 +146,7 @@ module.exports = [
   // confirm not active
   {
     print: print_adjust,
-    pattern: 'get:user'+LN(),
+    pattern: 'get:user' + LN(),
     params: {
       q: {
         handle: 'alice',
@@ -162,7 +161,7 @@ module.exports = [
   // adjust back to active
   {
     print: print_adjust,
-    pattern: 'adjust:user'+LN(),
+    pattern: 'adjust:user' + LN(),
     params: {
       q: {
         handle: 'alice'
@@ -175,10 +174,9 @@ module.exports = [
     }
   },
 
-  call.get_alice_active,
+  call.get_alice_active
 
-  
-/*
+  /*
   // no verifications by default
   // get:user just has boolean verified flag
   {

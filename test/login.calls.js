@@ -8,14 +8,13 @@ const Shared = require('./shared')
 
 const LN = Shared.LN
 
-
 // NOTE: assumes register_get.calls
 
 module.exports = [
   // test setting: options.password.minlen = 2
   {
     print: print_login,
-    pattern: 'hook:password,cmd:encrypt'+LN(),
+    pattern: 'hook:password,cmd:encrypt' + LN(),
     params: {
       pass: 'ab',
       salt: 'bar'
@@ -30,7 +29,7 @@ module.exports = [
   {
     name: 'fbp0',
     print: print_login,
-    pattern: 'hook:password,cmd:encrypt'+LN(),
+    pattern: 'hook:password,cmd:encrypt' + LN(),
     params: {
       pass: 'foo',
       salt: 'bar'
@@ -43,7 +42,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'hook:password,cmd:pass'+LN(),
+    pattern: 'hook:password,cmd:pass' + LN(),
     params: {
       proposed: 'foo',
       pass: '`fbp0:out.pass`',
@@ -56,7 +55,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'hook:password,cmd:pass'+LN(),
+    pattern: 'hook:password,cmd:pass' + LN(),
     params: {
       proposed: 'x',
       pass: '`fbp0:out.pass`',
@@ -70,7 +69,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'hook:password,cmd:pass'+LN(),
+    pattern: 'hook:password,cmd:pass' + LN(),
     params: {
       proposed: 'not-foo',
       pass: '`fbp0:out.pass`',
@@ -84,7 +83,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'hook:password,cmd:pass'+LN(),
+    pattern: 'hook:password,cmd:pass' + LN(),
     params: {
       proposed: 'foo',
       pass: '`fbp0:out.pass`',
@@ -98,7 +97,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'not-a-user'
     },
@@ -112,7 +111,7 @@ module.exports = [
   {
     name: 'al0',
     print: print_login,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'alice',
       auto: true
@@ -127,7 +126,7 @@ module.exports = [
   {
     name: 'bl0',
     print: print_login,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'bob',
       auto: true,
@@ -145,7 +144,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       handle: 'edward',
       email: 'edward@example.com',
@@ -160,7 +159,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       handle: 'edward',
       email: 'edward@example.com',
@@ -176,7 +175,7 @@ module.exports = [
   {
     name: 'el0',
     print: print_login,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'edward'
     },
@@ -189,7 +188,7 @@ module.exports = [
   {
     name: 'el0',
     print: print_login,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'edward',
       password: 'edward123',
@@ -206,7 +205,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'register:user'+LN(),
+    pattern: 'register:user' + LN(),
     params: {
       handle: 'frank',
       email: 'frank@example.com',
@@ -224,7 +223,7 @@ module.exports = [
   {
     name: 'fl0',
     print: print_login,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'frank',
       password: 'frank123',
@@ -242,7 +241,7 @@ module.exports = [
   // multiple active logins
   {
     print: print_login,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'frank',
       pass: 'frank123',
@@ -262,7 +261,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'login:user'+LN(),
+    pattern: 'login:user' + LN(),
     params: {
       handle: 'frank',
       password: 'not-franks-password'
@@ -275,7 +274,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'frank',
       active: true
@@ -288,7 +287,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'frank',
       login_q: {
@@ -304,7 +303,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'not-frank'
     },
@@ -316,7 +315,7 @@ module.exports = [
 
   {
     print: print_login,
-    pattern: 'list:login'+LN(),
+    pattern: 'list:login' + LN(),
     params: {
       handle: 'frank',
       active: false

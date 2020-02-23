@@ -29,6 +29,9 @@ lab.test('export', async () => {
     handle: 'alice'
   })
 
+  expect(alice.ok).true()
+  expect(alice.user.handle).equals('alice')
+
   var found = await find_user(si, { handle: 'alice' })
   expect(found.ok).true()
   expect(found.why).not.exists()

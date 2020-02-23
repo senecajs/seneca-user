@@ -10,7 +10,7 @@ const lab = (exports.lab = Lab.script())
 const SenecaMsgTest = require('seneca-msg-test')
 const Seneca = require('seneca')
 
-lab.test('messages', {timeout:5555}, async () => {
+lab.test('messages', { timeout: 5555 }, async () => {
   var seneca = Seneca({ legacy: false })
     .test()
     .use('promisify')
