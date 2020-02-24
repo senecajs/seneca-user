@@ -182,7 +182,7 @@ module.exports = [
   // change email
 
   {
-    print: print_calls,
+    print: true || print_calls,
     pattern: 'change:email' + LN(),
     params: {
       email: 'cathy@example.com',

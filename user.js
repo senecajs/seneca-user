@@ -17,6 +17,7 @@ const Assert = require('assert')
 const Crypto = require('crypto')
 const Nid = require('nid')
 const Uuid = require('uuid')
+const Joi = require('@hapi/joi')
 
 module.exports = user
 
@@ -151,12 +152,13 @@ function user(options) {
 
     .message('check:exists', intern.make_msg('check_exists', ctx))
 
-             // NEXT
+  // NEXT
   // JOI VALIDATE EXISTING
 
-  //.message('list:user'
   //.message('update:user'
-  //.message('check:exists'
+  //.message('auth:user'
+  //.message('remove:user'
+  //.message('migrate:data' - use native mongo driver to do update nick->handle
 
   return {
     exports: {
@@ -168,102 +170,6 @@ function user(options) {
     }
   }
 
-  // async function login_user(msg) {
-  //   var seneca = this
-
-  //   var user = null
-  //   var login_fields = msg.login // Optional extra fields to save with login.
-
-  //   // Find the user.
-  //   var found_user = get_user(this,msg)
-
-  //   if(!found_user.ok) {
-  //     return { ok: false, why: 'user-not-found' }
-  //   } else {
-  //     user = found_user.user
-  //   }
-
-  //   if(!user.active) {
-
-  //   }
-
-  /*
-    // NOTE: assumes user is resolved (see resolve_user)
-    var user = args.user
-    var login_fields = args.login
-    var why
-    var loginent = seneca.make(login_canon)
-
-    if (!user.active) {
-      seneca.log.debug('login/fail', (why = 'not-active'), user)
-      return done(null, { ok: false, why: why, user: user })
-    }
-
-    if (
-      options.failedLoginCount &&
-      user.failedLoginCount >= options.failedLoginCount
-    ) {
-      seneca.log.debug('login/fail', (why = 'locked-out'), user)
-      return done(null, { ok: false, why: why })
-    }
-    if (args.auto) {
-      return make_login(user, login_fields, 'auto')
-    } else {
-      seneca.act(
-        {
-          sys: 'user',
-          cmd: 'verify_password',
-          proposed: args.password,
-          pass: user.pass,
-          salt: user.salt
-        },
-        function(err, out) {
-          if (err) return done(err)
-          if (!out.ok) {
-            seneca.log.debug('login/fail', (why = 'invalid-password'), user)
-            cmd_increment_lock(seneca, user.id, false, function(err) {
-              if (err) return done(err)
-              done(null, { ok: false, why: why })
-            })
-          } else return make_login(user, login_fields, 'password')
-        }
-      )
-    }
-
-    function make_login(user, login_fields, why) {
-      var login_data = {
-        ...login_fields,
-        id$: Uuid(),
-        nick: user.nick,
-        user: user.id,
-        when: new Date().toISOString(),
-        active: true,
-        why: why
-      }
-
-      login_data.token = login_data.id$ // DEPRECATED
-
-      if (args.onetime) {
-        login_data.onetime_code = Uuid()
-        login_data.onetime_active = true
-        login_data.onetime_expiry = Date.now() + options.onetime.expire
-      }
-
-      var login = loginent.make$(login_data)
-
-      login.save$(function(err, login) {
-        if (err) return done(err)
-        cmd_increment_lock(seneca, user.id, true, function(err) {
-          if (err) return done(err)
-
-          seneca.log.debug('login/ok', why, user, login)
-          done(null, { ok: true, user: user, login: login, why: why })
-        })
-      })
-    }
-
-    */
-  //  }
 
   // --- LEGACY BELOW ---
   /*
@@ -274,92 +180,6 @@ function user(options) {
 
 
 
-  // TODO: accept user_id
-  // Change password using user's nick or email
-  // - nick, email: to resolve user
-  // - user: user entity
-  // - password: new password
-  // - repeat: password repeat, optional
-  // Provides: {ok:,user:}
-  function cmd_change_password(args, done) {
-    var seneca = this
-    var user = args.user
-
-    seneca.act(
-      {
-        sys: 'user',
-        cmd: 'encrypt_password',
-        whence: 'change/user=' + user.id + ',' + user.nick,
-        password: args.password,
-        repeat: args.repeat,
-        salt: args.salt
-      },
-      function(err, out) {
-        if (err) {
-          return done(err)
-        }
-        if (!out.ok) {
-          return done(null, out)
-        }
-
-        user.failedLoginCount = 0
-        user.salt = out.salt
-        user.pass = out.pass
-        user.save$(function(err, user) {
-          if (err) {
-            return done(err)
-          }
-
-          user = user.data$(false)
-          done(null, { ok: true, user: user })
-        })
-      }
-    )
-  }
-
-
-
-  function cmd_onetime_login(msg, reply) {
-    var seneca = this
-    var loginent = seneca.make(login_canon)
-    var userent = seneca.make(user_canon)
-
-    var onetime_code = msg.onetime
-
-    loginent
-      .make$()
-      .load$({ onetime_code: onetime_code, onetime_active: true }, function(
-        err,
-        login
-      ) {
-        if (err) return reply(err)
-
-        if (login) {
-          if (Date.now() <= login.onetime_expiry) {
-            login.onetime_active = false
-            login.save$(function(err, login) {
-              if (err) return reply(err)
-
-              userent
-                .make$()
-                .load$(login.user_id || login.user, function(err, user) {
-                  if (err) return reply(err)
-
-                  if (user) {
-                    reply({ ok: true, login: login, user: user })
-                  } else {
-                    reply({ ok: false, login: login, why: 'no-user' })
-                  }
-                })
-            })
-          } else {
-            reply({ ok: false, why: 'expired' })
-          }
-        } else {
-          reply({ ok: false, why: 'not-found' })
-        }
-      })
-  }
 
 
   // Authorize an existing user - resolve using token
@@ -913,6 +733,25 @@ function make_intern() {
       return msg
     },
 
+
+    email_schema: Joi.string().email().required(),
+    
+    valid_email: async function(seneca, email, ctx) {
+      var email_valid = intern.email_schema.validate(email)
+      if(email_valid.error) {
+        return {ok: false, email:email, why:'email-invalid-format'}
+      }
+
+      var email_taken = await intern.find_user(seneca, {email:email}, ctx)
+      
+      return {
+        ok: !email_taken.ok,
+        email:email,
+        why:email_taken.ok?'email-exists':null
+      }
+    },
+
+    
     valid_handle: async function(seneca, handle, ctx) {
       var options = ctx.options
 

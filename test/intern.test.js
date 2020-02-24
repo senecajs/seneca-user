@@ -126,7 +126,8 @@ lab.test('find_user', async () => {
       foo: 1
     }
   })
-
+  expect(alice.ok).true()
+  
   var bob = await si.post('sys:user,register:user', {
     user_data: {
       handle: 'bob',
@@ -134,7 +135,8 @@ lab.test('find_user', async () => {
       bar: 2
     }
   })
-
+  expect(bob.ok).true()
+  
   var ctx = intern.make_ctx({}, User.defaults)
 
   var msg0 = { handle: 'alice' }
@@ -509,6 +511,33 @@ lab.test('valid_handle', async () => {
   })
 
 })
+
+
+lab.test('valid_email', async () => {
+  var si = make_seneca()
+
+  await si.ready()
+
+  var ctx = intern.make_ctx({}, si.find_plugin('user').options)
+
+  expect(await intern.valid_email(si, 'aaa@example.com', ctx)).equals({
+    ok:true, email:'aaa@example.com', why: null
+  })
+
+  expect(await intern.valid_email(si, '@example.com', ctx)).equals({
+    ok:false, email:'@example.com', why: 'email-invalid-format'
+  })
+
+  var alice = await si.post('sys:user,register:user', {
+    email: 'alice@example.com'
+  })
+
+  expect(await intern.valid_email(si, 'alice@example.com', ctx)).equals({
+    ok:false, email:'alice@example.com', why: 'email-exists'
+  })
+  
+})
+
 
 function make_seneca() {
   var seneca = Seneca({ legacy: false })
