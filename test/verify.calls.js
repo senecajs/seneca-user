@@ -280,7 +280,7 @@ module.exports = [
       pass: 'alice-pass-change-02',
       verify: '`avc0:out.verify.code`'
     },
-    out: { ok: false, why: 'already-used' }
+    out: { ok: false, why: 'verify-already-used' }
   },
 
   // login with alice-pass-change-01
@@ -492,7 +492,7 @@ module.exports = [
     },
     out: {
       ok: false,
-      why: 'expired'
+      why: 'verify-expired'
     }
   },
 
@@ -572,7 +572,7 @@ module.exports = [
     },
     out: {
       ok: false, // once is true, so second time fails
-      why: 'already-used',
+      why: 'verify-already-used',
       details: {
         q: { code: 'bob-foo-code-02' }
       }
@@ -608,7 +608,7 @@ module.exports = [
     },
     out: {
       ok: false,
-      why: 'not-valid'
+      why: 'verify-not-valid'
     }
   }
 ]

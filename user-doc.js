@@ -123,5 +123,19 @@ module.exports = {
       },
       query_user
     )
+  },
+  change_email: {
+    desc: 'Change user email.',
+    reply_desc: {
+      ok: '_true_ if changed',
+      user: 'user entity'
+    },
+    validate: Object.assign(
+      {
+        new_email: Joi.string().email().min(1)
+      },
+      query_user
+    )
   }
+
 }

@@ -146,12 +146,13 @@ function user(options) {
     .message('change:password', intern.make_msg('change_pass', ctx))
 
     .message('change:handle', intern.make_msg('change_handle', ctx))
+    .message('change:email', intern.make_msg('change_email', ctx))
 
   // NEXT
   // JOI VALIDATE EXISTING
 
-  //.message('change:email', change_email) // also by token
   //.message('list:user'
+  //.message('update:user'
   //.message('check:exists'
 
   return {
