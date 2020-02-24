@@ -24,7 +24,7 @@ module.exports = [
         {active:true},
         {name:'Adam Ant',active:true},
         {name:'edward',handle:'edward',email:'edward@example.com',active:true},
-        {name:'frank',handle:'frank',email:'frank@example.com',active:true}
+        {name:'frank',handle:'frankly',email:'frankly@example.com',active:true}
       ]
     }
   },
@@ -41,7 +41,7 @@ module.exports = [
       ok: true,
       items: [
         {name:'bob',email:'bob@example.com',foo:1,handle:'bob',active:true},
-        {name:'frank',foo:1,handle:'frank',email:'frank@example.com',active:true}
+        {name:'frank',foo:1,handle:'frankly',email:'frankly@example.com',active:true}
       ]
     }
   },

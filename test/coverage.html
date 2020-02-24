@@ -611,6 +611,10 @@
             <span class="cov high">100</span>
             <a href="#lib/register_user.js"><span class="dirname">lib/</span><span class="basename">register_user.js</span></a>
         </li>
+        <li class="">
+            <span class="cov high">100</span>
+            <a href="#lib/update_user.js"><span class="dirname">lib/</span><span class="basename">update_user.js</span></a>
+        </li>
         <li><a href="#linting">Linting Report</a></li>
     </div>
     <div id="tests">
@@ -618,8 +622,8 @@
       <div class="stats high">
           <div class="failures">0</div>
           <div class="skipped">0</div>
-          <div class="test-count">21</div>
-          <div class="duration">4282</div>
+          <div class="test-count">22</div>
+          <div class="duration">4277</div>
       </div>
       <div id="filters">
           <input type="checkbox" checked="" onchange="filter(this)" value="success" id="show-success">
@@ -642,14 +646,14 @@
               <td class="test-title">happy-test
                   
               </td>
-              <td class="test-duration">188</td>
+              <td class="test-duration">174</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">2</td>
               <td class="test-title">happy-real
                   
               </td>
-              <td class="test-duration">801</td>
+              <td class="test-duration">797</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">3</td>
@@ -684,21 +688,21 @@
               <td class="test-title">handle_exit
                   
               </td>
-              <td class="test-duration">11</td>
+              <td class="test-duration">16</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">8</td>
               <td class="test-title">handle_message
                   
               </td>
-              <td class="test-duration">0</td>
+              <td class="test-duration">1</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">9</td>
               <td class="test-title">make_handle
                   
               </td>
-              <td class="test-duration">6</td>
+              <td class="test-duration">9</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">10</td>
@@ -712,35 +716,35 @@
               <td class="test-title">fix_nick_handle
                   
               </td>
-              <td class="test-duration">3</td>
+              <td class="test-duration">4</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">12</td>
               <td class="test-title">find_user
                   
               </td>
-              <td class="test-duration">363</td>
+              <td class="test-duration">337</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">13</td>
               <td class="test-title">make_login
                   
               </td>
-              <td class="test-duration">138</td>
+              <td class="test-duration">134</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">14</td>
               <td class="test-title">build_pass_fields
                   
               </td>
-              <td class="test-duration">385</td>
+              <td class="test-duration">361</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">15</td>
               <td class="test-title">load_user_field
                   
               </td>
-              <td class="test-duration">3</td>
+              <td class="test-duration">4</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">16</td>
@@ -754,31 +758,38 @@
               <td class="test-title">valid_email
                   
               </td>
-              <td class="test-duration">136</td>
+              <td class="test-duration">141</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">18</td>
-              <td class="test-title">messages
+              <td class="test-title">extract_pass
                   
               </td>
-              <td class="test-duration">1820</td>
+              <td class="test-duration">1</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">19</td>
+              <td class="test-title">messages
+                  
+              </td>
+              <td class="test-duration">1876</td>
+          </tr>
+          <tr class="show  success">
+              <td class="test-id">20</td>
               <td class="test-title">validate
                   
               </td>
               <td class="test-duration">1</td>
           </tr>
           <tr class="show  success">
-              <td class="test-id">20</td>
+              <td class="test-id">21</td>
               <td class="test-title">happy
                   
               </td>
-              <td class="test-duration">127</td>
+              <td class="test-duration">125</td>
           </tr>
           <tr class="show  success">
-              <td class="test-id">21</td>
+              <td class="test-id">22</td>
               <td class="test-title">export
                   
               </td>
@@ -791,8 +802,8 @@
         <h1>Code Coverage Report</h1>
         <div class="stats high">
             <div class="percentage">100%</div>
-            <div class="sloc">1280</div>
-            <div class="hits">1280</div>
+            <div class="sloc">1357</div>
+            <div class="hits">1357</div>
             <div class="misses">0</div>
         </div>
         <div id="filters">
@@ -1972,8 +1983,8 @@
                 <h2 id="user.js">user.js </h2>
                 <div class="stats high">
                     <div class="percentage">100%</div>
-                    <div class="sloc">362</div>
-                    <div class="hits">362</div>
+                    <div class="sloc">381</div>
+                    <div class="hits">381</div>
                     <div class="misses">0</div>
                 </div>
                 <table>
@@ -2807,133 +2818,133 @@
                           <td class="line" data-tooltip>137</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;login:user&#x27;, intern.make_msg(&#x27;login_user&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;update:user&#x27;, intern.make_msg(&#x27;update_user&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__138" class="hit">
                           <td class="line" data-tooltip>138</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;logout:user&#x27;, intern.make_msg(&#x27;logout_user&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;login:user&#x27;, intern.make_msg(&#x27;login_user&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__139" class="hit">
                           <td class="line" data-tooltip>139</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;list:login&#x27;, intern.make_msg(&#x27;list_login&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;logout:user&#x27;, intern.make_msg(&#x27;logout_user&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__140" class="hit">
                           <td class="line" data-tooltip>140</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;make:verify&#x27;, intern.make_msg(&#x27;make_verify&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;list:login&#x27;, intern.make_msg(&#x27;list_login&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__141" class="hit">
                           <td class="line" data-tooltip>141</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;list:verify&#x27;, intern.make_msg(&#x27;list_verify&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;make:verify&#x27;, intern.make_msg(&#x27;make_verify&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__142" class="hit">
                           <td class="line" data-tooltip>142</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;check:verify&#x27;, intern.make_msg(&#x27;check_verify&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;list:verify&#x27;, intern.make_msg(&#x27;list_verify&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__143" class="hit">
                           <td class="line" data-tooltip>143</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;hook:password,cmd:encrypt&#x27;, intern.make_msg(&#x27;cmd_encrypt&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;check:verify&#x27;, intern.make_msg(&#x27;check_verify&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__144" class="hit">
                           <td class="line" data-tooltip>144</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;hook:password,cmd:pass&#x27;, intern.make_msg(&#x27;cmd_pass&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;hook:password,cmd:encrypt&#x27;, intern.make_msg(&#x27;cmd_encrypt&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__145" class="hit">
                           <td class="line" data-tooltip>145</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;change:pass&#x27;, intern.make_msg(&#x27;change_pass&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;hook:password,cmd:pass&#x27;, intern.make_msg(&#x27;cmd_pass&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__146" class="hit">
                           <td class="line" data-tooltip>146</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">    .message(&#x27;change:pass&#x27;, intern.make_msg(&#x27;change_pass&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__147" class="hit">
                           <td class="line" data-tooltip>147</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    // TODO: seneca.alias method?</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="user.js__148" class="hit">
                           <td class="line" data-tooltip>148</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;change:password&#x27;, intern.make_msg(&#x27;change_pass&#x27;, ctx))</td>
+                          <td class="source">    // TODO: seneca.alias method?</td>
                           
                         </tr>            <tr id="user.js__149" class="hit">
                           <td class="line" data-tooltip>149</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">    .message(&#x27;change:password&#x27;, intern.make_msg(&#x27;change_pass&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__150" class="hit">
                           <td class="line" data-tooltip>150</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;change:handle&#x27;, intern.make_msg(&#x27;change_handle&#x27;, ctx))</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="user.js__151" class="hit">
                           <td class="line" data-tooltip>151</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;change:email&#x27;, intern.make_msg(&#x27;change_email&#x27;, ctx))</td>
+                          <td class="source">    .message(&#x27;change:handle&#x27;, intern.make_msg(&#x27;change_handle&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__152" class="hit">
                           <td class="line" data-tooltip>152</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">    .message(&#x27;change:email&#x27;, intern.make_msg(&#x27;change_email&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__153" class="hit">
                           <td class="line" data-tooltip>153</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    .message(&#x27;check:exists&#x27;, intern.make_msg(&#x27;check_exists&#x27;, ctx))</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="user.js__154" class="hit">
                           <td class="line" data-tooltip>154</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">    .message(&#x27;check:exists&#x27;, intern.make_msg(&#x27;check_exists&#x27;, ctx))</td>
                           
                         </tr>            <tr id="user.js__155" class="hit">
                           <td class="line" data-tooltip>155</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">  // NEXT</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="user.js__156" class="hit">
                           <td class="line" data-tooltip>156</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">  // JOI VALIDATE EXISTING</td>
+                          <td class="source">  // NEXT</td>
                           
                         </tr>            <tr id="user.js__157" class="hit">
                           <td class="line" data-tooltip>157</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">  // JOI VALIDATE EXISTING</td>
                           
                         </tr>            <tr id="user.js__158" class="hit">
                           <td class="line" data-tooltip>158</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">  //.message(&#x27;update:user&#x27;</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="user.js__159" class="hit">
                           <td class="line" data-tooltip>159</td>
@@ -4798,13 +4809,13 @@
                         </tr>            <tr id="user.js__469" class="hit">
                           <td class="line" data-tooltip>469</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>25</td>
+                          <td class="hits" data-tooltip>28</td>
                           <td class="source">      var found &#x3D; await intern.find_user(seneca, msg, ctx)</td>
                           
                         </tr>            <tr id="user.js__470" class="hit">
                           <td class="line" data-tooltip>470</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>25</td>
+                          <td class="hits" data-tooltip>28</td>
                           <td class="source">      return found.ok</td>
                           
                         </tr>            <tr id="user.js__471" class="hit">
@@ -4852,7 +4863,7 @@
                         </tr>            <tr id="user.js__478" class="hit">
                           <td class="line" data-tooltip>478</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>177</td>
+                          <td class="hits" data-tooltip>202</td>
                           <td class="source">      var msg_user_query &#x3D; msg.user_q || msg.q || {}</td>
                           
                         </tr>            <tr id="user.js__479" class="hit">
@@ -4864,13 +4875,13 @@
                         </tr>            <tr id="user.js__480" class="hit">
                           <td class="line" data-tooltip>480</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>177</td>
+                          <td class="hits" data-tooltip>202</td>
                           <td class="source">      if (null &#x3D;&#x3D; user) {</td>
                           
                         </tr>            <tr id="user.js__481" class="hit">
                           <td class="line" data-tooltip>481</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>176</td>
+                          <td class="hits" data-tooltip>201</td>
                           <td class="source">        msg &#x3D; intern.fix_nick_handle(msg, ctx.options)</td>
                           
                         </tr>            <tr id="user.js__482" class="hit">
@@ -4882,7 +4893,7 @@
                         </tr>            <tr id="user.js__483" class="hit">
                           <td class="line" data-tooltip>483</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>176</td>
+                          <td class="hits" data-tooltip>201</td>
                           <td class="source">        var why &#x3D; null</td>
                           
                         </tr>            <tr id="user.js__484" class="hit">
@@ -4906,7 +4917,7 @@
                         </tr>            <tr id="user.js__487" class="hit">
                           <td class="line" data-tooltip>487</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>176</td>
+                          <td class="hits" data-tooltip>201</td>
                           <td class="source">        var q &#x3D; Object.assign(</td>
                           
                         </tr>            <tr id="user.js__488" class="hit">
@@ -4960,31 +4971,31 @@
                         </tr>            <tr id="user.js__496" class="hit">
                           <td class="line" data-tooltip>496</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>176</td>
+                          <td class="hits" data-tooltip>201</td>
                           <td class="source">        for (var cfI &#x3D; 0; cfI &lt; ctx.convenience_fields.length; cfI++) {</td>
                           
                         </tr>            <tr id="user.js__497" class="hit">
                           <td class="line" data-tooltip>497</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>601</td>
+                          <td class="hits" data-tooltip>670</td>
                           <td class="source">          var f &#x3D; ctx.convenience_fields[cfI]</td>
                           
                         </tr>            <tr id="user.js__498" class="hit">
                           <td class="line" data-tooltip>498</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>601</td>
+                          <td class="hits" data-tooltip>670</td>
                           <td class="source">          if (null !&#x3D; msg[f]) {</td>
                           
                         </tr>            <tr id="user.js__499" class="hit">
                           <td class="line" data-tooltip>499</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>143</td>
+                          <td class="hits" data-tooltip>168</td>
                           <td class="source">            q[f] &#x3D; msg[f]</td>
                           
                         </tr>            <tr id="user.js__500" class="hit">
                           <td class="line" data-tooltip>500</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>143</td>
+                          <td class="hits" data-tooltip>168</td>
                           <td class="source">            break</td>
                           
                         </tr>            <tr id="user.js__501" class="hit">
@@ -5014,13 +5025,13 @@
                         </tr>            <tr id="user.js__505" class="hit">
                           <td class="line" data-tooltip>505</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>176</td>
+                          <td class="hits" data-tooltip>201</td>
                           <td class="source">        if (null &#x3D;&#x3D; q.id &amp;&amp; null !&#x3D; q.user_id) {</td>
                           
                         </tr>            <tr id="user.js__506" class="hit">
                           <td class="line" data-tooltip>506</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>11</td>
+                          <td class="hits" data-tooltip>19</td>
                           <td class="source">          q.id &#x3D; q.user_id</td>
                           
                         </tr>            <tr id="user.js__507" class="hit">
@@ -5032,7 +5043,7 @@
                         </tr>            <tr id="user.js__508" class="hit">
                           <td class="line" data-tooltip>508</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>176</td>
+                          <td class="hits" data-tooltip>201</td>
                           <td class="source">        delete q.user_id</td>
                           
                         </tr>            <tr id="user.js__509" class="hit">
@@ -5056,7 +5067,7 @@
                         </tr>            <tr id="user.js__512" class="hit">
                           <td class="line" data-tooltip>512</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>176</td>
+                          <td class="hits" data-tooltip>201</td>
                           <td class="source">        if (0 &lt; Object.keys(seneca.util.clean(q)).length) {</td>
                           
                         </tr>            <tr id="user.js__513" class="hit">
@@ -5068,13 +5079,13 @@
                         </tr>            <tr id="user.js__514" class="hit">
                           <td class="line" data-tooltip>514</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>171</td>
+                          <td class="hits" data-tooltip>196</td>
                           <td class="source">          var fields &#x3D; Array.isArray(msg.fields) ? msg.fields : []</td>
                           
                         </tr>            <tr id="user.js__515" class="hit">
                           <td class="line" data-tooltip>515</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>171</td>
+                          <td class="hits" data-tooltip>196</td>
                           <td class="source">          q.fields$ &#x3D; [</td>
                           
                         </tr>            <tr id="user.js__516" class="hit">
@@ -5104,7 +5115,7 @@
                         </tr>            <tr id="user.js__520" class="hit">
                           <td class="line" data-tooltip>520</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>171</td>
+                          <td class="hits" data-tooltip>196</td>
                           <td class="source">          if (null &#x3D;&#x3D; q.id &amp;&amp; null &#x3D;&#x3D; q.handle &amp;&amp; null &#x3D;&#x3D; q.email) {</td>
                           
                         </tr>            <tr id="user.js__521" class="hit">
@@ -5170,7 +5181,7 @@
                         </tr>            <tr id="user.js__531" class="hit">
                           <td class="line" data-tooltip>531</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>168</td>
+                          <td class="hits" data-tooltip>193</td>
                           <td class="source">            user &#x3D; await seneca.entity(ctx.sys_user).load$(q)</td>
                           
                         </tr>            <tr id="user.js__532" class="hit">
@@ -5212,19 +5223,19 @@
                         </tr>            <tr id="user.js__538" class="hit">
                           <td class="line" data-tooltip>538</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>177</td>
+                          <td class="hits" data-tooltip>202</td>
                           <td class="source">      var out &#x3D; { ok: null !&#x3D; user, user: user || null }</td>
                           
                         </tr>            <tr id="user.js__539" class="hit">
                           <td class="line" data-tooltip>539</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>177</td>
+                          <td class="hits" data-tooltip>202</td>
                           <td class="source">      if (null &#x3D;&#x3D; user) {</td>
                           
                         </tr>            <tr id="user.js__540" class="hit">
                           <td class="line" data-tooltip>540</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>50</td>
+                          <td class="hits" data-tooltip>54</td>
                           <td class="source">        out.why &#x3D; why || &#x27;user-not-found&#x27;</td>
                           
                         </tr>            <tr id="user.js__541" class="hit">
@@ -5242,7 +5253,7 @@
                         </tr>            <tr id="user.js__543" class="hit">
                           <td class="line" data-tooltip>543</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>177</td>
+                          <td class="hits" data-tooltip>202</td>
                           <td class="source">      return out</td>
                           
                         </tr>            <tr id="user.js__544" class="hit">
@@ -5272,13 +5283,13 @@
                         </tr>            <tr id="user.js__548" class="hit">
                           <td class="line" data-tooltip>548</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>17</td>
+                          <td class="hits" data-tooltip>21</td>
                           <td class="source">      var repeat &#x3D; msg.repeat // optional</td>
                           
                         </tr>            <tr id="user.js__549" class="hit">
                           <td class="line" data-tooltip>549</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>17</td>
+                          <td class="hits" data-tooltip>21</td>
                           <td class="source">      var salt &#x3D; msg.salt</td>
                           
                         </tr>            <tr id="user.js__550" class="hit">
@@ -5290,13 +5301,13 @@
                         </tr>            <tr id="user.js__551" class="hit">
                           <td class="line" data-tooltip>551</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>17</td>
+                          <td class="hits" data-tooltip>21</td>
                           <td class="source">      if (&#x27;string&#x27; &#x3D;&#x3D;&#x3D; typeof repeat &amp;&amp; repeat !&#x3D;&#x3D; pass) {</td>
                           
                         </tr>            <tr id="user.js__552" class="hit">
                           <td class="line" data-tooltip>552</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>3</td>
+                          <td class="hits" data-tooltip>4</td>
                           <td class="source">        return { ok: false, why: &#x27;repeat-password-mismatch&#x27; }</td>
                           
                         </tr>            <tr id="user.js__553" class="hit">
@@ -5314,7 +5325,7 @@
                         </tr>            <tr id="user.js__555" class="hit">
                           <td class="line" data-tooltip>555</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>14</td>
+                          <td class="hits" data-tooltip>17</td>
                           <td class="source">      var res &#x3D; await seneca.post(&#x27;sys:user,hook:password,cmd:encrypt&#x27;, {</td>
                           
                         </tr>            <tr id="user.js__556" class="hit">
@@ -5344,13 +5355,13 @@
                         </tr>            <tr id="user.js__560" class="hit">
                           <td class="line" data-tooltip>560</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>14</td>
+                          <td class="hits" data-tooltip>17</td>
                           <td class="source">      if (res.ok) {</td>
                           
                         </tr>            <tr id="user.js__561" class="hit">
                           <td class="line" data-tooltip>561</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>13</td>
+                          <td class="hits" data-tooltip>16</td>
                           <td class="source">        return {</td>
                           
                         </tr>            <tr id="user.js__562" class="hit">
@@ -5530,7 +5541,7 @@
                         </tr>            <tr id="user.js__591" class="hit">
                           <td class="line" data-tooltip>591</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>216</td>
+                          <td class="hits" data-tooltip>241</td>
                           <td class="source">      if (null &#x3D;&#x3D; data) {</td>
                           
                         </tr>            <tr id="user.js__592" class="hit">
@@ -5554,7 +5565,7 @@
                         </tr>            <tr id="user.js__595" class="hit">
                           <td class="line" data-tooltip>595</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>215</td>
+                          <td class="hits" data-tooltip>240</td>
                           <td class="source">      var downcase &#x3D; options.handle.downcase</td>
                           
                         </tr>            <tr id="user.js__596" class="hit">
@@ -5566,7 +5577,7 @@
                         </tr>            <tr id="user.js__597" class="hit">
                           <td class="line" data-tooltip>597</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>215</td>
+                          <td class="hits" data-tooltip>240</td>
                           <td class="source">      if (null !&#x3D; data.nick) {</td>
                           
                         </tr>            <tr id="user.js__598" class="hit">
@@ -5602,7 +5613,7 @@
                         </tr>            <tr id="user.js__603" class="hit">
                           <td class="line" data-tooltip>603</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>215</td>
+                          <td class="hits" data-tooltip>240</td>
                           <td class="source">      if (null !&#x3D; data.user &amp;&amp; null !&#x3D; data.user.nick) {</td>
                           
                         </tr>            <tr id="user.js__604" class="hit">
@@ -5656,7 +5667,7 @@
                         </tr>            <tr id="user.js__612" class="hit">
                           <td class="line" data-tooltip>612</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>215</td>
+                          <td class="hits" data-tooltip>240</td>
                           <td class="source">      if (null !&#x3D; data.user_data &amp;&amp; null !&#x3D; data.user_data.nick) {</td>
                           
                         </tr>            <tr id="user.js__613" class="hit">
@@ -5722,7 +5733,7 @@
                         </tr>            <tr id="user.js__623" class="hit">
                           <td class="line" data-tooltip>623</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>215</td>
+                          <td class="hits" data-tooltip>240</td>
                           <td class="source">      if (null !&#x3D; data.q &amp;&amp; null !&#x3D; data.q.nick) {</td>
                           
                         </tr>            <tr id="user.js__624" class="hit">
@@ -5758,7 +5769,7 @@
                         </tr>            <tr id="user.js__629" class="hit">
                           <td class="line" data-tooltip>629</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>215</td>
+                          <td class="hits" data-tooltip>240</td>
                           <td class="source">      return data</td>
                           
                         </tr>            <tr id="user.js__630" class="hit">
@@ -6430,7 +6441,7 @@
                         </tr>            <tr id="user.js__741" class="hit">
                           <td class="line" data-tooltip>741</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>13</td>
+                          <td class="hits" data-tooltip>15</td>
                           <td class="source">      if(email_valid.error) {</td>
                           
                         </tr>            <tr id="user.js__742" class="hit">
@@ -6454,7 +6465,7 @@
                         </tr>            <tr id="user.js__745" class="hit">
                           <td class="line" data-tooltip>745</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>12</td>
+                          <td class="hits" data-tooltip>14</td>
                           <td class="source">      var email_taken &#x3D; await intern.find_user(seneca, {email:email}, ctx)</td>
                           
                         </tr>            <tr id="user.js__746" class="hit">
@@ -6466,7 +6477,7 @@
                         </tr>            <tr id="user.js__747" class="hit">
                           <td class="line" data-tooltip>747</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>12</td>
+                          <td class="hits" data-tooltip>14</td>
                           <td class="source">      return {</td>
                           
                         </tr>            <tr id="user.js__748" class="hit">
@@ -6532,7 +6543,7 @@
                         </tr>            <tr id="user.js__758" class="hit">
                           <td class="line" data-tooltip>758</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>33</td>
+                          <td class="hits" data-tooltip>36</td>
                           <td class="source">      if (&#x27;string&#x27; !&#x3D; typeof handle) {</td>
                           
                         </tr>            <tr id="user.js__759" class="hit">
@@ -6556,7 +6567,7 @@
                         </tr>            <tr id="user.js__762" class="hit">
                           <td class="line" data-tooltip>762</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>31</td>
+                          <td class="hits" data-tooltip>34</td>
                           <td class="source">      handle &#x3D; options.handle.downcase ? handle.toLowerCase() : handle</td>
                           
                         </tr>            <tr id="user.js__763" class="hit">
@@ -6568,7 +6579,7 @@
                         </tr>            <tr id="user.js__764" class="hit">
                           <td class="line" data-tooltip>764</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>31</td>
+                          <td class="hits" data-tooltip>34</td>
                           <td class="source">      if (ctx.handle.reserved[handle]) {</td>
                           
                         </tr>            <tr id="user.js__765" class="hit">
@@ -6592,13 +6603,13 @@
                         </tr>            <tr id="user.js__768" class="hit">
                           <td class="line" data-tooltip>768</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>30</td>
+                          <td class="hits" data-tooltip>33</td>
                           <td class="source">      var mnc &#x3D; ctx.handle.must_not_contain()</td>
                           
                         </tr>            <tr id="user.js__769" class="hit">
                           <td class="line" data-tooltip>769</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>30</td>
+                          <td class="hits" data-tooltip>33</td>
                           <td class="source">      if (mnc[handle]) {</td>
                           
                         </tr>            <tr id="user.js__770" class="hit">
@@ -6646,7 +6657,7 @@
                         </tr>            <tr id="user.js__777" class="hit">
                           <td class="line" data-tooltip>777</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>29</td>
+                          <td class="hits" data-tooltip>32</td>
                           <td class="source">      if (!options.handle.must_match(handle)) {</td>
                           
                         </tr>            <tr id="user.js__778" class="hit">
@@ -6670,7 +6681,7 @@
                         </tr>            <tr id="user.js__781" class="hit">
                           <td class="line" data-tooltip>781</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>28</td>
+                          <td class="hits" data-tooltip>31</td>
                           <td class="source">      if (handle.length &lt; options.handle.minlen) {</td>
                           
                         </tr>            <tr id="user.js__782" class="hit">
@@ -6742,7 +6753,7 @@
                         </tr>            <tr id="user.js__793" class="hit">
                           <td class="line" data-tooltip>793</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>26</td>
+                          <td class="hits" data-tooltip>29</td>
                           <td class="source">      if (options.handle.maxlen &lt; handle.length) {</td>
                           
                         </tr>            <tr id="user.js__794" class="hit">
@@ -6814,7 +6825,7 @@
                         </tr>            <tr id="user.js__805" class="hit">
                           <td class="line" data-tooltip>805</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>25</td>
+                          <td class="hits" data-tooltip>28</td>
                           <td class="source">      var exists &#x3D; await intern.user_exists(seneca, { handle: handle }, ctx)</td>
                           
                         </tr>            <tr id="user.js__806" class="hit">
@@ -6826,13 +6837,13 @@
                         </tr>            <tr id="user.js__807" class="hit">
                           <td class="line" data-tooltip>807</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>25</td>
+                          <td class="hits" data-tooltip>28</td>
                           <td class="source">      if (exists) {</td>
                           
                         </tr>            <tr id="user.js__808" class="hit">
                           <td class="line" data-tooltip>808</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
+                          <td class="hits" data-tooltip>3</td>
                           <td class="source">        return {</td>
                           
                         </tr>            <tr id="user.js__809" class="hit">
@@ -6874,29 +6885,155 @@
                         </tr>            <tr id="user.js__815" class="hit">
                           <td class="line" data-tooltip>815</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>23</td>
+                          <td class="hits" data-tooltip>25</td>
                           <td class="source">      return { ok: true, handle: handle }</td>
                           
                         </tr>            <tr id="user.js__816" class="hit">
                           <td class="line" data-tooltip>816</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    }</td>
+                          <td class="source">    },</td>
                           
                         </tr>            <tr id="user.js__817" class="hit">
                           <td class="line" data-tooltip>817</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">  }</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="user.js__818" class="hit">
                           <td class="line" data-tooltip>818</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">}</td>
+                          <td class="source">    // These variations are supported for better REPL DX</td>
                           
                         </tr>            <tr id="user.js__819" class="hit">
                           <td class="line" data-tooltip>819</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    extract_pass: function(msg) {</td>
+                          
+                        </tr>            <tr id="user.js__820" class="hit">
+                          <td class="line" data-tooltip>820</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      var pass_data &#x3D; {}</td>
+                          
+                        </tr>            <tr id="user.js__821" class="hit">
+                          <td class="line" data-tooltip>821</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>17</td>
+                          <td class="source">      if(&#x27;string&#x27; &#x3D;&#x3D;&#x3D; typeof(msg.pass) || &#x27;string&#x27; &#x3D;&#x3D;&#x3D; typeof(msg.password)) {</td>
+                          
+                        </tr>            <tr id="user.js__822" class="hit">
+                          <td class="line" data-tooltip>822</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>4</td>
+                          <td class="source">        pass_data.pass &#x3D; msg.pass || msg.password</td>
+                          
+                        </tr>            <tr id="user.js__823" class="hit">
+                          <td class="line" data-tooltip>823</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>4</td>
+                          <td class="source">        pass_data.repeat &#x3D; msg.repeat</td>
+                          
+                        </tr>            <tr id="user.js__824" class="hit">
+                          <td class="line" data-tooltip>824</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      }</td>
+                          
+                        </tr>            <tr id="user.js__825" class="hit">
+                          <td class="line" data-tooltip>825</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>13</td>
+                          <td class="source">      else if(msg.user &amp;&amp; (&#x27;string&#x27; &#x3D;&#x3D;&#x3D; typeof(msg.user.pass) ||</td>
+                          
+                        </tr>            <tr id="user.js__826" class="hit">
+                          <td class="line" data-tooltip>826</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">                           &#x27;string&#x27; &#x3D;&#x3D;&#x3D; typeof(msg.user.password))) {</td>
+                          
+                        </tr>            <tr id="user.js__827" class="hit">
+                          <td class="line" data-tooltip>827</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>3</td>
+                          <td class="source">        pass_data.pass &#x3D; msg.user.pass || msg.user.password</td>
+                          
+                        </tr>            <tr id="user.js__828" class="hit">
+                          <td class="line" data-tooltip>828</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>3</td>
+                          <td class="source">        pass_data.repeat &#x3D; msg.user.repeat</td>
+                          
+                        </tr>            <tr id="user.js__829" class="hit">
+                          <td class="line" data-tooltip>829</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      }</td>
+                          
+                        </tr>            <tr id="user.js__830" class="hit">
+                          <td class="line" data-tooltip>830</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>10</td>
+                          <td class="source">      else if(msg.user_data &amp;&amp; (&#x27;string&#x27; &#x3D;&#x3D;&#x3D; typeof(msg.user_data.pass) ||</td>
+                          
+                        </tr>            <tr id="user.js__831" class="hit">
+                          <td class="line" data-tooltip>831</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">                                &#x27;string&#x27; &#x3D;&#x3D;&#x3D; typeof(msg.user_data.password))) {</td>
+                          
+                        </tr>            <tr id="user.js__832" class="hit">
+                          <td class="line" data-tooltip>832</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>4</td>
+                          <td class="source">        pass_data.pass &#x3D; msg.user_data.pass || msg.user_data.password</td>
+                          
+                        </tr>            <tr id="user.js__833" class="hit">
+                          <td class="line" data-tooltip>833</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>4</td>
+                          <td class="source">        pass_data.repeat &#x3D; msg.user_data.repeat</td>
+                          
+                        </tr>            <tr id="user.js__834" class="hit">
+                          <td class="line" data-tooltip>834</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      }</td>
+                          
+                        </tr>            <tr id="user.js__835" class="hit">
+                          <td class="line" data-tooltip>835</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>17</td>
+                          <td class="source">      return pass_data</td>
+                          
+                        </tr>            <tr id="user.js__836" class="hit">
+                          <td class="line" data-tooltip>836</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    },</td>
+                          
+                        </tr>            <tr id="user.js__837" class="hit">
+                          <td class="line" data-tooltip>837</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">  }</td>
+                          
+                        </tr>            <tr id="user.js__838" class="hit">
+                          <td class="line" data-tooltip>838</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="user.js__839" class="hit">
+                          <td class="line" data-tooltip>839</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">}</td>
+                          
+                        </tr>            <tr id="user.js__840" class="hit">
+                          <td class="line" data-tooltip>840</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
                           <td class="source"></td>
@@ -7794,13 +7931,13 @@
                         </tr>            <tr id="lib/change_email.js__11" class="hit">
                           <td class="line" data-tooltip>11</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>7</td>
+                          <td class="hits" data-tooltip>9</td>
                           <td class="source">    var new_email &#x3D; msg.new_email</td>
                           
                         </tr>            <tr id="lib/change_email.js__12" class="hit">
                           <td class="line" data-tooltip>12</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>7</td>
+                          <td class="hits" data-tooltip>9</td>
                           <td class="source">    var verify &#x3D; msg.verify // optional verification code</td>
                           
                         </tr>            <tr id="lib/change_email.js__13" class="hit">
@@ -7812,7 +7949,7 @@
                         </tr>            <tr id="lib/change_email.js__14" class="hit">
                           <td class="line" data-tooltip>14</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>7</td>
+                          <td class="hits" data-tooltip>9</td>
                           <td class="source">    var found &#x3D; await intern.find_user(seneca, msg, ctx)</td>
                           
                         </tr>            <tr id="lib/change_email.js__15" class="hit">
@@ -7824,7 +7961,7 @@
                         </tr>            <tr id="lib/change_email.js__16" class="hit">
                           <td class="line" data-tooltip>16</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>7</td>
+                          <td class="hits" data-tooltip>9</td>
                           <td class="source">    if (!found.ok) {</td>
                           
                         </tr>            <tr id="lib/change_email.js__17" class="hit">
@@ -7848,7 +7985,7 @@
                         </tr>            <tr id="lib/change_email.js__20" class="hit">
                           <td class="line" data-tooltip>20</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>6</td>
+                          <td class="hits" data-tooltip>8</td>
                           <td class="source">    var user &#x3D; found.user</td>
                           
                         </tr>            <tr id="lib/change_email.js__21" class="hit">
@@ -7866,7 +8003,7 @@
                         </tr>            <tr id="lib/change_email.js__23" class="hit">
                           <td class="line" data-tooltip>23</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>6</td>
+                          <td class="hits" data-tooltip>8</td>
                           <td class="source">    if (verify) {</td>
                           
                         </tr>            <tr id="lib/change_email.js__24" class="hit">
@@ -7956,191 +8093,131 @@
                         </tr>            <tr id="lib/change_email.js__38" class="hit">
                           <td class="line" data-tooltip>38</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>4</td>
+                          <td class="hits" data-tooltip>6</td>
                           <td class="source">    if (user.email !&#x3D; new_email) {</td>
                           
                         </tr>            <tr id="lib/change_email.js__39" class="hit">
                           <td class="line" data-tooltip>39</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">      /*</td>
+                          <td class="hits" data-tooltip>5</td>
+                          <td class="source">      var email_valid &#x3D; await intern.valid_email(seneca, new_email, ctx)</td>
                           
                         </tr>            <tr id="lib/change_email.js__40" class="hit">
                           <td class="line" data-tooltip>40</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">      var new_email_taken &#x3D; await intern.find_user(seneca, {email:new_email}, ctx)</td>
+                          <td class="hits" data-tooltip>5</td>
+                          <td class="source">      if(!email_valid.ok) {</td>
                           
                         </tr>            <tr id="lib/change_email.js__41" class="hit">
                           <td class="line" data-tooltip>41</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">      if(new_email_taken.ok) {</td>
+                          <td class="hits" data-tooltip>2</td>
+                          <td class="source">        return {</td>
                           
                         </tr>            <tr id="lib/change_email.js__42" class="hit">
                           <td class="line" data-tooltip>42</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">        return {ok:false, why:&#x27;email-exists&#x27;, details:{</td>
+                          <td class="source">          ok:false,</td>
                           
                         </tr>            <tr id="lib/change_email.js__43" class="hit">
                           <td class="line" data-tooltip>43</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">          new_email: new_email,</td>
+                          <td class="source">          why:email_valid.why,</td>
                           
                         </tr>            <tr id="lib/change_email.js__44" class="hit">
                           <td class="line" data-tooltip>44</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">          old_email: user.email</td>
+                          <td class="source">          details:{</td>
                           
                         </tr>            <tr id="lib/change_email.js__45" class="hit">
                           <td class="line" data-tooltip>45</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">        }}</td>
+                          <td class="source">            new_email: new_email,</td>
                           
                         </tr>            <tr id="lib/change_email.js__46" class="hit">
                           <td class="line" data-tooltip>46</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      }</td>
+                          <td class="source">            old_email: user.email</td>
                           
                         </tr>            <tr id="lib/change_email.js__47" class="hit">
                           <td class="line" data-tooltip>47</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      */</td>
+                          <td class="source">          }</td>
                           
                         </tr>            <tr id="lib/change_email.js__48" class="hit">
                           <td class="line" data-tooltip>48</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">        }</td>
                           
                         </tr>            <tr id="lib/change_email.js__49" class="hit">
                           <td class="line" data-tooltip>49</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>3</td>
-                          <td class="source">      var email_valid &#x3D; await intern.valid_email(seneca, new_email, ctx)</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      }</td>
                           
                         </tr>            <tr id="lib/change_email.js__50" class="hit">
                           <td class="line" data-tooltip>50</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>3</td>
-                          <td class="source">      if(!email_valid.ok) {</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      </td>
                           
                         </tr>            <tr id="lib/change_email.js__51" class="hit">
                           <td class="line" data-tooltip>51</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
-                          <td class="source">        return {</td>
+                          <td class="hits" data-tooltip>3</td>
+                          <td class="source">      user &#x3D; await user.data$({email:new_email}).save$()</td>
                           
                         </tr>            <tr id="lib/change_email.js__52" class="hit">
                           <td class="line" data-tooltip>52</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">          ok:false,</td>
+                          <td class="source">    }</td>
                           
                         </tr>            <tr id="lib/change_email.js__53" class="hit">
                           <td class="line" data-tooltip>53</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">          why:email_valid.why,</td>
+                          <td class="source">    </td>
                           
                         </tr>            <tr id="lib/change_email.js__54" class="hit">
                           <td class="line" data-tooltip>54</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">          details:{</td>
+                          <td class="hits" data-tooltip>4</td>
+                          <td class="source">    var out &#x3D; { ok: true, user: user }</td>
                           
                         </tr>            <tr id="lib/change_email.js__55" class="hit">
                           <td class="line" data-tooltip>55</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">            new_email: new_email,</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_email.js__56" class="hit">
                           <td class="line" data-tooltip>56</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">            old_email: user.email</td>
+                          <td class="hits" data-tooltip>4</td>
+                          <td class="source">    return out</td>
                           
                         </tr>            <tr id="lib/change_email.js__57" class="hit">
                           <td class="line" data-tooltip>57</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">          }</td>
+                          <td class="source">  }</td>
                           
                         </tr>            <tr id="lib/change_email.js__58" class="hit">
                           <td class="line" data-tooltip>58</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">        }</td>
+                          <td class="source">}</td>
                           
                         </tr>            <tr id="lib/change_email.js__59" class="hit">
                           <td class="line" data-tooltip>59</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">      }</td>
-                          
-                        </tr>            <tr id="lib/change_email.js__60" class="hit">
-                          <td class="line" data-tooltip>60</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">      </td>
-                          
-                        </tr>            <tr id="lib/change_email.js__61" class="hit">
-                          <td class="line" data-tooltip>61</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
-                          <td class="source">      user &#x3D; await user.data$({email:new_email}).save$()</td>
-                          
-                        </tr>            <tr id="lib/change_email.js__62" class="hit">
-                          <td class="line" data-tooltip>62</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    }</td>
-                          
-                        </tr>            <tr id="lib/change_email.js__63" class="hit">
-                          <td class="line" data-tooltip>63</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    </td>
-                          
-                        </tr>            <tr id="lib/change_email.js__64" class="hit">
-                          <td class="line" data-tooltip>64</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>3</td>
-                          <td class="source">    var out &#x3D; { ok: true, user: user }</td>
-                          
-                        </tr>            <tr id="lib/change_email.js__65" class="hit">
-                          <td class="line" data-tooltip>65</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
-                          
-                        </tr>            <tr id="lib/change_email.js__66" class="hit">
-                          <td class="line" data-tooltip>66</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>3</td>
-                          <td class="source">    return out</td>
-                          
-                        </tr>            <tr id="lib/change_email.js__67" class="hit">
-                          <td class="line" data-tooltip>67</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">  }</td>
-                          
-                        </tr>            <tr id="lib/change_email.js__68" class="hit">
-                          <td class="line" data-tooltip>68</td>
-                          <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">}</td>
-                          
-                        </tr>            <tr id="lib/change_email.js__69" class="hit">
-                          <td class="line" data-tooltip>69</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
                           <td class="source"></td>
@@ -8254,7 +8331,7 @@
                         </tr>            <tr id="lib/change_handle.js__15" class="hit">
                           <td class="line" data-tooltip>15</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>4</td>
+                          <td class="hits" data-tooltip>7</td>
                           <td class="source">    var new_handle &#x3D; msg.new_handle</td>
                           
                         </tr>            <tr id="lib/change_handle.js__16" class="hit">
@@ -8266,7 +8343,7 @@
                         </tr>            <tr id="lib/change_handle.js__17" class="hit">
                           <td class="line" data-tooltip>17</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>4</td>
+                          <td class="hits" data-tooltip>7</td>
                           <td class="source">    var found &#x3D; await intern.find_user(seneca, msg, ctx)</td>
                           
                         </tr>            <tr id="lib/change_handle.js__18" class="hit">
@@ -8278,7 +8355,7 @@
                         </tr>            <tr id="lib/change_handle.js__19" class="hit">
                           <td class="line" data-tooltip>19</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>4</td>
+                          <td class="hits" data-tooltip>7</td>
                           <td class="source">    if (!found.ok) {</td>
                           
                         </tr>            <tr id="lib/change_handle.js__20" class="hit">
@@ -8302,7 +8379,7 @@
                         </tr>            <tr id="lib/change_handle.js__23" class="hit">
                           <td class="line" data-tooltip>23</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>3</td>
+                          <td class="hits" data-tooltip>6</td>
                           <td class="source">    var user &#x3D; found.user</td>
                           
                         </tr>            <tr id="lib/change_handle.js__24" class="hit">
@@ -8320,13 +8397,13 @@
                         </tr>            <tr id="lib/change_handle.js__26" class="hit">
                           <td class="line" data-tooltip>26</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>3</td>
+                          <td class="hits" data-tooltip>6</td>
                           <td class="source">    if (user.handle !&#x3D; new_handle) {</td>
                           
                         </tr>            <tr id="lib/change_handle.js__27" class="hit">
                           <td class="line" data-tooltip>27</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
+                          <td class="hits" data-tooltip>5</td>
                           <td class="source">      var valid_handle &#x3D; await intern.valid_handle(seneca, new_handle, ctx)</td>
                           
                         </tr>            <tr id="lib/change_handle.js__28" class="hit">
@@ -8338,25 +8415,25 @@
                         </tr>            <tr id="lib/change_handle.js__29" class="hit">
                           <td class="line" data-tooltip>29</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
+                          <td class="hits" data-tooltip>5</td>
                           <td class="source">      if (!valid_handle.ok) {</td>
                           
                         </tr>            <tr id="lib/change_handle.js__30" class="hit">
                           <td class="line" data-tooltip>30</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
+                          <td class="hits" data-tooltip>2</td>
                           <td class="source">        valid_handle.details.user_id &#x3D; user.id</td>
                           
                         </tr>            <tr id="lib/change_handle.js__31" class="hit">
                           <td class="line" data-tooltip>31</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
+                          <td class="hits" data-tooltip>2</td>
                           <td class="source">        valid_handle.details.user_handle &#x3D; user.handle</td>
                           
                         </tr>            <tr id="lib/change_handle.js__32" class="hit">
                           <td class="line" data-tooltip>32</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
+                          <td class="hits" data-tooltip>2</td>
                           <td class="source">        return valid_handle</td>
                           
                         </tr>            <tr id="lib/change_handle.js__33" class="hit">
@@ -8374,7 +8451,7 @@
                         </tr>            <tr id="lib/change_handle.js__35" class="hit">
                           <td class="line" data-tooltip>35</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
+                          <td class="hits" data-tooltip>3</td>
                           <td class="source">      new_handle &#x3D; valid_handle.handle</td>
                           
                         </tr>            <tr id="lib/change_handle.js__36" class="hit">
@@ -8386,7 +8463,7 @@
                         </tr>            <tr id="lib/change_handle.js__37" class="hit">
                           <td class="line" data-tooltip>37</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
+                          <td class="hits" data-tooltip>3</td>
                           <td class="source">      user &#x3D; await user.data$({ handle: new_handle }).save$()</td>
                           
                         </tr>            <tr id="lib/change_handle.js__38" class="hit">
@@ -8404,7 +8481,7 @@
                         </tr>            <tr id="lib/change_handle.js__40" class="hit">
                           <td class="line" data-tooltip>40</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
+                          <td class="hits" data-tooltip>4</td>
                           <td class="source">    var out &#x3D; { ok: true, user: user }</td>
                           
                         </tr>            <tr id="lib/change_handle.js__41" class="hit">
@@ -8416,7 +8493,7 @@
                         </tr>            <tr id="lib/change_handle.js__42" class="hit">
                           <td class="line" data-tooltip>42</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
+                          <td class="hits" data-tooltip>4</td>
                           <td class="source">    return out</td>
                           
                         </tr>            <tr id="lib/change_handle.js__43" class="hit">
@@ -8522,44 +8599,44 @@
                         </tr>            <tr id="lib/change_pass.js__11" class="hit">
                           <td class="line" data-tooltip>11</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
-                          <td class="source">module.exports &#x3D; ctx &#x3D;&gt; {</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">// TODO: validate pass minlen</td>
                           
                         </tr>            <tr id="lib/change_pass.js__12" class="hit">
                           <td class="line" data-tooltip>12</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">  const intern &#x3D; ctx.intern</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__13" class="hit">
                           <td class="line" data-tooltip>13</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">module.exports &#x3D; ctx &#x3D;&gt; {</td>
                           
                         </tr>            <tr id="lib/change_pass.js__14" class="hit">
                           <td class="line" data-tooltip>14</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>16</td>
-                          <td class="source">  return async function change_pass(msg) {</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">  const intern &#x3D; ctx.intern</td>
                           
                         </tr>            <tr id="lib/change_pass.js__15" class="hit">
                           <td class="line" data-tooltip>15</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">    var seneca &#x3D; this</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__16" class="hit">
                           <td class="line" data-tooltip>16</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="hits" data-tooltip>16</td>
+                          <td class="source">  return async function change_pass(msg) {</td>
                           
                         </tr>            <tr id="lib/change_pass.js__17" class="hit">
                           <td class="line" data-tooltip>17</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>7</td>
-                          <td class="source">    var verify &#x3D; msg.verify // optional verification code</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    var seneca &#x3D; this</td>
                           
                         </tr>            <tr id="lib/change_pass.js__18" class="hit">
                           <td class="line" data-tooltip>18</td>
@@ -8570,74 +8647,74 @@
                         </tr>            <tr id="lib/change_pass.js__19" class="hit">
                           <td class="line" data-tooltip>19</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>7</td>
-                          <td class="source">    var pass_msg &#x3D; Object.assign({}, msg)</td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    var verify &#x3D; msg.verify // optional verification code</td>
                           
                         </tr>            <tr id="lib/change_pass.js__20" class="hit">
                           <td class="line" data-tooltip>20</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>7</td>
-                          <td class="source">    if (msg.generate) {</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__21" class="hit">
                           <td class="line" data-tooltip>21</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
-                          <td class="source">      pass_msg.pass &#x3D; generate_password()</td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    var pass_msg &#x3D; Object.assign({}, msg)</td>
                           
                         </tr>            <tr id="lib/change_pass.js__22" class="hit">
                           <td class="line" data-tooltip>22</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
-                          <td class="source">      delete pass_msg.password // remove ambiguity</td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    if (msg.generate) {</td>
                           
                         </tr>            <tr id="lib/change_pass.js__23" class="hit">
                           <td class="line" data-tooltip>23</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    }</td>
+                          <td class="hits" data-tooltip>2</td>
+                          <td class="source">      pass_msg.pass &#x3D; generate_password()</td>
                           
                         </tr>            <tr id="lib/change_pass.js__24" class="hit">
                           <td class="line" data-tooltip>24</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="hits" data-tooltip>2</td>
+                          <td class="source">      delete pass_msg.password // remove ambiguity</td>
                           
                         </tr>            <tr id="lib/change_pass.js__25" class="hit">
                           <td class="line" data-tooltip>25</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>7</td>
-                          <td class="source">    var pass_fields &#x3D; await intern.build_pass_fields(seneca, pass_msg, ctx)</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
                           
                         </tr>            <tr id="lib/change_pass.js__26" class="hit">
                           <td class="line" data-tooltip>26</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>7</td>
-                          <td class="source">    if (!pass_fields.ok) {</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__27" class="hit">
                           <td class="line" data-tooltip>27</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
-                          <td class="source">      return pass_fields</td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    var pass_fields &#x3D; await intern.build_pass_fields(seneca, pass_msg, ctx)</td>
                           
                         </tr>            <tr id="lib/change_pass.js__28" class="hit">
                           <td class="line" data-tooltip>28</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    }</td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    if (!pass_fields.ok) {</td>
                           
                         </tr>            <tr id="lib/change_pass.js__29" class="hit">
                           <td class="line" data-tooltip>29</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="hits" data-tooltip>2</td>
+                          <td class="source">      return pass_fields</td>
                           
                         </tr>            <tr id="lib/change_pass.js__30" class="hit">
                           <td class="line" data-tooltip>30</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>6</td>
-                          <td class="source">    var found &#x3D; await intern.find_user(seneca, msg, ctx)</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
                           
                         </tr>            <tr id="lib/change_pass.js__31" class="hit">
                           <td class="line" data-tooltip>31</td>
@@ -8648,32 +8725,32 @@
                         </tr>            <tr id="lib/change_pass.js__32" class="hit">
                           <td class="line" data-tooltip>32</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>6</td>
-                          <td class="source">    if (!found.ok) {</td>
+                          <td class="hits" data-tooltip>9</td>
+                          <td class="source">    var found &#x3D; await intern.find_user(seneca, msg, ctx)</td>
                           
                         </tr>            <tr id="lib/change_pass.js__33" class="hit">
                           <td class="line" data-tooltip>33</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
-                          <td class="source">      return found</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__34" class="hit">
                           <td class="line" data-tooltip>34</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    }</td>
+                          <td class="hits" data-tooltip>9</td>
+                          <td class="source">    if (!found.ok) {</td>
                           
                         </tr>            <tr id="lib/change_pass.js__35" class="hit">
                           <td class="line" data-tooltip>35</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">      return found</td>
                           
                         </tr>            <tr id="lib/change_pass.js__36" class="hit">
                           <td class="line" data-tooltip>36</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>5</td>
-                          <td class="source">    var user &#x3D; found.user</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
                           
                         </tr>            <tr id="lib/change_pass.js__37" class="hit">
                           <td class="line" data-tooltip>37</td>
@@ -8684,104 +8761,104 @@
                         </tr>            <tr id="lib/change_pass.js__38" class="hit">
                           <td class="line" data-tooltip>38</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    // Password is being changed using a verification code</td>
+                          <td class="hits" data-tooltip>8</td>
+                          <td class="source">    var user &#x3D; found.user</td>
                           
                         </tr>            <tr id="lib/change_pass.js__39" class="hit">
                           <td class="line" data-tooltip>39</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>5</td>
-                          <td class="source">    if (verify) {</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__40" class="hit">
                           <td class="line" data-tooltip>40</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
-                          <td class="source">      var verify_msg &#x3D; {</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    // Password is being changed using a verification code</td>
                           
                         </tr>            <tr id="lib/change_pass.js__41" class="hit">
                           <td class="line" data-tooltip>41</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">        user_id: user.id,</td>
+                          <td class="hits" data-tooltip>8</td>
+                          <td class="source">    if (verify) {</td>
                           
                         </tr>            <tr id="lib/change_pass.js__42" class="hit">
                           <td class="line" data-tooltip>42</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">        kind: &#x27;pass&#x27;,</td>
+                          <td class="hits" data-tooltip>2</td>
+                          <td class="source">      var verify_msg &#x3D; {</td>
                           
                         </tr>            <tr id="lib/change_pass.js__43" class="hit">
                           <td class="line" data-tooltip>43</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">        code: verify</td>
+                          <td class="source">        user_id: user.id,</td>
                           
                         </tr>            <tr id="lib/change_pass.js__44" class="hit">
                           <td class="line" data-tooltip>44</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      }</td>
+                          <td class="source">        kind: &#x27;pass&#x27;,</td>
                           
                         </tr>            <tr id="lib/change_pass.js__45" class="hit">
                           <td class="line" data-tooltip>45</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">        code: verify</td>
                           
                         </tr>            <tr id="lib/change_pass.js__46" class="hit">
                           <td class="line" data-tooltip>46</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">      // TODO: implement and rename pwd verify</td>
+                          <td class="source">      }</td>
                           
                         </tr>            <tr id="lib/change_pass.js__47" class="hit">
                           <td class="line" data-tooltip>47</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>2</td>
-                          <td class="source">      var verification &#x3D; await seneca.post(&#x27;sys:user,check:verify&#x27;, verify_msg)</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__48" class="hit">
                           <td class="line" data-tooltip>48</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">      // TODO: implement and rename pwd verify</td>
                           
                         </tr>            <tr id="lib/change_pass.js__49" class="hit">
                           <td class="line" data-tooltip>49</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip>2</td>
-                          <td class="source">      if (!verification.ok) {</td>
+                          <td class="source">      var verification &#x3D; await seneca.post(&#x27;sys:user,check:verify&#x27;, verify_msg)</td>
                           
                         </tr>            <tr id="lib/change_pass.js__50" class="hit">
                           <td class="line" data-tooltip>50</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
-                          <td class="source">        return verification</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__51" class="hit">
                           <td class="line" data-tooltip>51</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">      }</td>
+                          <td class="hits" data-tooltip>2</td>
+                          <td class="source">      if (!verification.ok) {</td>
                           
                         </tr>            <tr id="lib/change_pass.js__52" class="hit">
                           <td class="line" data-tooltip>52</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    }</td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">        return verification</td>
                           
                         </tr>            <tr id="lib/change_pass.js__53" class="hit">
                           <td class="line" data-tooltip>53</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="source">      }</td>
                           
                         </tr>            <tr id="lib/change_pass.js__54" class="hit">
                           <td class="line" data-tooltip>54</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>4</td>
-                          <td class="source">    user &#x3D; await user.data$(pass_fields.fields).save$()</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
                           
                         </tr>            <tr id="lib/change_pass.js__55" class="hit">
                           <td class="line" data-tooltip>55</td>
@@ -8792,8 +8869,8 @@
                         </tr>            <tr id="lib/change_pass.js__56" class="hit">
                           <td class="line" data-tooltip>56</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>4</td>
-                          <td class="source">    var out &#x3D; { ok: true, user: user }</td>
+                          <td class="hits" data-tooltip>7</td>
+                          <td class="source">    user &#x3D; await user.data$(pass_fields.fields).save$()</td>
                           
                         </tr>            <tr id="lib/change_pass.js__57" class="hit">
                           <td class="line" data-tooltip>57</td>
@@ -8804,47 +8881,59 @@
                         </tr>            <tr id="lib/change_pass.js__58" class="hit">
                           <td class="line" data-tooltip>58</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>4</td>
-                          <td class="source">    if (msg.generate) {</td>
+                          <td class="hits" data-tooltip>7</td>
+                          <td class="source">    var out &#x3D; { ok: true, user: user }</td>
                           
                         </tr>            <tr id="lib/change_pass.js__59" class="hit">
                           <td class="line" data-tooltip>59</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>1</td>
-                          <td class="source">      out.pass &#x3D; pass_msg.pass</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__60" class="hit">
                           <td class="line" data-tooltip>60</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">    }</td>
+                          <td class="hits" data-tooltip>7</td>
+                          <td class="source">    if (msg.generate) {</td>
                           
                         </tr>            <tr id="lib/change_pass.js__61" class="hit">
                           <td class="line" data-tooltip>61</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source"></td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">      out.pass &#x3D; pass_msg.pass</td>
                           
                         </tr>            <tr id="lib/change_pass.js__62" class="hit">
                           <td class="line" data-tooltip>62</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>4</td>
-                          <td class="source">    return out</td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
                           
                         </tr>            <tr id="lib/change_pass.js__63" class="hit">
                           <td class="line" data-tooltip>63</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
-                          <td class="source">  }</td>
+                          <td class="source"></td>
                           
                         </tr>            <tr id="lib/change_pass.js__64" class="hit">
                           <td class="line" data-tooltip>64</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip></td>
-                          <td class="source">}</td>
+                          <td class="hits" data-tooltip>7</td>
+                          <td class="source">    return out</td>
                           
                         </tr>            <tr id="lib/change_pass.js__65" class="hit">
                           <td class="line" data-tooltip>65</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">  }</td>
+                          
+                        </tr>            <tr id="lib/change_pass.js__66" class="hit">
+                          <td class="line" data-tooltip>66</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">}</td>
+                          
+                        </tr>            <tr id="lib/change_pass.js__67" class="hit">
+                          <td class="line" data-tooltip>67</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
                           <td class="source"></td>
@@ -9548,31 +9637,31 @@
                         </tr>            <tr id="lib/cmd_encrypt.js__12" class="hit">
                           <td class="line" data-tooltip>12</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>32</td>
+                          <td class="hits" data-tooltip>35</td>
                           <td class="source">    var salt &#x3D; msg.salt || intern.generate_salt(options)</td>
                           
                         </tr>            <tr id="lib/cmd_encrypt.js__13" class="hit">
                           <td class="line" data-tooltip>13</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>32</td>
+                          <td class="hits" data-tooltip>35</td>
                           <td class="source">    var pass &#x3D; null !&#x3D; msg.password ? msg.password : msg.pass</td>
                           
                         </tr>            <tr id="lib/cmd_encrypt.js__14" class="hit">
                           <td class="line" data-tooltip>14</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>32</td>
+                          <td class="hits" data-tooltip>35</td>
                           <td class="source">    var pepper &#x3D; options.pepper</td>
                           
                         </tr>            <tr id="lib/cmd_encrypt.js__15" class="hit">
                           <td class="line" data-tooltip>15</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>32</td>
+                          <td class="hits" data-tooltip>35</td>
                           <td class="source">    var rounds &#x3D; options.rounds</td>
                           
                         </tr>            <tr id="lib/cmd_encrypt.js__16" class="hit">
                           <td class="line" data-tooltip>16</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>32</td>
+                          <td class="hits" data-tooltip>35</td>
                           <td class="source">    var fail &#x3D; true &#x3D;&#x3D;&#x3D; msg.fail ? true : false</td>
                           
                         </tr>            <tr id="lib/cmd_encrypt.js__17" class="hit">
@@ -9584,7 +9673,7 @@
                         </tr>            <tr id="lib/cmd_encrypt.js__18" class="hit">
                           <td class="line" data-tooltip>18</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>32</td>
+                          <td class="hits" data-tooltip>35</td>
                           <td class="source">    if (null &#x3D;&#x3D; pass) {</td>
                           
                         </tr>            <tr id="lib/cmd_encrypt.js__19" class="hit">
@@ -9608,7 +9697,7 @@
                         </tr>            <tr id="lib/cmd_encrypt.js__22" class="hit">
                           <td class="line" data-tooltip>22</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>31</td>
+                          <td class="hits" data-tooltip>34</td>
                           <td class="source">    if (pass.length &lt; options.password.minlen) {</td>
                           
                         </tr>            <tr id="lib/cmd_encrypt.js__23" class="hit">
@@ -9680,7 +9769,7 @@
                         </tr>            <tr id="lib/cmd_encrypt.js__34" class="hit">
                           <td class="line" data-tooltip>34</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>28</td>
+                          <td class="hits" data-tooltip>31</td>
                           <td class="source">    return new Promise((resolve, reject) &#x3D;&gt; {</td>
                           
                         </tr>            <tr id="lib/cmd_encrypt.js__35" class="hit">
@@ -9758,7 +9847,7 @@
                         </tr>            <tr id="lib/cmd_encrypt.js__47" class="hit">
                           <td class="line" data-tooltip>47</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>27</td>
+                          <td class="hits" data-tooltip>30</td>
                           <td class="source">            return resolve({ ok: !err, pass: out.hash, salt: salt })</td>
                           
                         </tr>            <tr id="lib/cmd_encrypt.js__48" class="hit">
@@ -10096,7 +10185,7 @@
                         </tr>            <tr id="lib/get_user.js__11" class="hit">
                           <td class="line" data-tooltip>11</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>22</td>
+                          <td class="hits" data-tooltip>23</td>
                           <td class="source">    var verification &#x3D; !!msg.verification</td>
                           
                         </tr>            <tr id="lib/get_user.js__12" class="hit">
@@ -10108,7 +10197,7 @@
                         </tr>            <tr id="lib/get_user.js__13" class="hit">
                           <td class="line" data-tooltip>13</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>22</td>
+                          <td class="hits" data-tooltip>23</td>
                           <td class="source">    if (verification) {</td>
                           
                         </tr>            <tr id="lib/get_user.js__14" class="hit">
@@ -10132,7 +10221,7 @@
                         </tr>            <tr id="lib/get_user.js__17" class="hit">
                           <td class="line" data-tooltip>17</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>22</td>
+                          <td class="hits" data-tooltip>23</td>
                           <td class="source">    var found &#x3D; await intern.find_user(this, msg, ctx)</td>
                           
                         </tr>            <tr id="lib/get_user.js__18" class="hit">
@@ -10144,7 +10233,7 @@
                         </tr>            <tr id="lib/get_user.js__19" class="hit">
                           <td class="line" data-tooltip>19</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>22</td>
+                          <td class="hits" data-tooltip>23</td>
                           <td class="source">    if (!found.ok) {</td>
                           
                         </tr>            <tr id="lib/get_user.js__20" class="hit">
@@ -10168,7 +10257,7 @@
                         </tr>            <tr id="lib/get_user.js__23" class="hit">
                           <td class="line" data-tooltip>23</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>19</td>
+                          <td class="hits" data-tooltip>20</td>
                           <td class="source">    if (verification) {</td>
                           
                         </tr>            <tr id="lib/get_user.js__24" class="hit">
@@ -10216,7 +10305,7 @@
                         </tr>            <tr id="lib/get_user.js__31" class="hit">
                           <td class="line" data-tooltip>31</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>19</td>
+                          <td class="hits" data-tooltip>20</td>
                           <td class="source">    return found</td>
                           
                         </tr>            <tr id="lib/get_user.js__32" class="hit">
@@ -10448,13 +10537,13 @@
                         </tr>            <tr id="lib/hasher.js__32" class="hit">
                           <td class="line" data-tooltip>32</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>31</td>
+                          <td class="hits" data-tooltip>34</td>
                           <td class="source">  spec.interval &#x3D; spec.interval || 11111</td>
                           
                         </tr>            <tr id="lib/hasher.js__33" class="hit">
                           <td class="line" data-tooltip>33</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>31</td>
+                          <td class="hits" data-tooltip>34</td>
                           <td class="source">  spec.rounds &#x3D; spec.rounds || 1</td>
                           
                         </tr>            <tr id="lib/hasher.js__34" class="hit">
@@ -10466,7 +10555,7 @@
                         </tr>            <tr id="lib/hasher.js__35" class="hit">
                           <td class="line" data-tooltip>35</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>31</td>
+                          <td class="hits" data-tooltip>34</td>
                           <td class="source">  if (spec.fail) {</td>
                           
                         </tr>            <tr id="lib/hasher.js__36" class="hit">
@@ -10490,7 +10579,7 @@
                         </tr>            <tr id="lib/hasher.js__39" class="hit">
                           <td class="line" data-tooltip>39</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>30</td>
+                          <td class="hits" data-tooltip>33</td>
                           <td class="source">  if (spec.test) {</td>
                           
                         </tr>            <tr id="lib/hasher.js__40" class="hit">
@@ -10514,7 +10603,7 @@
                         </tr>            <tr id="lib/hasher.js__43" class="hit">
                           <td class="line" data-tooltip>43</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>29</td>
+                          <td class="hits" data-tooltip>32</td>
                           <td class="source">    if (null &#x3D;&#x3D; hasher_process) {</td>
                           
                         </tr>            <tr id="lib/hasher.js__44" class="hit">
@@ -10604,13 +10693,13 @@
                         </tr>            <tr id="lib/hasher.js__58" class="hit">
                           <td class="line" data-tooltip>58</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>29</td>
+                          <td class="hits" data-tooltip>32</td>
                           <td class="source">    spec.id &#x3D; make_hash_id()</td>
                           
                         </tr>            <tr id="lib/hasher.js__59" class="hit">
                           <td class="line" data-tooltip>59</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>29</td>
+                          <td class="hits" data-tooltip>32</td>
                           <td class="source">    var waiter &#x3D; (waiting[spec.id] &#x3D; function(err, out) {</td>
                           
                         </tr>            <tr id="lib/hasher.js__60" class="hit">
@@ -10628,13 +10717,13 @@
                         </tr>            <tr id="lib/hasher.js__62" class="hit">
                           <td class="line" data-tooltip>62</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>29</td>
+                          <td class="hits" data-tooltip>32</td>
                           <td class="source">    waiter.id &#x3D; spec.id</td>
                           
                         </tr>            <tr id="lib/hasher.js__63" class="hit">
                           <td class="line" data-tooltip>63</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>29</td>
+                          <td class="hits" data-tooltip>32</td>
                           <td class="source">    waiter.when &#x3D; Date.now()</td>
                           
                         </tr>            <tr id="lib/hasher.js__64" class="hit">
@@ -10652,7 +10741,7 @@
                         </tr>            <tr id="lib/hasher.js__66" class="hit">
                           <td class="line" data-tooltip>66</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>29</td>
+                          <td class="hits" data-tooltip>32</td>
                           <td class="source">    hasher_process.send(spec)</td>
                           
                         </tr>            <tr id="lib/hasher.js__67" class="hit">
@@ -10760,13 +10849,13 @@
                         </tr>            <tr id="lib/hasher.js__84" class="hit">
                           <td class="line" data-tooltip>84</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>32</td>
+                          <td class="hits" data-tooltip>35</td>
                           <td class="source">    if (waiter) {</td>
                           
                         </tr>            <tr id="lib/hasher.js__85" class="hit">
                           <td class="line" data-tooltip>85</td>
                           <td class="lint empty"></td>
-                          <td class="hits" data-tooltip>30</td>
+                          <td class="hits" data-tooltip>33</td>
                           <td class="source">      waiter(null, { hash: msg.hash })</td>
                           
                         </tr>            <tr id="lib/hasher.js__86" class="hit">
@@ -14609,6 +14698,508 @@
                           
                         </tr>            <tr id="lib/register_user.js__84" class="hit">
                           <td class="line" data-tooltip>84</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>        </tbody>
+                </table>
+            </div>
+            <div class="file ">
+                <h2 id="lib/update_user.js">lib/update_user.js </h2>
+                <div class="stats high">
+                    <div class="percentage">100%</div>
+                    <div class="sloc">58</div>
+                    <div class="hits">58</div>
+                    <div class="misses">0</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Line</th>
+                            <th>Lint</th>
+                            <th>Hits</th>
+                            <th>Source</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="lib/update_user.js__1" class="hit">
+                          <td class="line" data-tooltip>1</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">/* Copyright (c) 2012-2020 Richard Rodger and other contributors, MIT License. */</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__2" class="hit">
+                          <td class="line" data-tooltip>2</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">&#x27;use strict&#x27;</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__3" class="hit">
+                          <td class="line" data-tooltip>3</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__4" class="hit">
+                          <td class="line" data-tooltip>4</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">module.exports &#x3D; ctx &#x3D;&gt; {</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__5" class="hit">
+                          <td class="line" data-tooltip>5</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">  const intern &#x3D; ctx.intern</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__6" class="hit">
+                          <td class="line" data-tooltip>6</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">  //const options &#x3D; ctx.options</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__7" class="hit">
+                          <td class="line" data-tooltip>7</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__8" class="hit">
+                          <td class="line" data-tooltip>8</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>8</td>
+                          <td class="source">  return async function update_user(msg) {</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__9" class="hit">
+                          <td class="line" data-tooltip>9</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    var seneca &#x3D; this</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__10" class="hit">
+                          <td class="line" data-tooltip>10</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__11" class="hit">
+                          <td class="line" data-tooltip>11</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    var find_msg &#x3D; Object.assign({}, msg)</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__12" class="hit">
+                          <td class="line" data-tooltip>12</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    delete find_msg.user</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__13" class="hit">
+                          <td class="line" data-tooltip>13</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    delete find_msg.user_data</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__14" class="hit">
+                          <td class="line" data-tooltip>14</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    </td>
+                          
+                        </tr>            <tr id="lib/update_user.js__15" class="hit">
+                          <td class="line" data-tooltip>15</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    var found &#x3D; await intern.find_user(seneca, find_msg, ctx)</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__16" class="hit">
+                          <td class="line" data-tooltip>16</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__17" class="hit">
+                          <td class="line" data-tooltip>17</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>11</td>
+                          <td class="source">    if (!found.ok) {</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__18" class="hit">
+                          <td class="line" data-tooltip>18</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">      return found</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__19" class="hit">
+                          <td class="line" data-tooltip>19</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__20" class="hit">
+                          <td class="line" data-tooltip>20</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__21" class="hit">
+                          <td class="line" data-tooltip>21</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>10</td>
+                          <td class="source">    var user &#x3D; found.user</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__22" class="hit">
+                          <td class="line" data-tooltip>22</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    </td>
+                          
+                        </tr>            <tr id="lib/update_user.js__23" class="hit">
+                          <td class="line" data-tooltip>23</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    // NOTE: handle, email, pass must be in msg.user or msg.user_data to update</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__24" class="hit">
+                          <td class="line" data-tooltip>24</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    // top level is used to find user</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__25" class="hit">
+                          <td class="line" data-tooltip>25</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__26" class="hit">
+                          <td class="line" data-tooltip>26</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>10</td>
+                          <td class="source">    var pass_data &#x3D; intern.extract_pass(msg)</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__27" class="hit">
+                          <td class="line" data-tooltip>27</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    </td>
+                          
+                        </tr>            <tr id="lib/update_user.js__28" class="hit">
+                          <td class="line" data-tooltip>28</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    // in order of precedence</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__29" class="hit">
+                          <td class="line" data-tooltip>29</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>10</td>
+                          <td class="source">    var user_data &#x3D; Object.assign(</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__30" class="hit">
+                          <td class="line" data-tooltip>30</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      {},</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__31" class="hit">
+                          <td class="line" data-tooltip>31</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      msg.user||{},</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__32" class="hit">
+                          <td class="line" data-tooltip>32</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      msg.user_data||{},</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__33" class="hit">
+                          <td class="line" data-tooltip>33</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      pass_data</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__34" class="hit">
+                          <td class="line" data-tooltip>34</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    )</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__35" class="hit">
+                          <td class="line" data-tooltip>35</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__36" class="hit">
+                          <td class="line" data-tooltip>36</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    // handle, email, password are handled separately by specialist actions</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__37" class="hit">
+                          <td class="line" data-tooltip>37</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    </td>
+                          
+                        </tr>            <tr id="lib/update_user.js__38" class="hit">
+                          <td class="line" data-tooltip>38</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>10</td>
+                          <td class="source">    if(null !&#x3D; user_data.handle) {</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__39" class="hit">
+                          <td class="line" data-tooltip>39</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>3</td>
+                          <td class="source">      var handle_change &#x3D; await seneca.post(&#x27;sys:user,change:handle&#x27;,{</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__40" class="hit">
+                          <td class="line" data-tooltip>40</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">        user_id: user.id,</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__41" class="hit">
+                          <td class="line" data-tooltip>41</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">        new_handle: user_data.handle</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__42" class="hit">
+                          <td class="line" data-tooltip>42</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      })</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__43" class="hit">
+                          <td class="line" data-tooltip>43</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>3</td>
+                          <td class="source">      if(!handle_change.ok) {</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__44" class="hit">
+                          <td class="line" data-tooltip>44</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">        return handle_change</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__45" class="hit">
+                          <td class="line" data-tooltip>45</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      }</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__46" class="hit">
+                          <td class="line" data-tooltip>46</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>2</td>
+                          <td class="source">      delete user_data.handle</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__47" class="hit">
+                          <td class="line" data-tooltip>47</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__48" class="hit">
+                          <td class="line" data-tooltip>48</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__49" class="hit">
+                          <td class="line" data-tooltip>49</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>9</td>
+                          <td class="source">    if(null !&#x3D; user_data.email) {</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__50" class="hit">
+                          <td class="line" data-tooltip>50</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>2</td>
+                          <td class="source">      var email_change &#x3D; await seneca.post(&#x27;sys:user,change:email&#x27;,{</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__51" class="hit">
+                          <td class="line" data-tooltip>51</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">        user_id: user.id,</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__52" class="hit">
+                          <td class="line" data-tooltip>52</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">        new_email: user_data.email</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__53" class="hit">
+                          <td class="line" data-tooltip>53</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      })</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__54" class="hit">
+                          <td class="line" data-tooltip>54</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>2</td>
+                          <td class="source">      if(!email_change.ok) {</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__55" class="hit">
+                          <td class="line" data-tooltip>55</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">        return email_change</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__56" class="hit">
+                          <td class="line" data-tooltip>56</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      }</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__57" class="hit">
+                          <td class="line" data-tooltip>57</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">      delete user_data.email</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__58" class="hit">
+                          <td class="line" data-tooltip>58</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__59" class="hit">
+                          <td class="line" data-tooltip>59</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__60" class="hit">
+                          <td class="line" data-tooltip>60</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>8</td>
+                          <td class="source">    if(null !&#x3D; pass_data.pass) {</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__61" class="hit">
+                          <td class="line" data-tooltip>61</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>4</td>
+                          <td class="source">      var pass_change &#x3D; await seneca.post(&#x27;sys:user,change:pass&#x27;,{</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__62" class="hit">
+                          <td class="line" data-tooltip>62</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">        user_id: user.id,</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__63" class="hit">
+                          <td class="line" data-tooltip>63</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">        pass: pass_data.pass,</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__64" class="hit">
+                          <td class="line" data-tooltip>64</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">        repeat: pass_data.repeat</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__65" class="hit">
+                          <td class="line" data-tooltip>65</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      })</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__66" class="hit">
+                          <td class="line" data-tooltip>66</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>4</td>
+                          <td class="source">      if(!pass_change.ok) {</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__67" class="hit">
+                          <td class="line" data-tooltip>67</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>1</td>
+                          <td class="source">        return pass_change</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__68" class="hit">
+                          <td class="line" data-tooltip>68</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      }</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__69" class="hit">
+                          <td class="line" data-tooltip>69</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">    }</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__70" class="hit">
+                          <td class="line" data-tooltip>70</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__71" class="hit">
+                          <td class="line" data-tooltip>71</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>7</td>
+                          <td class="source">    user_data.id &#x3D; user.id</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__72" class="hit">
+                          <td class="line" data-tooltip>72</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>7</td>
+                          <td class="source">    user &#x3D; await seneca</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__73" class="hit">
+                          <td class="line" data-tooltip>73</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      .entity(ctx.sys_user)</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__74" class="hit">
+                          <td class="line" data-tooltip>74</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      .data$(user_data)</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__75" class="hit">
+                          <td class="line" data-tooltip>75</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">      .save$()</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__76" class="hit">
+                          <td class="line" data-tooltip>76</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source"></td>
+                          
+                        </tr>            <tr id="lib/update_user.js__77" class="hit">
+                          <td class="line" data-tooltip>77</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip>7</td>
+                          <td class="source">    return { ok: true, user: user }</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__78" class="hit">
+                          <td class="line" data-tooltip>78</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">  }</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__79" class="hit">
+                          <td class="line" data-tooltip>79</td>
+                          <td class="lint empty"></td>
+                          <td class="hits" data-tooltip></td>
+                          <td class="source">}</td>
+                          
+                        </tr>            <tr id="lib/update_user.js__80" class="hit">
+                          <td class="line" data-tooltip>80</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip></td>
                           <td class="source"></td>

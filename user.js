@@ -134,6 +134,7 @@ function user(options) {
     .message('get:user', intern.make_msg('get_user', ctx))
     .message('list:user', intern.make_msg('list_user', ctx))
     .message('adjust:user', intern.make_msg('adjust_user', ctx))
+    .message('update:user', intern.make_msg('update_user', ctx))
     .message('login:user', intern.make_msg('login_user', ctx))
     .message('logout:user', intern.make_msg('logout_user', ctx))
     .message('list:login', intern.make_msg('list_login', ctx))
@@ -155,7 +156,6 @@ function user(options) {
   // NEXT
   // JOI VALIDATE EXISTING
 
-  //.message('update:user'
   //.message('auth:user'
   //.message('remove:user'
   //.message('migrate:data' - use native mongo driver to do update nick->handle
@@ -813,6 +813,27 @@ function make_intern() {
       }
 
       return { ok: true, handle: handle }
-    }
+    },
+
+    // These variations are supported for better REPL DX
+    extract_pass: function(msg) {
+      var pass_data = {}
+      if('string' === typeof(msg.pass) || 'string' === typeof(msg.password)) {
+        pass_data.pass = msg.pass || msg.password
+        pass_data.repeat = msg.repeat
+      }
+      else if(msg.user && ('string' === typeof(msg.user.pass) ||
+                           'string' === typeof(msg.user.password))) {
+        pass_data.pass = msg.user.pass || msg.user.password
+        pass_data.repeat = msg.user.repeat
+      }
+      else if(msg.user_data && ('string' === typeof(msg.user_data.pass) ||
+                                'string' === typeof(msg.user_data.password))) {
+        pass_data.pass = msg.user_data.pass || msg.user_data.password
+        pass_data.repeat = msg.user_data.repeat
+      }
+      return pass_data
+    },
   }
+
 }

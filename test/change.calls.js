@@ -324,4 +324,206 @@ module.exports = [
     }
   },
 
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'frank',
+      user: {
+        foo: 1,
+        zed:'a'
+      }
+    },
+    out: {
+      ok: true,
+      user: {
+        handle: 'frank',
+        foo: 1,
+        zed:'a'
+      }
+    }
+  },
+
+  {
+    print: print_calls,
+    pattern: 'get:user' + LN(),
+    params: {
+      handle: 'frank',
+      fields:['foo','zed']
+    },
+    out: {
+      ok: true,
+      user: {
+        handle: 'frank',
+        foo: 1,
+        zed:'a'
+      }
+    }
+  },
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'frank',
+      user: {
+        email: 'frankly@example.com'
+      }
+    },
+    out: {
+      ok: true,
+      user: {
+        handle: 'frank',
+        email: 'frankly@example.com'
+      }
+    }
+  },
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'not-frank',
+      user: {
+        email: 'frankly2@example.com'
+      }
+    },
+    out: {
+      ok: false,
+      why: 'user-not-found'
+    }
+  },
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'frank',
+      pass: 'frank001'
+    },
+    out: {
+      ok: true,
+      user: {
+        handle: 'frank',
+      }
+    }
+  },
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'frank',
+      user: {
+        pass: 'frank002'
+      }
+    },
+    out: {
+      ok: true,
+      user: {
+        handle: 'frank',
+      }
+    }
+  },
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'frank',
+      user_data: {
+        pass: 'frank002'
+      }
+    },
+    out: {
+      ok: true,
+      user: {
+        handle: 'frank',
+      }
+    }
+  },
+
+  
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'frank',
+      user: {
+        handle: 'franklymaybe'
+      }
+    },
+    out: {
+      ok: true,
+      user: {
+        handle: 'franklymaybe',
+      }
+    }
+  },
+
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'franklymaybe',
+      user_data: {
+        handle: 'frankly'
+      }
+    },
+    out: {
+      ok: true,
+      user: {
+        handle: 'frankly',
+      }
+    }
+  },
+
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'frankly',
+      user_data: {
+        handle: 'bob'
+      }
+    },
+    out: {
+      ok: false,
+    }
+  },
+
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'frankly',
+      user_data: {
+        email: 'bob@example.com'
+      }
+    },
+    out: {
+      ok: false,
+    }
+  },
+
+
+  {
+    print: print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'frankly',
+      user_data: {
+        pass: 'aaa',
+        repeat: 'bbb'
+      }
+    },
+    out: {
+      ok: false,
+    }
+  },
+
 ]

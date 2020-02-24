@@ -539,6 +539,18 @@ lab.test('valid_email', async () => {
 })
 
 
+lab.test('extract_pass', async () => {
+  expect(intern.extract_pass({pass:'foo'})).equals({pass:'foo',repeat:void 0})
+  expect(intern.extract_pass({password:'foo'})).equals({pass:'foo',repeat:void 0})
+  expect(intern.extract_pass({user:{pass:'foo'}})).equals({pass:'foo',repeat:void 0})
+  expect(intern.extract_pass({user:{password:'foo'}})).equals({pass:'foo',repeat:void 0})
+  expect(intern.extract_pass({user_data:{pass:'foo'}})).equals({pass:'foo',repeat:void 0})
+  expect(intern.extract_pass({user_data:{password:'foo'}})).equals({pass:'foo',repeat:void 0})
+
+  expect(intern.extract_pass({pass:'foo',repeat:'bar'}))
+    .equals({pass:'foo',repeat:'bar'})
+})
+
 function make_seneca() {
   var seneca = Seneca({ legacy: false })
     .test()
