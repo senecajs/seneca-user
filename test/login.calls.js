@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi')
 
-var print_login = false
+var print_calls = false
 
 var call = {}
 
@@ -13,7 +13,7 @@ const LN = Shared.LN
 module.exports = [
   // test setting: options.password.minlen = 2
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'hook:password,cmd:encrypt' + LN(),
     params: {
       pass: 'ab',
@@ -28,7 +28,7 @@ module.exports = [
 
   {
     name: 'fbp0',
-    print: print_login,
+    print: print_calls,
     pattern: 'hook:password,cmd:encrypt' + LN(),
     params: {
       pass: 'foo',
@@ -41,7 +41,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'hook:password,cmd:pass' + LN(),
     params: {
       proposed: 'foo',
@@ -54,7 +54,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'hook:password,cmd:pass' + LN(),
     params: {
       proposed: 'x',
@@ -68,7 +68,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'hook:password,cmd:pass' + LN(),
     params: {
       proposed: 'not-foo',
@@ -82,7 +82,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'hook:password,cmd:pass' + LN(),
     params: {
       proposed: 'foo',
@@ -96,7 +96,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'not-a-user'
@@ -110,7 +110,7 @@ module.exports = [
 
   {
     name: 'al0',
-    print: print_login,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'alice',
@@ -125,7 +125,7 @@ module.exports = [
 
   {
     name: 'bl0',
-    print: print_login,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'bob',
@@ -143,7 +143,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'register:user' + LN(),
     params: {
       handle: 'edward',
@@ -158,7 +158,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'register:user' + LN(),
     params: {
       handle: 'edward',
@@ -174,7 +174,7 @@ module.exports = [
 
   {
     name: 'el0',
-    print: print_login,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'edward'
@@ -187,7 +187,7 @@ module.exports = [
 
   {
     name: 'el0',
-    print: print_login,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'edward',
@@ -204,7 +204,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'register:user' + LN(),
     params: {
       handle: 'frank',
@@ -222,7 +222,7 @@ module.exports = [
 
   {
     name: 'fl0',
-    print: print_login,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'frank',
@@ -240,7 +240,7 @@ module.exports = [
 
   // multiple active logins
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'frank',
@@ -260,7 +260,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'frank',
@@ -273,7 +273,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'frank',
@@ -286,7 +286,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'frank',
@@ -302,7 +302,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'not-frank'
@@ -314,7 +314,7 @@ module.exports = [
   },
 
   {
-    print: print_login,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'frank',
@@ -324,5 +324,60 @@ module.exports = [
       ok: true,
       items: Joi.array().length(0) // 0 non-active logins
     }
-  }
+  },
+
+
+  {
+    print: print_calls,
+    pattern: 'login:user' + LN(),
+    params: {
+      handle: 'frank',
+      verify: 'bad-login-code',
+    },
+    out: {
+      ok: false,
+      why: 'no-verify',
+      details: { q: { kind: 'login', code: 'bad-login-code' } }
+    }
+  },
+
+
+  // login code for frank...
+  {
+    print: print_calls,
+    name: 'franklogin0',
+    pattern: 'make:verify' + LN(),
+    params: {
+      handle: 'frank',
+      kind: 'login',
+      valid: true,
+      unique: false,
+      expire_point: new Date().getTime() + 10 * 60 * 1000
+    },
+    out: {
+      ok: true,
+      verify: {
+        code: Joi.string(),
+        once: true,
+        used: false
+      }
+    },
+  },
+
+
+  {
+    print: print_calls,
+    pattern: 'login:user' + LN(),
+    params: {
+      handle: 'frank',
+      verify: '`franklogin0:out.verify.code`',
+    },
+    out: {
+      ok: true,
+      user: {handle:'frank'},
+      login: {handle:'frank'},
+      why: 'verify'
+    }
+  },
+
 ]

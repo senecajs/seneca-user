@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi')
 
-var print_verify = false
+var print_calls = false
 
 var call = {}
 
@@ -11,7 +11,7 @@ const LN = Shared.LN
 module.exports = [
   // user not found
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {},
     out: { ok: false, why: 'no-user-query' }
@@ -19,7 +19,7 @@ module.exports = [
 
   // mark a user email as verified
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {
       handle: 'alice',
@@ -57,7 +57,7 @@ module.exports = [
 
   // mark a user email as verified, convenience field
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {
       handle: 'alice',
@@ -86,7 +86,7 @@ module.exports = [
 
   // unique verification
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {
       handle: 'alice',
@@ -108,7 +108,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'alice',
@@ -124,7 +124,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'not-alice',
@@ -139,7 +139,7 @@ module.exports = [
 
   // multiple use
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'alice',
@@ -156,7 +156,7 @@ module.exports = [
 
   // password reset
   {
-    print: print_verify,
+    print: print_calls,
     name: 'avc0',
     pattern: 'make:verify' + LN(),
     params: {
@@ -174,14 +174,16 @@ module.exports = [
         used: false
       }
     },
+    /*
     verify: function(call) {
       console.log(call.result.out.verify.data$())
     }
+    */
   },
 
   // password reset
   {
-    print: print_verify,
+    print: print_calls,
     name: 'avc1',
     pattern: 'make:verify' + LN(),
     params: {
@@ -207,7 +209,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'list:verify' + LN(),
     params: {
       handle: 'not-alice'
@@ -219,7 +221,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'list:verify' + LN(),
     params: {
       handle: 'alice'
@@ -231,7 +233,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'list:verify' + LN(),
     params: {
       handle: 'alice',
@@ -244,7 +246,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'list:verify' + LN(),
     params: {
       handle: 'alice',
@@ -259,7 +261,7 @@ module.exports = [
 
   // change password with onetime code
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'change:password' + LN(),
     params: {
       handle: 'alice',
@@ -272,7 +274,7 @@ module.exports = [
 
   // can't change password twice with onetime code
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'change:password' + LN(),
     params: {
       handle: 'alice',
@@ -285,7 +287,7 @@ module.exports = [
 
   // login with alice-pass-change-01
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'alice',
@@ -300,7 +302,7 @@ module.exports = [
 
   // custom, unique:true by default, so can't reuse code
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {
       handle: 'alice',
@@ -328,7 +330,7 @@ module.exports = [
 
   // custom
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {
       handle: 'alice',
@@ -349,7 +351,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
       handle: 'alice',
@@ -371,7 +373,7 @@ module.exports = [
 
   // convenience fields
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'list:verify' + LN(),
     params: {
       handle: 'alice',
@@ -385,7 +387,7 @@ module.exports = [
 
   // custom queries
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'list:verify' + LN(),
     params: {
       handle: 'alice',
@@ -404,7 +406,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'list:verify' + LN(),
     params: {
       user_q: {
@@ -425,7 +427,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'alice',
@@ -440,7 +442,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'alice',
@@ -458,7 +460,7 @@ module.exports = [
   // bob
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {
       handle: 'bob',
@@ -483,7 +485,7 @@ module.exports = [
 
   // expired now?
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'bob',
@@ -498,7 +500,7 @@ module.exports = [
 
   // go back in time
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'bob',
@@ -512,7 +514,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       user_q: {
@@ -530,7 +532,7 @@ module.exports = [
   // once and used
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {
       handle: 'bob',
@@ -552,7 +554,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'bob',
@@ -564,7 +566,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'bob',
@@ -582,7 +584,7 @@ module.exports = [
   // not valid
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {
       handle: 'bob',
@@ -599,7 +601,7 @@ module.exports = [
   },
 
   {
-    print: print_verify,
+    print: print_calls,
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'bob',

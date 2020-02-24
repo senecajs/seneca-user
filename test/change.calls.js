@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi')
 
-var print_change = true
+var print_calls = false
 
 var call = {}
 
@@ -11,7 +11,7 @@ const LN = Shared.LN
 module.exports = [
   // generate a password
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:pass' + LN(),
     params: {
       user: {
@@ -24,7 +24,7 @@ module.exports = [
 
   // not a user
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:pass' + LN(),
     params: {
       user: {
@@ -37,7 +37,7 @@ module.exports = [
 
   // by repeat password
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:pass' + LN(),
     params: {
       q: {
@@ -51,7 +51,7 @@ module.exports = [
 
   // verify login works
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       q: {
@@ -68,7 +68,7 @@ module.exports = [
 
   // bad repeat password
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:pass' + LN(),
     params: {
       q: {
@@ -82,7 +82,7 @@ module.exports = [
 
   // verify login still works using correct pass
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       q: {
@@ -99,7 +99,7 @@ module.exports = [
 
   // simple
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:pass' + LN(),
     params: {
       email: 'cathy@example.com',
@@ -110,7 +110,7 @@ module.exports = [
 
   // verify login works with new pass
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       q: {
@@ -126,7 +126,7 @@ module.exports = [
   },
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:handle' + LN(),
     params: {
       handle: 'cathy',
@@ -137,7 +137,7 @@ module.exports = [
 
   // change to same has no effect
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:handle' + LN(),
     params: {
       email: 'cathy@example.com',
@@ -148,7 +148,7 @@ module.exports = [
 
   // can't use existing handle
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:handle' + LN(),
     params: {
       handle: 'catherine',
@@ -166,7 +166,7 @@ module.exports = [
 
   //
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:handle' + LN(),
     params: {
       handle: 'not-catherine',
@@ -182,7 +182,7 @@ module.exports = [
   // change email
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       email: 'cathy@example.com',
@@ -192,7 +192,7 @@ module.exports = [
   },
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       email: 'cathy@example.com',
@@ -204,7 +204,7 @@ module.exports = [
 
   // email change with code
   {
-    print: print_change,
+    print: print_calls,
     name: 'emailcode0',
     pattern: 'make:verify' + LN(),
     params: {
@@ -222,14 +222,16 @@ module.exports = [
         used: false
       }
     },
+    /*
     verify: function(call) {
       console.log(call.result.out.verify.data$())
     }
+    */
   },
 
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       email: 'not-catherine@example.com',
@@ -239,7 +241,7 @@ module.exports = [
   },
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       email: 'catherine@example.com',
@@ -251,7 +253,7 @@ module.exports = [
   },
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
       email: 'catherine@example.com',
@@ -261,7 +263,7 @@ module.exports = [
 
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       email: 'catherine@example.com',
@@ -273,7 +275,7 @@ module.exports = [
 
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
       email: 'catherinethegreat@example.com',
@@ -283,7 +285,7 @@ module.exports = [
 
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       handle: 'catherine',
@@ -295,7 +297,7 @@ module.exports = [
 
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       handle: 'catherine',
@@ -306,7 +308,7 @@ module.exports = [
 
 
   {
-    print: print_change,
+    print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       handle: 'catherine',

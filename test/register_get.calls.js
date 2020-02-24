@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi')
 
-var print_register = false
+var print_calls = false
 
 const Shared = require('./shared')
 
@@ -32,7 +32,7 @@ module.exports = [
 
   //
   {
-    print: print_register,
+    print: print_calls,
     pattern: 'get:user' + LN(),
     params: { handle: '' },
     err: { code: 'act_invalid_msg' }
@@ -40,7 +40,7 @@ module.exports = [
 
   // use convenience params
   {
-    print: print_register,
+    print: print_calls,
     pattern: 'get:user' + LN(),
     params: { id: '`uf0:out.user.id`' },
     out: { ok: true, user: { email: 'foo@example.com' } }
@@ -48,7 +48,7 @@ module.exports = [
 
   // `user_id` is an alias for `id`
   {
-    print: print_register,
+    print: print_calls,
     pattern: 'get:user' + LN(),
     params: { user_id: '`uf0:out.user.id`' },
     out: { ok: true, user: { email: 'foo@example.com' } }
@@ -82,8 +82,16 @@ module.exports = [
   },
 
   {
+    print: true || print_calls,
+    pattern: 'check:exists' + LN(),
+    params: { email: 'foo@example.com' },
+    out: { ok: true, user: { email: 'foo@example.com' } }
+  },
+
+  
+  {
     // can't register with short handle
-    print: print_register,
+    print: print_calls,
     pattern: 'register:user' + LN(),
     params: {
       handle: 'al'
@@ -114,7 +122,7 @@ module.exports = [
 
   {
     // handle must be unique
-    print: print_register,
+    print: print_calls,
     pattern: 'register:user' + LN(),
     params: {
       handle: 'alice'
@@ -239,14 +247,14 @@ module.exports = [
   },
 
   {
-    // always generate a handle
+    // bad email
     pattern: 'register:user' + LN(),
     params: {
       user_data: {
         email: 'example.com'
       }
     },
-    out: { ok: true, user: { handle: Joi.string().length(12) } }
+    err: { code: 'act_invalid_msg' }
   },
 
   {
@@ -254,10 +262,25 @@ module.exports = [
     pattern: 'register:user' + LN(),
     params: {
       user_data: {
-        email: '@example.com'
       }
     },
-    out: { ok: true, user: { handle: Joi.string().length(12) } }
+    out: {
+      ok: true,
+      user: {
+        handle: Joi.string().length(12)
+      }
+    }
+  },
+
+  {
+    // always generate a handle
+    pattern: 'register:user' + LN(),
+    params: {
+      user_data: {
+        name: 'Adam Ant'
+      }
+    },
+    out: { ok: true, user: { name: 'Adam Ant', handle: Joi.string().length(12) } }
   },
 
   {

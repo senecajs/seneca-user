@@ -4,11 +4,11 @@ const Shared = require('./shared')
 
 const LN = Shared.LN
 
-var print_logout = false
+var print_calls = false
 
 module.exports = [
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'alice'
@@ -20,7 +20,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'alice',
@@ -33,7 +33,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'logout:user' + LN(),
     params: {
       handle: 'alice'
@@ -46,7 +46,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'alice',
@@ -60,7 +60,7 @@ module.exports = [
 
   // another foo:1 login
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'login:user',
     params: {
       handle: 'bob',
@@ -78,7 +78,7 @@ module.exports = [
 
   // a foo:2 login
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'login:user',
     params: {
       handle: 'bob',
@@ -95,7 +95,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'bob'
@@ -107,7 +107,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'logout:user' + LN(),
     params: {
       handle: 'bob',
@@ -128,7 +128,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'bob'
@@ -142,7 +142,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'logout:user' + LN(),
     params: {
       handle: 'not-bob'
@@ -154,7 +154,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'login:user',
     params: {
       handle: 'bob',
@@ -172,7 +172,7 @@ module.exports = [
 
   // logs out all active
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'logout:user' + LN(),
     params: {
       handle: 'bob',
@@ -190,7 +190,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     name: 'bob-login-foo4',
     pattern: 'login:user',
     params: {
@@ -208,7 +208,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     name: 'bob-login-foo5',
     pattern: 'login:user',
     params: {
@@ -226,7 +226,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'logout:user' + LN(),
     params: {
       handle: 'bob',
@@ -242,7 +242,7 @@ module.exports = [
   },
 
   {
-    print: print_logout,
+    print: print_calls,
     pattern: 'logout:user' + LN(),
     params: {
       handle: 'bob',

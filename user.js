@@ -131,6 +131,7 @@ function user(options) {
     .fix('sys:user')
     .message('register:user', intern.make_msg('register_user', ctx))
     .message('get:user', intern.make_msg('get_user', ctx))
+    .message('list:user', intern.make_msg('list_user', ctx))
     .message('adjust:user', intern.make_msg('adjust_user', ctx))
     .message('login:user', intern.make_msg('login_user', ctx))
     .message('logout:user', intern.make_msg('logout_user', ctx))
@@ -148,7 +149,9 @@ function user(options) {
     .message('change:handle', intern.make_msg('change_handle', ctx))
     .message('change:email', intern.make_msg('change_email', ctx))
 
-  // NEXT
+    .message('check:exists', intern.make_msg('check_exists', ctx))
+
+             // NEXT
   // JOI VALIDATE EXISTING
 
   //.message('list:user'
@@ -814,16 +817,12 @@ function make_intern() {
       if ('string' != typeof handle) {
         var email = msg.email || user_data.email || null
 
-        if ('string' == typeof email && email.includes('@')) {
+        // NOTE: assumes email already validated in msg
+        if(null != email) {
           handle =
             email.split('@')[0].toLowerCase() +
             ('' + Math.random()).substring(2, 6)
         } else {
-          handle = options.make_handle()
-        }
-
-        // there was nothing before the @
-        if (4 === handle.length) {
           handle = options.make_handle()
         }
       }

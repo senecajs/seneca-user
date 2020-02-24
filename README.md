@@ -13,10 +13,14 @@ Next version of seneca-user - work in progress!
 * [adjust:user,sys:user](#-adjustusersysuser-)
 * [change:pass,sys:user](#-changepasssysuser-)
 * [change:password,sys:user](#-changepasswordsysuser-)
+* [change:handle,sys:user](#-changehandlesysuser-)
+* [change:email,sys:user](#-changeemailsysuser-)
 * [check:verify,sys:user](#-checkverifysysuser-)
+* [check:exists,sys:user](#-checkexistssysuser-)
 * [cmd:encrypt,hook:password,sys:user](#-cmdencrypthookpasswordsysuser-)
 * [cmd:pass,hook:password,sys:user](#-cmdpasshookpasswordsysuser-)
 * [get:user,sys:user](#-getusersysuser-)
+* [list:user,sys:user](#-listusersysuser-)
 * [list:login,sys:user](#-listloginsysuser-)
 * [list:verify,sys:user](#-listverifysysuser-)
 * [login:user,sys:user](#-loginusersysuser-)
@@ -78,10 +82,105 @@ No description provided.
 
 
 ----------
+### &laquo; `change:handle,sys:user` &raquo;
+
+Change user handle.
+
+
+#### Parameters
+
+
+* _new_handle_ : string
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if changed',
+  user: 'user entity'
+}
+```
+
+
+----------
+### &laquo; `change:email,sys:user` &raquo;
+
+Change user email.
+
+
+#### Parameters
+
+
+* _new_email_ : string
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if changed',
+  user: 'user entity'
+}
+```
+
+
+----------
 ### &laquo; `check:verify,sys:user` &raquo;
 
 No description provided.
 
+
+
+----------
+### &laquo; `check:exists,sys:user` &raquo;
+
+Check user exists.
+
+
+#### Parameters
+
+
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if user exists',
+  user: 'user entity'
+}
+```
 
 
 ----------
@@ -160,6 +259,32 @@ Get user details
 
 
 ----------
+### &laquo; `list:user,sys:user` &raquo;
+
+List users
+
+
+#### Parameters
+
+
+* _active_ : boolean <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if user found',
+  user: 'user entity'
+}
+```
+
+
+----------
 ### &laquo; `list:login,sys:user` &raquo;
 
 No description provided.
@@ -207,8 +332,35 @@ Create a verification entry (multiple use cases).
 ----------
 ### &laquo; `login:user,sys:user` &raquo;
 
-No description provided.
+Login user
 
+
+#### Parameters
+
+
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+* _auto_ : boolean <i><small>{presence:optional}</small></i>
+* _pass_ : string <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if user logged in',
+  user: 'user entity',
+  login: 'login entity'
+}
+```
 
 
 ----------
@@ -269,6 +421,7 @@ Register a new user
 * _handle_ : string <i><small>{presence:optional}</small></i>
 * _nick_ : string <i><small>{presence:optional}</small></i>
 * _user_ : object <i><small>{unknown:true}</small></i>
+* _user_data_ : object <i><small>{unknown:true}</small></i>
 
 
 

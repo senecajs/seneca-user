@@ -4,9 +4,12 @@ const Shared = require('./shared')
 
 const LN = Shared.LN
 
+const print_calls = false
+
 module.exports = [
   {
     pattern: 'hook:password,cmd:encrypt' + LN(),
+    print: print_calls,
     params: {
       pass: 'foo',
       test: true,

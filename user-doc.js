@@ -25,7 +25,82 @@ const query_user = {
     .optional()
 }
 
+const user_data = {
+  email: Joi.string().email().optional(),
+  handle: Joi.string().optional(),
+  nick: Joi.string().optional() // legacy
+}
+
+
+
 module.exports = {
+  register_user: {
+    desc: 'Register a new user',
+    reply_desc: {
+      ok: '_true_ if user registration succeeded',
+      user: 'user entity'
+    },
+    validate: {
+      ...user_data,
+      user: Joi.object({
+        ...user_data,
+      }).unknown(),
+      user_data: Joi.object({
+        ...user_data,
+      }).unknown(),
+    }
+  },
+
+  get_user: {
+    desc: 'Get user details',
+    reply_desc: {
+      ok: '_true_ if user found',
+      user: 'user entity'
+    },
+    validate: query_user
+  },
+
+  list_user: {
+    desc: 'List users',
+    reply_desc: {
+      ok: '_true_ if user found',
+      user: 'user entity'
+    },
+    validate: {
+      active: Joi.boolean().optional(),
+      q: Joi.object().optional()
+    }
+  },
+
+  adjust_user: {
+    desc: 'Adjust user status idempotently (activated, etc.).',
+    reply_desc: {
+      ok: '_true_ if user found',
+      user: 'user entity'
+    },
+    validate: Object.assign(
+      {
+        active: Joi.boolean().optional()
+      },
+      query_user
+    )
+  },
+  
+  login_user: {
+    desc: 'Login user',
+    reply_desc: {
+      ok: '_true_ if user logged in',
+      user: 'user entity',
+      login: 'login entity'
+    },
+    validate: {
+      ...query_user,
+      auto: Joi.boolean().optional(),
+      pass: Joi.string().optional(),
+    }
+  },
+
+
   cmd_encrypt: {
     desc: 'Encrypt a plain text password string.',
     examples: {
@@ -49,46 +124,20 @@ module.exports = {
     }
   },
 
-  get_user: {
-    desc: 'Get user details',
+  
+  
+
+  check_exists: {
+    desc: 'Check user exists.',
     reply_desc: {
-      ok: '_true_ if user found',
+      ok: '_true_ if user exists',
       user: 'user entity'
     },
     validate: query_user
   },
 
-  register_user: {
-    desc: 'Register a new user',
-    reply_desc: {
-      ok: '_true_ if user registration succeeded',
-      user: 'user entity'
-    },
-    validate: {
-      email: Joi.string().optional(),
-      handle: Joi.string().optional(),
-      nick: Joi.string().optional(), // legacy
-      user: Joi.object({
-        email: Joi.string().optional(),
-        handle: Joi.string().optional(),
-        nick: Joi.string().optional() // legacy
-      }).unknown()
-    }
-  },
+  
 
-  adjust_user: {
-    desc: 'Adjust user status idempotently (activated, etc.).',
-    reply_desc: {
-      ok: '_true_ if user found',
-      user: 'user entity'
-    },
-    validate: Object.assign(
-      {
-        active: Joi.boolean().optional()
-      },
-      query_user
-    )
-  },
 
   make_verify: {
     desc: 'Create a verification entry (multiple use cases).',
