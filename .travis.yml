@@ -2,19 +2,15 @@ language: node_js
 sudo: false
 
 env:
-  - SENECA_VER=seneca@2.x.x
   - SENECA_VER=seneca@3.x.x
   - SENECA_VER=seneca@plugin
   - SENECA_VER=senecajs/seneca
 
 node_js:
   - "8"
-  - "6"
-  - "4"
-
-cache:
-  directories:
-  - node_modules
+  - "10"
+  - "12"
+  - "13"
 
 before_script:
   - npm uninstall seneca

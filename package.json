@@ -1,7 +1,7 @@
 {
-  "name": "seneca-user",
+  "name": "@seneca/user",
   "description": "User management plugin for Seneca",
-  "version": "2.2.0",
+  "version": "4.0.0",
   "keywords": [
     "seneca",
     "user",
@@ -15,9 +15,10 @@
   "license": "MIT",
   "main": "user.js",
   "scripts": {
-    "test": "lab -v -L -P test -r console -m 3000 -t 70 -I URL,URLSearchParams,SharedArrayBuffer,Atomics,BigUint64Array,BigInt64Array,BigInt",
-    "coveralls": "lab -s -P test -r lcov  -I WebAssembly | coveralls",
-    "coverage": "lab -v -P test -L -t 70 -r html -I WebAssembly > doc/coverage.html",
+    "test": "lab -v -L  -t 70 -P test -r console -o stdout -r html -o test/coverage.html",
+    "test-msgs": "lab -t 100 --coverage-exclude lib/hasher.js -P messages.test -r console -o stdout -r html -o test/coverage.html",
+    "doc": "seneca-doc",
+    "coveralls": "lab -s -P test -r lcov | coveralls",
     "prettier": "prettier --write --no-semi --single-quote *.js lib/*.js test/*.js",
     "reset": "npm run clean && npm i && npm test",
     "clean": "rm -rf node_modules package-lock.json yarn.lock",
@@ -28,7 +29,8 @@
     "LICENSE",
     "README.md",
     "user.js",
-    "default-options.json"
+    "user-docs.js",
+    "lib/hasher.js"
   ],
   "contributors": [
     "Mircea Alexandru <mircea.alexandru@gmail.com> (http://www.alexandrumircea.ro)",
@@ -49,22 +51,23 @@
     "Sorin Silaghi (https://github.com/sorin7486)"
   ],
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=8"
   },
   "dependencies": {
-    "eraro": "^2.1.0",
-    "lodash": "^4.17.15",
+    "nid": "^1.1.0",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
-    "async": "3",
-    "code": "5",
-    "coveralls": "3",
-    "lab": "14",
-    "prettier": "1",
-    "seneca": "^3.20.0",
-    "seneca-basic": "^1.0.0",
-    "seneca-entity": "^7.0.0"
+    "async": "^3.1.1",
+    "coveralls": "^3.0.9",
+    "prettier": "^1.19.1",
+    "seneca": "^3.20.1",
+    "seneca-doc": "^2.1.2",
+    "seneca-entity": "^7.1.0",
+    "seneca-joi": "^7.0.1",
+    "seneca-msg-test": "^2.2.0",
+    "seneca-plugin-validator": "^0.6.0",
+    "seneca-promisify": "^1.2.0"
   },
   "repository": {
     "type": "git",
