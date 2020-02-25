@@ -50,6 +50,7 @@ module.exports.defaults = {
 
   limit: 111, // default result limit
 
+  generate_salt: intern.generate_salt,
   ensure_handle: intern.ensure_handle,
   make_handle: intern.make_handle,
   make_token: intern.make_token

@@ -1,3 +1,5 @@
+const Assert = require('assert')
+
 const Joi = require('@hapi/joi')
 
 var print_calls = false
@@ -289,12 +291,20 @@ module.exports = [
     pattern: 'register:user' + LN(),
     params: {
       user_data: {
-        name: 'Adam Ant'
+        name: 'Adam Ant',
+        pass: 'foo',
+        repeat: 'foo'
       }
     },
     out: {
       ok: true,
-      user: { name: 'Adam Ant', handle: Joi.string().length(12) }
+      user: {
+        name: 'Adam Ant',
+        handle: Joi.string().length(12)
+      }
+    },
+    verify: function(call) {
+      Assert(call.out.user.repeat === void 0)
     }
   },
 
