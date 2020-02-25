@@ -84,9 +84,8 @@ module.exports = [
     }
   },
 
-
   {
-    print: true||print_calls,
+    print: true || print_calls,
     pattern: 'update:user' + LN(),
     params: {
       handle: 'edward',
@@ -95,12 +94,12 @@ module.exports = [
       }
     },
     out: {
-      ok: true,
+      ok: true
     }
   },
 
   {
-    print: true||print_calls,
+    print: true || print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'edward',
@@ -109,12 +108,12 @@ module.exports = [
     },
     out: {
       ok: true,
-      user: {address:'edward house'}
+      user: { address: 'edward house' }
     }
   },
 
   {
-    print: true||print_calls,
+    print: true || print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'edward'
@@ -126,35 +125,36 @@ module.exports = [
   },
 
   {
-    print: true||print_calls,
+    print: true || print_calls,
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
-      handle: 'edward',
+      handle: 'edward'
     },
     out: {
       ok: true,
       login_count: 2,
       removed: Joi.string(),
       purged: false,
-      user_id: Joi.string(),
+      user_id: Joi.string()
     }
   },
 
-
   {
-    print: true||print_calls,
+    print: true || print_calls,
     pattern: 'get:user' + LN(),
     params: {
       user_id: '`re0:out.user_id`',
-      q:{fields$: ['address']}
+      q: { fields$: ['address'] }
     },
     out: {
       ok: true,
       user: {
         active: false,
         removed: Joi.string(),
-        handle: Joi.string().invalid('edward').length(12),
+        handle: Joi.string()
+          .invalid('edward')
+          .length(12),
         address: 'edward house'
       }
     }
@@ -162,12 +162,12 @@ module.exports = [
 
   // can run multiple times, custom anon fields
   {
-    print: true||print_calls,
+    print: true || print_calls,
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
       user_id: '`re0:out.user_id`',
-      q:{fields$: ['address']},
+      q: { fields$: ['address'] },
       anon_fields: ['address']
     },
     out: {
@@ -175,31 +175,35 @@ module.exports = [
       login_count: 2,
       removed: Joi.string(),
       purged: false,
-      user_id: Joi.string(),
+      user_id: Joi.string()
     }
   },
 
   {
-    print: true||print_calls,
+    print: true || print_calls,
     pattern: 'get:user' + LN(),
     params: {
       user_id: '`re0:out.user_id`',
-      q:{fields$: ['address']}
+      q: { fields$: ['address'] }
     },
     out: {
       ok: true,
       user: {
         active: false,
         removed: Joi.string(),
-        handle: Joi.string().invalid('edward').length(12),
-        address: Joi.string().invalid('edward house').length(12)
+        handle: Joi.string()
+          .invalid('edward')
+          .length(12),
+        address: Joi.string()
+          .invalid('edward house')
+          .length(12)
       }
     }
   },
 
   // explicitly purge data
   {
-    print: true||print_calls,
+    print: true || print_calls,
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
@@ -211,15 +215,15 @@ module.exports = [
       login_count: 2,
       removed: Joi.string(),
       purged: true,
-      user_id: Joi.string(),
+      user_id: Joi.string()
     }
   },
 
   {
-    print: true||print_calls,
+    print: true || print_calls,
     pattern: 'get:user' + LN(),
     params: {
-      user_id: '`re0:out.user_id`',
+      user_id: '`re0:out.user_id`'
     },
     out: {
       ok: false,
@@ -228,16 +232,15 @@ module.exports = [
   },
 
   {
-    print: true||print_calls,
+    print: true || print_calls,
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
-      user_id: '`re0:out.user_id`',
+      user_id: '`re0:out.user_id`'
     },
     out: {
       ok: false,
       why: 'user-not-found'
     }
-  },
-
+  }
 ]
