@@ -771,8 +771,8 @@ Licensed under [MIT][].
 [travis-url]: https://travis-ci.org/senecajs/seneca-user
 [npm-badge]: https://img.shields.io/npm/v/@seneca/user.svg
 [npm-url]: https://npmjs.com/package/@seneca/user
-[david-badge]: https://david-dm.org/senecajs/@seneca/user.svg
-[david-url]: https://david-dm.org/senecajs/@seneca/user
+[david-badge]: https://david-dm.org/senecajs/seneca-user.svg
+[david-url]: https://david-dm.org/senecajs/seneca-user
 [gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
-[gitter-url]: https://gitter.im/rjrodger/seneca
+[gitter-url]: https://gitter.im/senecajs/seneca
 [Senecajs org]: https://github.com/senecajs/
