@@ -1,6 +1,59 @@
-# @seneca/user
+![Seneca](http://senecajs.org/files/assets/seneca-logo.png)
 
-Business logic for user management.
+> A [Seneca.js][] user management plugin.
+
+# @seneca/user
+[![npm version][npm-badge]][npm-url]
+[![Build Status][travis-badge]][travis-url]
+[![Dependency Status][david-badge]][david-url]
+[![Gitter][gitter-badge]][gitter-url]
+
+
+| ![Voxgig](https://www.voxgig.com/res/img/vgt01r.png) | This open source module is sponsored and supported by [Voxgig](https://www.voxgig.com). |
+|---|---|
+
+
+## Description
+
+This module is a plugin for
+the [Seneca framework](http://senecajs.org). It provides a set of
+common user management actions (`register`, `login` etc.).
+
+
+## Install
+
+```sh
+npm install seneca
+npm install seneca-promisify // dependency
+npm install seneca-entity // dependency
+npm install @seneca/user
+```
+
+### Quick example
+
+This code snippet sets a value and then retrieves it.
+
+```js
+const Seneca = require('seneca')
+
+var seneca = Seneca()
+  .use('promisify')
+  .use('entity')
+  .use('user')
+
+var out = await seneca.post('sys:user,register:user', {
+  handle: 'alice'
+})
+
+console.log('USER:', out.user)
+
+out = await seneca.post('sys:user,login:user', {
+  handle: 'alice'
+})
+
+console.log('LOGIN:', out.login)
+
+```
 
 
 <!--START:action-list-->
@@ -705,3 +758,21 @@ Update a user
 
 <!--END:action-desc-->
 
+
+
+## License
+
+Copyright (c) 2010-2020, Richard Rodger and other contributors.
+Licensed under [MIT][].
+
+[MIT]: ./LICENSE
+[Seneca.js]: https://www.npmjs.com/package/seneca
+[travis-badge]: https://travis-ci.org/senecajs/seneca-user.svg
+[travis-url]: https://travis-ci.org/senecajs/seneca-user
+[npm-badge]: https://img.shields.io/npm/v/@seneca/user.svg
+[npm-url]: https://npmjs.com/package/@seneca/user
+[david-badge]: https://david-dm.org/senecajs/@seneca/user.svg
+[david-url]: https://david-dm.org/senecajs/@seneca/user
+[gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
+[gitter-url]: https://gitter.im/rjrodger/seneca
+[Senecajs org]: https://github.com/senecajs/

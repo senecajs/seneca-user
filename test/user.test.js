@@ -88,16 +88,3 @@ lab.test('legacy-data', async () => {
   expect(out.user).contains({ handle: 'alice' })
   expect(out.login).contains({ token: 'al0', handle: 'alice' })
 })
-
-/*
-function make_seneca() {
-  var seneca = Seneca({ legacy: false })
-    .test()
-    .use('promisify')
-    .use('doc')
-    .use('joi')
-    .use('entity')
-    .use('..')
-  return seneca
-}
-*/
