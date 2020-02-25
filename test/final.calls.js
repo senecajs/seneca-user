@@ -82,5 +82,162 @@ module.exports = [
       ok: true,
       items: [{ name: 'derek', handle: 'derek', active: false }]
     }
-  }
+  },
+
+
+  {
+    print: true||print_calls,
+    pattern: 'update:user' + LN(),
+    params: {
+      handle: 'edward',
+      user: {
+        address: 'edward house'
+      }
+    },
+    out: {
+      ok: true,
+    }
+  },
+
+  {
+    print: true||print_calls,
+    pattern: 'login:user' + LN(),
+    params: {
+      handle: 'edward',
+      fields: ['address'],
+      auto: true
+    },
+    out: {
+      ok: true,
+      user: {address:'edward house'}
+    }
+  },
+
+  {
+    print: true||print_calls,
+    pattern: 'list:login' + LN(),
+    params: {
+      handle: 'edward'
+    },
+    out: {
+      ok: true,
+      items: Joi.array().length(2)
+    }
+  },
+
+  {
+    print: true||print_calls,
+    name: 're0',
+    pattern: 'remove:user' + LN(),
+    params: {
+      handle: 'edward',
+    },
+    out: {
+      ok: true,
+      login_count: 2,
+      removed: Joi.string(),
+      purged: false,
+      user_id: Joi.string(),
+    }
+  },
+
+
+  {
+    print: true||print_calls,
+    pattern: 'get:user' + LN(),
+    params: {
+      user_id: '`re0:out.user_id`',
+      q:{fields$: ['address']}
+    },
+    out: {
+      ok: true,
+      user: {
+        active: false,
+        removed: Joi.string(),
+        handle: Joi.string().invalid('edward').length(12),
+        address: 'edward house'
+      }
+    }
+  },
+
+  // can run multiple times, custom anon fields
+  {
+    print: true||print_calls,
+    name: 're0',
+    pattern: 'remove:user' + LN(),
+    params: {
+      user_id: '`re0:out.user_id`',
+      q:{fields$: ['address']},
+      anon_fields: ['address']
+    },
+    out: {
+      ok: true,
+      login_count: 2,
+      removed: Joi.string(),
+      purged: false,
+      user_id: Joi.string(),
+    }
+  },
+
+  {
+    print: true||print_calls,
+    pattern: 'get:user' + LN(),
+    params: {
+      user_id: '`re0:out.user_id`',
+      q:{fields$: ['address']}
+    },
+    out: {
+      ok: true,
+      user: {
+        active: false,
+        removed: Joi.string(),
+        handle: Joi.string().invalid('edward').length(12),
+        address: Joi.string().invalid('edward house').length(12)
+      }
+    }
+  },
+
+  // explicitly purge data
+  {
+    print: true||print_calls,
+    name: 're0',
+    pattern: 'remove:user' + LN(),
+    params: {
+      user_id: '`re0:out.user_id`',
+      purge: true
+    },
+    out: {
+      ok: true,
+      login_count: 2,
+      removed: Joi.string(),
+      purged: true,
+      user_id: Joi.string(),
+    }
+  },
+
+  {
+    print: true||print_calls,
+    pattern: 'get:user' + LN(),
+    params: {
+      user_id: '`re0:out.user_id`',
+    },
+    out: {
+      ok: false,
+      why: 'user-not-found'
+    }
+  },
+
+  {
+    print: true||print_calls,
+    name: 're0',
+    pattern: 'remove:user' + LN(),
+    params: {
+      user_id: '`re0:out.user_id`',
+    },
+    out: {
+      ok: false,
+      why: 'user-not-found'
+    }
+  },
+
 ]

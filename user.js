@@ -136,6 +136,7 @@ function user(options) {
     .message('list:user', intern.make_msg('list_user', ctx))
     .message('adjust:user', intern.make_msg('adjust_user', ctx))
     .message('update:user', intern.make_msg('update_user', ctx))
+    .message('remove:user', intern.make_msg('remove_user', ctx))
     .message('login:user', intern.make_msg('login_user', ctx))
     .message('logout:user', intern.make_msg('logout_user', ctx))
 
@@ -162,7 +163,6 @@ function user(options) {
   // NEXT
   // JOI VALIDATE EXISTING
 
-  //.message('auth:user'
   //.message('remove:user'
   //.message('migrate:data' - use native mongo driver to do update nick->handle
 

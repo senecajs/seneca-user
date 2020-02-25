@@ -96,7 +96,8 @@ module.exports = {
     validate: {
       ...query_user,
       auto: Joi.boolean().optional(),
-      pass: Joi.string().optional()
+      pass: Joi.string().optional(),
+      fields: Joi.array().items(Joi.string()).optional(),
     }
   },
 
