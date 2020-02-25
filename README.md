@@ -62,14 +62,14 @@ Because Seneca treats messages as first-class citizens, 90% of unit
 testing can be iplemented with message scenarios that also provide
 excellent usage exmaples:
 
-* [register_get](senecajs/seneca-user/blob/master/test/register_get.calls.js)
-* [password](senecajs/seneca-user/blob/master/test/password.calls.js)
-* [adjust](senecajs/seneca-user/blob/master/test/adjust.calls.js)
-* [verify](senecajs/seneca-user/blob/master/test/verify.calls.js)
-* [login](senecajs/seneca-user/blob/master/test/login.calls.js)
-* [logout](senecajs/seneca-user/blob/master/test/logout.calls.js)
-* [change](senecajs/seneca-user/blob/master/test/change.calls.js)
-* [final](senecajs/seneca-user/blob/master/test/final.calls.js)
+* [register_get](test/register_get.calls.js)
+* [password](test/password.calls.js)
+* [adjust](test/adjust.calls.js)
+* [verify](test/verify.calls.js)
+* [login](test/login.calls.js)
+* [logout](test/logout.calls.js)
+* [change](test/change.calls.js)
+* [final](test/final.calls.js)
 
 
 <!--START:action-list-->
