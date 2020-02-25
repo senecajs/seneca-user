@@ -11,10 +11,11 @@ Next version of seneca-user - work in progress!
 ## Action Patterns
 
 * [adjust:user,sys:user](#-adjustusersysuser-)
+* [auth:user,sys:user](#-authusersysuser-)
 * [change:pass,sys:user](#-changepasssysuser-)
-* [change:password,sys:user](#-changepasswordsysuser-)
 * [change:handle,sys:user](#-changehandlesysuser-)
 * [change:email,sys:user](#-changeemailsysuser-)
+* [change:password,sys:user](#-changepasswordsysuser-)
 * [check:verify,sys:user](#-checkverifysysuser-)
 * [check:exists,sys:user](#-checkexistssysuser-)
 * [cmd:encrypt,hook:password,sys:user](#-cmdencrypthookpasswordsysuser-)
@@ -27,6 +28,8 @@ Next version of seneca-user - work in progress!
 * [logout:user,sys:user](#-logoutusersysuser-)
 * [make:verify,sys:user](#-makeverifysysuser-)
 * [register:user,sys:user](#-registerusersysuser-)
+* [remove:user,sys:user](#-removeusersysuser-)
+* [sys:user,update:user](#-sysuserupdateuser-)
 
 
 <!--END:action-list-->
@@ -68,17 +71,71 @@ Adjust user status idempotently (activated, etc.).
 
 
 ----------
-### &laquo; `change:pass,sys:user` &raquo;
+### &laquo; `auth:user,sys:user` &raquo;
 
-No description provided.
+Authenticate a login using token
 
+
+#### Parameters
+
+
+* _token_ : string <i><small>{presence:required}</small></i>
+* _user_fields_ : array <i><small>{presence:optional}</small></i>
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if login is active',
+  user: 'user entity',
+  login: 'user entity'
+}
+```
 
 
 ----------
-### &laquo; `change:password,sys:user` &raquo;
+### &laquo; `change:pass,sys:user` &raquo;
 
-No description provided.
+Change user password.
 
+
+#### Parameters
+
+
+* _pass_ : string
+* _repeat_ : string <i><small>{presence:optional}</small></i>
+* _verify_ : string <i><small>{presence:optional}</small></i>
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if changed',
+  user: 'user entity'
+}
+```
 
 
 ----------
@@ -146,10 +203,72 @@ Change user email.
 
 
 ----------
+### &laquo; `change:password,sys:user` &raquo;
+
+Change user password.
+
+
+#### Parameters
+
+
+* _pass_ : string
+* _repeat_ : string <i><small>{presence:optional}</small></i>
+* _verify_ : string <i><small>{presence:optional}</small></i>
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if changed',
+  user: 'user entity'
+}
+```
+
+
+----------
 ### &laquo; `check:verify,sys:user` &raquo;
 
-No description provided.
+Check a verfication entry.
 
+
+#### Parameters
+
+
+* _kind_ : string <i><small>{presence:optional}</small></i>
+* _code_ : string <i><small>{presence:optional}</small></i>
+* _now_ : number <i><small>{presence:optional}</small></i>
+* _expiry_ : boolean <i><small>{presence:optional}</small></i>
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if valid',
+  why: 'string coded reason if not valid'
+}
+```
 
 
 ----------
@@ -223,8 +342,37 @@ Encrypt a plain text password string.
 ----------
 ### &laquo; `cmd:pass,hook:password,sys:user` &raquo;
 
-No description provided.
+Validate a plain text password string.
 
+
+
+
+#### Examples
+
+
+
+* `cmd:pass,hook:password,sys:user,pass:goodpassword`
+  * Result: {ok:true}
+#### Parameters
+
+
+* _salt_ : string
+* _pass_ : string
+* _proposed_ : string
+* _rounds_ : number <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if password is valid',
+  why: 'string coded reason if not valid'
+}
+```
 
 
 ----------
@@ -279,7 +427,7 @@ List users
 ```
 {
   ok: '_true_ if user found',
-  user: 'user entity'
+  items: 'user entity item list'
 }
 ```
 
@@ -287,8 +435,34 @@ List users
 ----------
 ### &laquo; `list:login,sys:user` &raquo;
 
-No description provided.
+List logins for a user
 
+
+#### Parameters
+
+
+* _active_ : boolean <i><small>{presence:optional}</small></i>
+* _login_q_ : object <i><small>{presence:optional}</small></i>
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if user found',
+  items: 'user entity item list'
+}
+```
 
 
 ----------
@@ -366,8 +540,36 @@ Login user
 ----------
 ### &laquo; `logout:user,sys:user` &raquo;
 
-No description provided.
+Login user
 
+
+#### Parameters
+
+
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+* _token_ : string <i><small>{presence:optional}</small></i>
+* _login_in_ : string <i><small>{presence:optional}</small></i>
+* _login_q_ : object <i><small>{presence:optional,default:{}}</small></i>
+* _load_logins_ : boolean <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if user logged in',
+  count: 'number of logouts'
+}
+```
 
 
 ----------
@@ -432,6 +634,69 @@ Register a new user
 ```
 {
   ok: '_true_ if user registration succeeded',
+  user: 'user entity'
+}
+```
+
+
+----------
+### &laquo; `remove:user,sys:user` &raquo;
+
+Remove a user
+
+
+#### Parameters
+
+
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if user removed',
+  user: 'user entity'
+}
+```
+
+
+----------
+### &laquo; `sys:user,update:user` &raquo;
+
+Update a user
+
+
+#### Parameters
+
+
+* _user_ : object <i><small>{presence:optional}</small></i>
+* _id_ : string <i><small>{presence:optional}</small></i>
+* _user_id_ : string <i><small>{presence:optional}</small></i>
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _handle_ : string <i><small>{presence:optional}</small></i>
+* _nick_ : string <i><small>{presence:optional}</small></i>
+* _q_ : object <i><small>{presence:optional}</small></i>
+* _fields_ : array <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if user updated',
   user: 'user entity'
 }
 ```

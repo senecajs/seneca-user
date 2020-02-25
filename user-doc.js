@@ -34,6 +34,38 @@ const user_data = {
 }
 
 module.exports = {
+  adjust_user: {
+    desc: 'Adjust user status idempotently (activated, etc.).',
+    reply_desc: {
+      ok: '_true_ if user found',
+      user: 'user entity'
+    },
+    validate: Object.assign(
+      {
+        active: Joi.boolean().optional()
+      },
+      query_user
+    )
+  },
+
+  auth_user: {
+    desc: 'Authenticate a login using token',
+    reply_desc: {
+      ok: '_true_ if login is active',
+      user: 'user entity',
+      login: 'user entity'
+    },
+    validate: Object.assign(
+      {
+        token: Joi.string().required(),
+        user_fields: Joi.array()
+          .items(Joi.string())
+          .optional()
+      },
+      query_user
+    )
+  },
+
   register_user: {
     desc: 'Register a new user',
     reply_desc: {
@@ -60,11 +92,34 @@ module.exports = {
     validate: query_user
   },
 
+  remove_user: {
+    desc: 'Remove a user',
+    reply_desc: {
+      ok: '_true_ if user removed',
+      user: 'user entity'
+    },
+    validate: query_user
+  },
+
+  update_user: {
+    desc: 'Update a user',
+    reply_desc: {
+      ok: '_true_ if user updated',
+      user: 'user entity'
+    },
+    validate: Object.assign(
+      {
+        user: Joi.object().optional()
+      },
+      query_user
+    )
+  },
+
   list_user: {
     desc: 'List users',
     reply_desc: {
       ok: '_true_ if user found',
-      user: 'user entity'
+      items: 'user entity item list'
     },
     validate: {
       active: Joi.boolean().optional(),
@@ -72,15 +127,16 @@ module.exports = {
     }
   },
 
-  adjust_user: {
-    desc: 'Adjust user status idempotently (activated, etc.).',
+  list_login: {
+    desc: 'List logins for a user',
     reply_desc: {
       ok: '_true_ if user found',
-      user: 'user entity'
+      items: 'user entity item list'
     },
     validate: Object.assign(
       {
-        active: Joi.boolean().optional()
+        active: Joi.boolean().optional(),
+        login_q: Joi.object().optional()
       },
       query_user
     )
@@ -173,6 +229,7 @@ module.exports = {
       query_user
     )
   },
+
   change_handle: {
     desc: 'Change user handle.',
     reply_desc: {
@@ -186,6 +243,7 @@ module.exports = {
       query_user
     )
   },
+
   change_email: {
     desc: 'Change user email.',
     reply_desc: {
@@ -200,5 +258,59 @@ module.exports = {
       },
       query_user
     )
+  },
+
+  change_pass: {
+    desc: 'Change user password.',
+    reply_desc: {
+      ok: '_true_ if changed',
+      user: 'user entity'
+    },
+    validate: Object.assign(
+      {
+        pass: Joi.string().min(1),
+        repeat: Joi.string()
+          .min(1)
+          .optional(),
+        verify: Joi.string()
+          .min(1)
+          .optional()
+      },
+      query_user
+    )
+  },
+
+  check_verify: {
+    desc: 'Check a verfication entry.',
+    reply_desc: {
+      ok: '_true_ if valid',
+      why: 'string coded reason if not valid'
+    },
+    validate: Object.assign(
+      {
+        kind: Joi.string().optional(),
+        code: Joi.string().optional(),
+        now: Joi.number().optional(),
+        expiry: Joi.boolean().optional()
+      },
+      query_user
+    )
+  },
+
+  cmd_pass: {
+    desc: 'Validate a plain text password string.',
+    examples: {
+      'pass:goodpassword': 'Result: {ok:true}'
+    },
+    reply_desc: {
+      ok: '_true_ if password is valid',
+      why: 'string coded reason if not valid'
+    },
+    validate: {
+      salt: Joi.string().min(1),
+      pass: Joi.string().min(1),
+      proposed: Joi.string().min(1),
+      rounds: Joi.number().optional()
+    }
   }
 }

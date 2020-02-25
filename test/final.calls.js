@@ -8,7 +8,7 @@ const LN = Shared.LN
 
 module.exports = [
   {
-    print: print_calls,
+    print: true || print_calls,
     pattern: 'list:user' + LN(),
     out: {
       ok: true,
