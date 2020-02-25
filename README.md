@@ -59,8 +59,8 @@ console.log('LOGIN:', out.login)
 ### Detailed Examples
 
 Because Seneca treats messages as first-class citizens, 90% of unit
-testing can be iplemented with message scenarios that also provide
-excellent usage exmaples:
+testing can be implemented with message scenarios that also provide
+detailed usage examples:
 
 * [register_get](test/register_get.calls.js)
 * [password](test/password.calls.js)

@@ -13,20 +13,6 @@ const SenecaMsgTest = require('seneca-msg-test')
 const Seneca = require('seneca')
 
 lab.test('messages', { timeout: 5555 }, async () => {
-  /*
-  var seneca = Seneca({ legacy: false })
-    .test()
-    .use('promisify')
-    .use('doc')
-    .use('joi')
-    .use('entity')
-    .use('..', {
-      password: {
-        minlen: 3
-      }
-    })
-  */
-
   var seneca = Shared.make_seneca()
 
   var run = SenecaMsgTest(seneca, {
