@@ -10,16 +10,18 @@ const Seneca = require('seneca')
 const Plugin = require('..')
 const PluginValidator = require('seneca-plugin-validator')
 
+const Shared = require('./shared')
+
 lab.test('validate', PluginValidator(Plugin, module))
 
 lab.test('happy', async () => {
-  var si = make_seneca()
+  var si = Shared.make_seneca()
   await si.ready()
   expect(si.find_plugin('user')).exists()
 })
 
 lab.test('export', async () => {
-  var si = make_seneca()
+  var si = Shared.make_seneca()
   await si.ready()
 
   var find_user = si.export('user/find_user')
@@ -48,6 +50,46 @@ lab.test('export', async () => {
   expect(alice.user.data$()).contains(found.user.data$())
 })
 
+lab.test('bad-data', async () => {
+  var si = Shared.make_seneca()
+  await si.ready()
+
+  var bad_login0 = await si
+    .entity('sys/login')
+    .data$({ token: 'bad0', active: true, user_id: 'not-a-user' })
+    .save$()
+
+  var out = await si.post('sys:user,auth:user', { token: 'bad0' })
+
+  expect(out).equal({
+    login_id: bad_login0.id,
+    ok: false,
+    token: 'bad0',
+    why: 'user-not-found'
+  })
+})
+
+lab.test('legacy-data', async () => {
+  var si = Shared.make_seneca()
+  await si.ready()
+
+  var alice = await si.post('sys:user,register:user', {
+    handle: 'alice'
+  })
+
+  var legacy_login0 = await si
+    .entity('sys/login')
+    .data$({ token: 'al0', handle: 'alice', active: true, user: alice.user.id })
+    .save$()
+
+  var out = await si.post('sys:user,auth:user', { token: 'al0' })
+
+  expect(out.ok).true()
+  expect(out.user).contains({ handle: 'alice' })
+  expect(out.login).contains({ token: 'al0', handle: 'alice' })
+})
+
+/*
 function make_seneca() {
   var seneca = Seneca({ legacy: false })
     .test()
@@ -58,3 +100,4 @@ function make_seneca() {
     .use('..')
   return seneca
 }
+*/

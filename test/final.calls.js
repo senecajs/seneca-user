@@ -13,18 +13,32 @@ module.exports = [
     out: {
       ok: true,
       items: [
-        {email:'foo@example.com',active:true},
-        {name:'alice',handle:'alice',active:true},
-        {name:'bob',email:'bob@example.com',handle:'bob',active:true},
-        {name:'cathy',handle:'catherine',
-         email:'catherinethegreat@example.com',active:true},
-        {name:'derek',handle:'derek',active:false},
-        {active:true},
-        {active:true},
-        {active:true},
-        {name:'Adam Ant',active:true},
-        {name:'edward',handle:'edward',email:'edward@example.com',active:true},
-        {name:'frank',handle:'frankly',email:'frankly@example.com',active:true}
+        { email: 'foo@example.com', active: true },
+        { name: 'alice', handle: 'alice', active: true },
+        { name: 'bob', email: 'bob@example.com', handle: 'bob', active: true },
+        {
+          name: 'cathy',
+          handle: 'catherine',
+          email: 'catherinethegreat@example.com',
+          active: true
+        },
+        { name: 'derek', handle: 'derek', active: false },
+        { active: true },
+        { active: true },
+        { active: true },
+        { name: 'Adam Ant', active: true },
+        {
+          name: 'edward',
+          handle: 'edward',
+          email: 'edward@example.com',
+          active: true
+        },
+        {
+          name: 'frank',
+          handle: 'frankly',
+          email: 'frankly@example.com',
+          active: true
+        }
       ]
     }
   },
@@ -40,8 +54,20 @@ module.exports = [
     out: {
       ok: true,
       items: [
-        {name:'bob',email:'bob@example.com',foo:1,handle:'bob',active:true},
-        {name:'frank',foo:1,handle:'frankly',email:'frankly@example.com',active:true}
+        {
+          name: 'bob',
+          email: 'bob@example.com',
+          foo: 1,
+          handle: 'bob',
+          active: true
+        },
+        {
+          name: 'frank',
+          foo: 1,
+          handle: 'frankly',
+          email: 'frankly@example.com',
+          active: true
+        }
       ]
     }
   },
@@ -54,10 +80,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: [
-        {name:'derek',handle:'derek',active:false},
-      ]
+      items: [{ name: 'derek', handle: 'derek', active: false }]
     }
-  },
-
+  }
 ]

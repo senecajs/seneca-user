@@ -130,6 +130,7 @@ function user(options) {
 
   seneca
     .fix('sys:user')
+
     .message('register:user', intern.make_msg('register_user', ctx))
     .message('get:user', intern.make_msg('get_user', ctx))
     .message('list:user', intern.make_msg('list_user', ctx))
@@ -137,21 +138,26 @@ function user(options) {
     .message('update:user', intern.make_msg('update_user', ctx))
     .message('login:user', intern.make_msg('login_user', ctx))
     .message('logout:user', intern.make_msg('logout_user', ctx))
+
     .message('list:login', intern.make_msg('list_login', ctx))
+
     .message('make:verify', intern.make_msg('make_verify', ctx))
     .message('list:verify', intern.make_msg('list_verify', ctx))
-    .message('check:verify', intern.make_msg('check_verify', ctx))
-    .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
-    .message('hook:password,cmd:pass', intern.make_msg('cmd_pass', ctx))
+
     .message('change:pass', intern.make_msg('change_pass', ctx))
-
-    // TODO: seneca.alias method?
-    .message('change:password', intern.make_msg('change_pass', ctx))
-
     .message('change:handle', intern.make_msg('change_handle', ctx))
     .message('change:email', intern.make_msg('change_email', ctx))
 
+    .message('check:verify', intern.make_msg('check_verify', ctx))
     .message('check:exists', intern.make_msg('check_exists', ctx))
+
+    .message('auth:user', intern.make_msg('auth_user', ctx))
+
+    .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
+    .message('hook:password,cmd:pass', intern.make_msg('cmd_pass', ctx))
+
+    // TODO: seneca.alias method?
+    .message('change:password', intern.make_msg('change_pass', ctx))
 
   // NEXT
   // JOI VALIDATE EXISTING
@@ -169,7 +175,6 @@ function user(options) {
       }
     }
   }
-
 
   // --- LEGACY BELOW ---
   /*
@@ -638,7 +643,7 @@ function make_intern() {
         var email = msg.email || user_data.email || null
 
         // NOTE: assumes email already validated in msg
-        if(null != email) {
+        if (null != email) {
           handle =
             email.split('@')[0].toLowerCase() +
             ('' + Math.random()).substring(2, 6)
@@ -733,25 +738,25 @@ function make_intern() {
       return msg
     },
 
+    email_schema: Joi.string()
+      .email()
+      .required(),
 
-    email_schema: Joi.string().email().required(),
-    
     valid_email: async function(seneca, email, ctx) {
       var email_valid = intern.email_schema.validate(email)
-      if(email_valid.error) {
-        return {ok: false, email:email, why:'email-invalid-format'}
+      if (email_valid.error) {
+        return { ok: false, email: email, why: 'email-invalid-format' }
       }
 
-      var email_taken = await intern.find_user(seneca, {email:email}, ctx)
-      
+      var email_taken = await intern.find_user(seneca, { email: email }, ctx)
+
       return {
         ok: !email_taken.ok,
-        email:email,
-        why:email_taken.ok?'email-exists':null
+        email: email,
+        why: email_taken.ok ? 'email-exists' : null
       }
     },
 
-    
     valid_handle: async function(seneca, handle, ctx) {
       var options = ctx.options
 
@@ -818,22 +823,25 @@ function make_intern() {
     // These variations are supported for better REPL DX
     extract_pass: function(msg) {
       var pass_data = {}
-      if('string' === typeof(msg.pass) || 'string' === typeof(msg.password)) {
+      if ('string' === typeof msg.pass || 'string' === typeof msg.password) {
         pass_data.pass = msg.pass || msg.password
         pass_data.repeat = msg.repeat
-      }
-      else if(msg.user && ('string' === typeof(msg.user.pass) ||
-                           'string' === typeof(msg.user.password))) {
+      } else if (
+        msg.user &&
+        ('string' === typeof msg.user.pass ||
+          'string' === typeof msg.user.password)
+      ) {
         pass_data.pass = msg.user.pass || msg.user.password
         pass_data.repeat = msg.user.repeat
-      }
-      else if(msg.user_data && ('string' === typeof(msg.user_data.pass) ||
-                                'string' === typeof(msg.user_data.password))) {
+      } else if (
+        msg.user_data &&
+        ('string' === typeof msg.user_data.pass ||
+          'string' === typeof msg.user_data.password)
+      ) {
         pass_data.pass = msg.user_data.pass || msg.user_data.password
         pass_data.repeat = msg.user_data.repeat
       }
       return pass_data
-    },
+    }
   }
-
 }

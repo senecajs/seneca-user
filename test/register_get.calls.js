@@ -30,7 +30,6 @@ module.exports = [
     out: { ok: false }
   },
 
-  
   //
   {
     print: print_calls,
@@ -89,11 +88,10 @@ module.exports = [
     out: { ok: true, user: { email: 'foo@example.com' } }
   },
 
-
   {
     // can't register with existing email
     pattern: 'register:user' + LN(),
-    print: true||print_calls,
+    print: true || print_calls,
     params: {
       email: 'foo@example.com'
     },
@@ -104,7 +102,6 @@ module.exports = [
     }
   },
 
-  
   {
     // can't register with short handle
     print: print_calls,
@@ -277,8 +274,7 @@ module.exports = [
     // always generate a handle
     pattern: 'register:user' + LN(),
     params: {
-      user_data: {
-      }
+      user_data: {}
     },
     out: {
       ok: true,
@@ -296,7 +292,10 @@ module.exports = [
         name: 'Adam Ant'
       }
     },
-    out: { ok: true, user: { name: 'Adam Ant', handle: Joi.string().length(12) } }
+    out: {
+      ok: true,
+      user: { name: 'Adam Ant', handle: Joi.string().length(12) }
+    }
   },
 
   {

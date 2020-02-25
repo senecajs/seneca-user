@@ -178,7 +178,6 @@ module.exports = [
     }
   },
 
-
   // change email
 
   {
@@ -188,7 +187,10 @@ module.exports = [
       email: 'cathy@example.com',
       new_email: 'catherine@example.com'
     },
-    out: { ok: true, user: { handle: 'catherine', email: 'catherine@example.com' } }
+    out: {
+      ok: true,
+      user: { handle: 'catherine', email: 'catherine@example.com' }
+    }
   },
 
   {
@@ -200,7 +202,6 @@ module.exports = [
     },
     err: { code: 'act_invalid_msg' }
   },
-
 
   // email change with code
   {
@@ -221,7 +222,7 @@ module.exports = [
         once: true,
         used: false
       }
-    },
+    }
     /*
     verify: function(call) {
       console.log(call.result.out.verify.data$())
@@ -229,13 +230,12 @@ module.exports = [
     */
   },
 
-
   {
     print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       email: 'not-catherine@example.com',
-      new_email: 'catherinethegreat@example.com',
+      new_email: 'catherinethegreat@example.com'
     },
     out: { ok: false, why: 'user-not-found' }
   },
@@ -248,19 +248,21 @@ module.exports = [
       new_email: 'catherinethegreat@example.com',
       verify: 'bad-code'
     },
-    out: { ok: false, why: 'no-verify',
-           details: { q: { kind: 'email', code: 'bad-code' } } }
+    out: {
+      ok: false,
+      why: 'no-verify',
+      details: { q: { kind: 'email', code: 'bad-code' } }
+    }
   },
 
   {
     print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
-      email: 'catherine@example.com',
+      email: 'catherine@example.com'
     },
     out: { ok: true, user: { email: 'catherine@example.com' } }
   },
-
 
   {
     print: print_calls,
@@ -273,16 +275,14 @@ module.exports = [
     out: { ok: true, user: { email: 'catherinethegreat@example.com' } }
   },
 
-
   {
     print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
-      email: 'catherinethegreat@example.com',
+      email: 'catherinethegreat@example.com'
     },
     out: { ok: true, user: { email: 'catherinethegreat@example.com' } }
   },
-
 
   {
     print: print_calls,
@@ -295,24 +295,22 @@ module.exports = [
     out: { ok: false, why: 'verify-already-used' }
   },
 
-
   {
     print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       handle: 'catherine',
-      new_email: 'catherinethegreat@example.com',
+      new_email: 'catherinethegreat@example.com'
     },
     out: { ok: true }
   },
 
-
   {
     print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       handle: 'catherine',
-      new_email: 'bob@example.com',
+      new_email: 'bob@example.com'
     },
     out: {
       ok: false,
@@ -324,7 +322,6 @@ module.exports = [
     }
   },
 
-
   {
     print: print_calls,
     pattern: 'update:user' + LN(),
@@ -332,7 +329,7 @@ module.exports = [
       handle: 'frank',
       user: {
         foo: 1,
-        zed:'a'
+        zed: 'a'
       }
     },
     out: {
@@ -340,7 +337,7 @@ module.exports = [
       user: {
         handle: 'frank',
         foo: 1,
-        zed:'a'
+        zed: 'a'
       }
     }
   },
@@ -350,14 +347,14 @@ module.exports = [
     pattern: 'get:user' + LN(),
     params: {
       handle: 'frank',
-      fields:['foo','zed']
+      fields: ['foo', 'zed']
     },
     out: {
       ok: true,
       user: {
         handle: 'frank',
         foo: 1,
-        zed:'a'
+        zed: 'a'
       }
     }
   },
@@ -405,7 +402,7 @@ module.exports = [
     out: {
       ok: true,
       user: {
-        handle: 'frank',
+        handle: 'frank'
       }
     }
   },
@@ -422,7 +419,7 @@ module.exports = [
     out: {
       ok: true,
       user: {
-        handle: 'frank',
+        handle: 'frank'
       }
     }
   },
@@ -439,12 +436,11 @@ module.exports = [
     out: {
       ok: true,
       user: {
-        handle: 'frank',
+        handle: 'frank'
       }
     }
   },
 
-  
   {
     print: print_calls,
     pattern: 'update:user' + LN(),
@@ -457,11 +453,10 @@ module.exports = [
     out: {
       ok: true,
       user: {
-        handle: 'franklymaybe',
+        handle: 'franklymaybe'
       }
     }
   },
-
 
   {
     print: print_calls,
@@ -475,11 +470,10 @@ module.exports = [
     out: {
       ok: true,
       user: {
-        handle: 'frankly',
+        handle: 'frankly'
       }
     }
   },
-
 
   {
     print: print_calls,
@@ -491,10 +485,9 @@ module.exports = [
       }
     },
     out: {
-      ok: false,
+      ok: false
     }
   },
-
 
   {
     print: print_calls,
@@ -506,10 +499,9 @@ module.exports = [
       }
     },
     out: {
-      ok: false,
+      ok: false
     }
   },
-
 
   {
     print: print_calls,
@@ -522,8 +514,7 @@ module.exports = [
       }
     },
     out: {
-      ok: false,
+      ok: false
     }
-  },
-
+  }
 ]

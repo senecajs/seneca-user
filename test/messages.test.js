@@ -7,10 +7,13 @@ const Joi = require('@hapi/joi')
 const expect = Code.expect
 const lab = (exports.lab = Lab.script())
 
+const Shared = require('./shared')
+
 const SenecaMsgTest = require('seneca-msg-test')
 const Seneca = require('seneca')
 
 lab.test('messages', { timeout: 5555 }, async () => {
+  /*
   var seneca = Seneca({ legacy: false })
     .test()
     .use('promisify')
@@ -22,6 +25,9 @@ lab.test('messages', { timeout: 5555 }, async () => {
         minlen: 3
       }
     })
+  */
+
+  var seneca = Shared.make_seneca()
 
   var run = SenecaMsgTest(seneca, {
     print: false,

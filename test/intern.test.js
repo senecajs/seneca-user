@@ -127,7 +127,7 @@ lab.test('find_user', async () => {
     }
   })
   expect(alice.ok).true()
-  
+
   var bob = await si.post('sys:user,register:user', {
     user_data: {
       handle: 'bob',
@@ -136,7 +136,7 @@ lab.test('find_user', async () => {
     }
   })
   expect(bob.ok).true()
-  
+
   var ctx = intern.make_ctx({}, User.defaults)
 
   var msg0 = { handle: 'alice' }
@@ -487,7 +487,6 @@ lab.test('valid_handle', async () => {
     }
   })
 
-
   expect(await intern.valid_handle(si, 'AAA', ctx)).equals({
     handle: 'aaa',
     ok: true
@@ -499,19 +498,18 @@ lab.test('valid_handle', async () => {
     details: { handle: '***' }
   })
 
-  
   var ctx0 = ctx
-  ctx0.options = si.util.deep({},ctx.options,{handle:{
-    must_match: (handle)=>handle.match(/^[A-Za-z0-9_]+$/),
-    downcase:false
-  }})
+  ctx0.options = si.util.deep({}, ctx.options, {
+    handle: {
+      must_match: handle => handle.match(/^[A-Za-z0-9_]+$/),
+      downcase: false
+    }
+  })
   expect(await intern.valid_handle(si, 'AAA', ctx0)).equals({
     handle: 'AAA',
     ok: true
   })
-
 })
-
 
 lab.test('valid_email', async () => {
   var si = make_seneca()
@@ -521,11 +519,15 @@ lab.test('valid_email', async () => {
   var ctx = intern.make_ctx({}, si.find_plugin('user').options)
 
   expect(await intern.valid_email(si, 'aaa@example.com', ctx)).equals({
-    ok:true, email:'aaa@example.com', why: null
+    ok: true,
+    email: 'aaa@example.com',
+    why: null
   })
 
   expect(await intern.valid_email(si, '@example.com', ctx)).equals({
-    ok:false, email:'@example.com', why: 'email-invalid-format'
+    ok: false,
+    email: '@example.com',
+    why: 'email-invalid-format'
   })
 
   var alice = await si.post('sys:user,register:user', {
@@ -533,22 +535,42 @@ lab.test('valid_email', async () => {
   })
 
   expect(await intern.valid_email(si, 'alice@example.com', ctx)).equals({
-    ok:false, email:'alice@example.com', why: 'email-exists'
+    ok: false,
+    email: 'alice@example.com',
+    why: 'email-exists'
   })
-  
 })
 
-
 lab.test('extract_pass', async () => {
-  expect(intern.extract_pass({pass:'foo'})).equals({pass:'foo',repeat:void 0})
-  expect(intern.extract_pass({password:'foo'})).equals({pass:'foo',repeat:void 0})
-  expect(intern.extract_pass({user:{pass:'foo'}})).equals({pass:'foo',repeat:void 0})
-  expect(intern.extract_pass({user:{password:'foo'}})).equals({pass:'foo',repeat:void 0})
-  expect(intern.extract_pass({user_data:{pass:'foo'}})).equals({pass:'foo',repeat:void 0})
-  expect(intern.extract_pass({user_data:{password:'foo'}})).equals({pass:'foo',repeat:void 0})
+  expect(intern.extract_pass({ pass: 'foo' })).equals({
+    pass: 'foo',
+    repeat: void 0
+  })
+  expect(intern.extract_pass({ password: 'foo' })).equals({
+    pass: 'foo',
+    repeat: void 0
+  })
+  expect(intern.extract_pass({ user: { pass: 'foo' } })).equals({
+    pass: 'foo',
+    repeat: void 0
+  })
+  expect(intern.extract_pass({ user: { password: 'foo' } })).equals({
+    pass: 'foo',
+    repeat: void 0
+  })
+  expect(intern.extract_pass({ user_data: { pass: 'foo' } })).equals({
+    pass: 'foo',
+    repeat: void 0
+  })
+  expect(intern.extract_pass({ user_data: { password: 'foo' } })).equals({
+    pass: 'foo',
+    repeat: void 0
+  })
 
-  expect(intern.extract_pass({pass:'foo',repeat:'bar'}))
-    .equals({pass:'foo',repeat:'bar'})
+  expect(intern.extract_pass({ pass: 'foo', repeat: 'bar' })).equals({
+    pass: 'foo',
+    repeat: 'bar'
+  })
 })
 
 function make_seneca() {

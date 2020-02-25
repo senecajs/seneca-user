@@ -184,14 +184,13 @@ module.exports = [
       q: {
         handle: 'derek'
       },
-      active: false,
+      active: false
     },
     out: {
       user: { handle: 'derek', active: false }
     }
   },
 
-  
   // login code for derek...
   {
     print: print_calls,
@@ -211,22 +210,22 @@ module.exports = [
         once: true,
         used: false
       }
-    },
+    }
   },
 
-
   // .. won't work, as not active
-  
+
   {
     print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'derek',
-      verify: '`dereklogin0:out.verify.code`',
+      verify: '`dereklogin0:out.verify.code`'
     },
     out: {
-      ok: false, user_id: Joi.string(), why: 'user-not-active'
+      ok: false,
+      user_id: Joi.string(),
+      why: 'user-not-active'
     }
-  },
-
+  }
 ]

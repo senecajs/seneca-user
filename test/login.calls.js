@@ -121,6 +121,38 @@ module.exports = [
       user: { handle: 'alice' },
       login: { handle: 'alice' }
     }
+    /*
+    verify: function(call) {
+      console.log(call.result.out.user.data$())
+      console.log(call.result.out.login.data$())
+    }
+    */
+  },
+
+  {
+    print: print_calls,
+    pattern: 'auth:user' + LN(),
+    params: {
+      token: '`al0:out.login.token`'
+    },
+    out: {
+      ok: true,
+      user: { handle: 'alice' },
+      login: { handle: 'alice' }
+    }
+  },
+
+  {
+    print: print_calls,
+    pattern: 'auth:user' + LN(),
+    params: {
+      token: 'not-a-token'
+    },
+    out: {
+      ok: false,
+      token: 'not-a-token',
+      why: 'login-not-found'
+    }
   },
 
   {
@@ -132,13 +164,27 @@ module.exports = [
       auto: true,
       login_data: {
         handle: 'wrong', // will get overridden
-        foo: 1
+        bar: 1
       }
     },
     out: {
       ok: true,
       user: { handle: 'bob' },
-      login: { handle: 'bob', foo: 1 }
+      login: { handle: 'bob', bar: 1 }
+    }
+  },
+
+  {
+    print: print_calls,
+    pattern: 'auth:user' + LN(),
+    params: {
+      token: '`bl0:out.login.token`',
+      user_fields: ['foo']
+    },
+    out: {
+      ok: true,
+      user: { handle: 'bob', foo: 1 },
+      login: { handle: 'bob', bar: 1 }
     }
   },
 
@@ -326,13 +372,12 @@ module.exports = [
     }
   },
 
-
   {
     print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'frank',
-      verify: 'bad-login-code',
+      verify: 'bad-login-code'
     },
     out: {
       ok: false,
@@ -340,7 +385,6 @@ module.exports = [
       details: { q: { kind: 'login', code: 'bad-login-code' } }
     }
   },
-
 
   // login code for frank...
   {
@@ -361,23 +405,21 @@ module.exports = [
         once: true,
         used: false
       }
-    },
+    }
   },
-
 
   {
     print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'frank',
-      verify: '`franklogin0:out.verify.code`',
+      verify: '`franklogin0:out.verify.code`'
     },
     out: {
       ok: true,
-      user: {handle:'frank'},
-      login: {handle:'frank'},
+      user: { handle: 'frank' },
+      login: { handle: 'frank' },
       why: 'verify'
     }
-  },
-
+  }
 ]

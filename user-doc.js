@@ -26,12 +26,12 @@ const query_user = {
 }
 
 const user_data = {
-  email: Joi.string().email().optional(),
+  email: Joi.string()
+    .email()
+    .optional(),
   handle: Joi.string().optional(),
   nick: Joi.string().optional() // legacy
 }
-
-
 
 module.exports = {
   register_user: {
@@ -43,11 +43,11 @@ module.exports = {
     validate: {
       ...user_data,
       user: Joi.object({
-        ...user_data,
+        ...user_data
       }).unknown(),
       user_data: Joi.object({
-        ...user_data,
-      }).unknown(),
+        ...user_data
+      }).unknown()
     }
   },
 
@@ -85,7 +85,7 @@ module.exports = {
       query_user
     )
   },
-  
+
   login_user: {
     desc: 'Login user',
     reply_desc: {
@@ -96,10 +96,26 @@ module.exports = {
     validate: {
       ...query_user,
       auto: Joi.boolean().optional(),
-      pass: Joi.string().optional(),
+      pass: Joi.string().optional()
     }
   },
 
+  logout_user: {
+    desc: 'Login user',
+    reply_desc: {
+      ok: '_true_ if user logged in',
+      count: 'number of logouts'
+    },
+    validate: {
+      ...query_user,
+      token: Joi.string().optional(),
+      login_in: Joi.string().optional(),
+      login_q: Joi.object()
+        .optional()
+        .default({}),
+      load_logins: Joi.boolean().optional()
+    }
+  },
 
   cmd_encrypt: {
     desc: 'Encrypt a plain text password string.',
@@ -124,9 +140,6 @@ module.exports = {
     }
   },
 
-  
-  
-
   check_exists: {
     desc: 'Check user exists.',
     reply_desc: {
@@ -135,9 +148,6 @@ module.exports = {
     },
     validate: query_user
   },
-
-  
-
 
   make_verify: {
     desc: 'Create a verification entry (multiple use cases).',
@@ -181,10 +191,11 @@ module.exports = {
     },
     validate: Object.assign(
       {
-        new_email: Joi.string().email().min(1)
+        new_email: Joi.string()
+          .email()
+          .min(1)
       },
       query_user
     )
   }
-
 }

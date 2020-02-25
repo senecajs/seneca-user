@@ -173,7 +173,7 @@ module.exports = [
         once: true,
         used: false
       }
-    },
+    }
     /*
     verify: function(call) {
       console.log(call.result.out.verify.data$())
