@@ -1,17 +1,6 @@
 /* Copyright (c) 2012-2020 Richard Rodger and other contributors, MIT License. */
 'use strict'
 
-// CHANGES FROM OLD VERSION (seneca-user):
-// role:user -> sys:user, freeing up role:user for calling app
-// move user fields to `user` sub prop
-// all custom fields from `data`
-// use Joi via seneca-doc for validation
-
-// TODO:
-// - convention: msg.data provides custom fields merged at top level - can be used for all msgs
-// - support user_id arg at top level
-// - cmd patterns: change:password, change:handle, change:email - logic to handle
-
 const Assert = require('assert')
 
 const Crypto = require('crypto')
@@ -64,62 +53,6 @@ module.exports.defaults = {
   ensure_handle: intern.ensure_handle,
   make_handle: intern.make_handle,
   make_token: intern.make_token
-
-  /*  
-  // --- LEGACY BELOW ---
-  
-  rounds: 11111,
-  autopass: true,
-  mustrepeat: false,
-  resetperiod: 86400000,
-  confirm: false,
-  oldsha: true,
-  pepper: '',
-  salt_strfmt: 'hex',
-  failedLoginCount: null,
-  user: {
-    fields: [
-      {
-        name: 'pass',
-        hide: true
-      },
-      {
-        name: 'salt',
-        hide: true
-      }
-    ]
-  },
-  login: {
-    fields: []
-  },
-  reset: {
-    fields: []
-  },
-  updateUser: {
-    omit: [
-      'role',
-      'cmd',
-      'nick',
-      'email',
-      'name',
-      'active',
-      'username',
-      'password',
-      'salt',
-      'pass',
-      'id',
-      'confirmed',
-      'confirmcode'
-    ]
-  },
-  verify: {
-    expire: 10 * 60 * 1000, // 10 minutes
-    default_score: 0
-  },
-  onetime: {
-    expire: 5 * 60 * 1000 // 5 minutes
-  },
-*/
 }
 
 function user(options) {
@@ -160,9 +93,6 @@ function user(options) {
 
     // TODO: seneca.alias method?
     .message('change:password', intern.make_msg('change_pass', ctx))
-
-  // NEXT
-  // JOI VALIDATE EXISTING
 
   return {
     exports: {
