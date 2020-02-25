@@ -32,7 +32,7 @@ npm install @seneca/user
 
 ### Quick example
 
-This code snippet sets a value and then retrieves it.
+Register a user and then create an automatic login for testing.
 
 ```js
 const Seneca = require('seneca')
@@ -49,7 +49,8 @@ var out = await seneca.post('sys:user,register:user', {
 console.log('USER:', out.user)
 
 out = await seneca.post('sys:user,login:user', {
-  handle: 'alice'
+  handle: 'alice',
+  auto: true
 })
 
 console.log('LOGIN:', out.login)
