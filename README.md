@@ -1,8 +1,6 @@
 # @seneca/user
 
-
-Next version of seneca-user - work in progress!
-
+Business logic for user management.
 
 
 <!--START:action-list-->
