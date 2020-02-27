@@ -45,6 +45,8 @@ module.exports.defaults = {
     // a function returning an array of strings
     must_not_contain: Nid.curses,
 
+    sanitize: handle => handle.replace(/[^a-z0-9_]/g, '_'),
+
     downcase: true
   },
 
@@ -332,6 +334,10 @@ function make_intern() {
           handle =
             email.split('@')[0].toLowerCase() +
             ('' + Math.random()).substring(2, 6)
+
+          handle = options.handle
+            .sanitize(handle)
+            .substring(0,options.handle.maxlen)          
         } else {
           handle = options.make_handle()
         }

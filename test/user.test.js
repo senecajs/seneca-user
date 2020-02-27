@@ -88,3 +88,13 @@ lab.test('legacy-data', async () => {
   expect(out.user).contains({ handle: 'alice' })
   expect(out.login).contains({ token: 'al0', handle: 'alice' })
 })
+
+lab.test('handle-sanitize', async () => {
+  var si = Shared.make_seneca()
+  await si.ready()
+
+  var opts = si.find_plugin('user').options
+  var sanitize = opts.handle.sanitize
+
+  expect(sanitize('alice.anderson')).equal('alice_anderson')
+})

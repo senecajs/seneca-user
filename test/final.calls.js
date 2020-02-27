@@ -8,7 +8,7 @@ const LN = Shared.LN
 
 module.exports = [
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'list:user' + LN(),
     out: {
       ok: true,
@@ -85,7 +85,7 @@ module.exports = [
   },
 
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'update:user' + LN(),
     params: {
       handle: 'edward',
@@ -99,7 +99,7 @@ module.exports = [
   },
 
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'edward',
@@ -113,7 +113,7 @@ module.exports = [
   },
 
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
       handle: 'edward'
@@ -125,7 +125,7 @@ module.exports = [
   },
 
   {
-    print: true || print_calls,
+    print: print_calls,
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
@@ -141,7 +141,7 @@ module.exports = [
   },
 
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
       user_id: '`re0:out.user_id`',
@@ -162,7 +162,7 @@ module.exports = [
 
   // can run multiple times, custom anon fields
   {
-    print: true || print_calls,
+    print: print_calls,
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
@@ -180,7 +180,7 @@ module.exports = [
   },
 
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
       user_id: '`re0:out.user_id`',
@@ -203,7 +203,7 @@ module.exports = [
 
   // explicitly purge data
   {
-    print: true || print_calls,
+    print: print_calls,
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
@@ -220,7 +220,7 @@ module.exports = [
   },
 
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
       user_id: '`re0:out.user_id`'
@@ -232,7 +232,7 @@ module.exports = [
   },
 
   {
-    print: true || print_calls,
+    print: print_calls,
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
@@ -241,6 +241,24 @@ module.exports = [
     out: {
       ok: false,
       why: 'user-not-found'
+    }
+  },
+
+  {
+    // sanitize handle from email
+    pattern: 'register:user' + LN(),
+    print: true || print_calls,
+    params: {
+      user_data: {
+        email: 'gothic.gallifrey@example.com'
+      }
+    },
+    out: {
+      ok: true,
+      user: {
+        handle: 'gothic_gallifre',
+        email: 'gothic.gallifrey@example.com'
+      }
     }
   }
 ]
