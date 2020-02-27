@@ -631,7 +631,7 @@
           <div class="failures">0</div>
           <div class="skipped">0</div>
           <div class="test-count">25</div>
-          <div class="duration">4822</div>
+          <div class="duration">4910</div>
       </div>
       <div id="filters">
           <input type="checkbox" checked="" onchange="filter(this)" value="success" id="show-success">
@@ -654,14 +654,14 @@
               <td class="test-title">happy-test
                   
               </td>
-              <td class="test-duration">191</td>
+              <td class="test-duration">209</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">2</td>
               <td class="test-title">happy-real
                   
               </td>
-              <td class="test-duration">800</td>
+              <td class="test-duration">797</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">3</td>
@@ -675,7 +675,7 @@
               <td class="test-title">accept_msg
                   
               </td>
-              <td class="test-duration">4</td>
+              <td class="test-duration">3</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">5</td>
@@ -689,14 +689,14 @@
               <td class="test-title">clean_waiting
                   
               </td>
-              <td class="test-duration">2</td>
+              <td class="test-duration">1</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">7</td>
               <td class="test-title">handle_exit
                   
               </td>
-              <td class="test-duration">15</td>
+              <td class="test-duration">17</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">8</td>
@@ -717,7 +717,7 @@
               <td class="test-title">ensure_handle
                   
               </td>
-              <td class="test-duration">5</td>
+              <td class="test-duration">3</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">11</td>
@@ -731,42 +731,42 @@
               <td class="test-title">find_user
                   
               </td>
-              <td class="test-duration">389</td>
+              <td class="test-duration">393</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">13</td>
               <td class="test-title">make_login
                   
               </td>
-              <td class="test-duration">137</td>
+              <td class="test-duration">135</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">14</td>
               <td class="test-title">build_pass_fields
                   
               </td>
-              <td class="test-duration">368</td>
+              <td class="test-duration">385</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">15</td>
               <td class="test-title">load_user_field
                   
               </td>
-              <td class="test-duration">6</td>
+              <td class="test-duration">7</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">16</td>
               <td class="test-title">valid_handle
                   
               </td>
-              <td class="test-duration">136</td>
+              <td class="test-duration">135</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">17</td>
               <td class="test-title">valid_email
                   
               </td>
-              <td class="test-duration">136</td>
+              <td class="test-duration">135</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">18</td>
@@ -780,7 +780,7 @@
               <td class="test-title">messages
                   
               </td>
-              <td class="test-duration">1955</td>
+              <td class="test-duration">2002</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">20</td>
@@ -794,35 +794,35 @@
               <td class="test-title">happy
                   
               </td>
-              <td class="test-duration">128</td>
+              <td class="test-duration">130</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">22</td>
               <td class="test-title">export
                   
               </td>
-              <td class="test-duration">133</td>
+              <td class="test-duration">134</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">23</td>
               <td class="test-title">bad-data
                   
               </td>
-              <td class="test-duration">131</td>
+              <td class="test-duration">127</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">24</td>
               <td class="test-title">legacy-data
                   
               </td>
-              <td class="test-duration">133</td>
+              <td class="test-duration">137</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">25</td>
               <td class="test-title">handle-sanitize
                   
               </td>
-              <td class="test-duration">122</td>
+              <td class="test-duration">127</td>
           </tr>
           </tbody>
       </table>
@@ -12729,7 +12729,7 @@
                           <td class="line" data-tooltip>16</td>
                           <td class="lint empty"></td>
                           <td class="hits" data-tooltip>22</td>
-                          <td class="source">    var user_data &#x3D; msg.user_data || {}</td>
+                          <td class="source">    var user_data &#x3D; Object.assign({}, msg.user || {}, msg.user_data || {})</td>
                           
                         </tr>            <tr id="lib/register_user.js__17" class="hit">
                           <td class="line" data-tooltip>17</td>

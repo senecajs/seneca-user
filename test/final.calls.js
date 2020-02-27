@@ -249,7 +249,7 @@ module.exports = [
     pattern: 'register:user' + LN(),
     print: true || print_calls,
     params: {
-      user_data: {
+      user: {
         email: 'gothic.gallifrey@example.com'
       }
     },
