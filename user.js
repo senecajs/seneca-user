@@ -337,7 +337,7 @@ function make_intern() {
 
           handle = options.handle
             .sanitize(handle)
-            .substring(0,options.handle.maxlen)          
+            .substring(0, options.handle.maxlen)
         } else {
           handle = options.make_handle()
         }
