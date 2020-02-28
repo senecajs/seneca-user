@@ -10,6 +10,25 @@ const LN = require('seneca-msg-test').LN
 const print_calls = false
 
 module.exports = [
+  // continuity
+  {
+    pattern: 'hook:password,cmd:encrypt' + LN(),
+    print: print_calls,
+    params: {
+      pass: '1*92hmddCTd#',
+      salt: 'abe44aba97de143916a27522ab365ccb',
+      rounds: 11111
+    },
+    out: {
+      ok: true,
+      salt: 'abe44aba97de143916a27522ab365ccb',
+      //pass: 'qqq',
+    },
+    verify: (call) =>{
+      console.dir(call.out)
+    }
+  },
+
   {
     pattern: 'hook:password,cmd:encrypt' + LN(),
     print: print_calls,

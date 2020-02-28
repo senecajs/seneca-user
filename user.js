@@ -22,6 +22,8 @@ module.exports.defaults = {
     format: 'hex'
   },
 
+  pepper: '',
+  
   rounds: 11111,
 
   fields: {
@@ -247,7 +249,8 @@ function make_intern() {
 
       var res = await seneca.post('sys:user,hook:password,cmd:encrypt', {
         pass: pass,
-        salt: salt
+        salt: salt,
+        whence: 'build'
       })
 
       if (res.ok) {

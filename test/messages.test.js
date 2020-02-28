@@ -15,13 +15,16 @@ const Seneca = require('seneca')
 lab.test('messages', { timeout: 5555 }, async () => {
   var seneca = Shared.make_seneca()
 
+  var LN = SenecaMsgTest.LN
+  
   var run = SenecaMsgTest(seneca, {
     print: false,
     allow: {
       missing: true
     },
     pattern: 'sys:user',
-
+    log:false,
+    
     // NOTE: order is significant
     calls: []
       .concat(require('./register_get.calls.js'))
