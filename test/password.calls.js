@@ -22,10 +22,7 @@ module.exports = [
     out: {
       ok: true,
       salt: 'abe44aba97de143916a27522ab365ccb',
-      //pass: 'qqq',
-    },
-    verify: (call) =>{
-      console.dir(call.out)
+      pass: 'fd61a166af8a86b2e6f43415e175c3459b22741b4936c6beb71ae65d374115b5dfd89e8fae61100e1454b8bc48a18fd24bf9d0d6f316fe9791d1ca387f6b83ae',
     }
   },
 
@@ -49,6 +46,17 @@ module.exports = [
       rounds: 2
     },
     out: { ok: true, salt: 'bar', pass: Joi.string().min(32) }
+  },
+
+
+  {
+    pattern: 'hook:password,cmd:encrypt' + LN(),
+    params: {
+      password: 'foo',
+      salt: 'zed',
+      test: true,
+    },
+    out: { ok: true, salt: 'zed', pass: Joi.string().min(32) }
   },
 
   {
