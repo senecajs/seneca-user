@@ -1,3 +1,6 @@
+/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+'use strict'
+
 const Joi = require('@hapi/joi')
 
 var print_calls = false
@@ -6,7 +9,7 @@ var call = {}
 
 const Shared = require('./shared')
 
-const LN = Shared.LN
+const LN = require('seneca-msg-test').LN
 
 module.exports = [
   // user not found
@@ -614,7 +617,6 @@ module.exports = [
     }
   },
 
-
   // verify for a registration
   {
     print: print_calls,
@@ -652,7 +654,6 @@ module.exports = [
     //}
   },
 
-
   {
     print: print_calls,
     pattern: 'check:verify' + LN(),
@@ -678,7 +679,5 @@ module.exports = [
     //verify: function(call) {
     //  console.log(call.result.out.verify.data$())
     //}
-  },
-
-  
+  }
 ]

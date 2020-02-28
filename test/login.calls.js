@@ -1,3 +1,6 @@
+/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+'use strict'
+
 const Joi = require('@hapi/joi')
 
 var print_calls = false
@@ -6,7 +9,7 @@ var call = {}
 
 const Shared = require('./shared')
 
-const LN = Shared.LN
+const LN = require('seneca-msg-test').LN
 
 // NOTE: assumes register_get.calls
 

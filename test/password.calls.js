@@ -1,8 +1,11 @@
+/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+'use strict'
+
 const Joi = require('@hapi/joi')
 
 const Shared = require('./shared')
 
-const LN = Shared.LN
+const LN = require('seneca-msg-test').LN
 
 const print_calls = false
 

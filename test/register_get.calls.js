@@ -1,3 +1,6 @@
+/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+'use strict'
+
 const Assert = require('assert')
 
 const Joi = require('@hapi/joi')
@@ -6,7 +9,7 @@ var print_calls = false
 
 const Shared = require('./shared')
 
-const LN = Shared.LN
+const LN = require('seneca-msg-test').LN
 
 module.exports = [
   {

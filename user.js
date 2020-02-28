@@ -235,7 +235,6 @@ function make_intern() {
       return out
     },
 
-
     // expects normalized user data
     build_pass_fields: async function(seneca, user_data, ctx) {
       var pass = user_data.pass
@@ -516,28 +515,26 @@ function make_intern() {
       var msg_user_data = msg.user_data || {}
 
       var top_data = {}
-      var top_fields = ctx.convenience_fields.concat(['pass','password','repeat'])
-      top_fields.forEach(
-        f => null == msg[f] || (top_data[f] = msg[f])
-      )
+      var top_fields = ctx.convenience_fields.concat([
+        'pass',
+        'password',
+        'repeat'
+      ])
+      top_fields.forEach(f => null == msg[f] || (top_data[f] = msg[f]))
 
-      var user_data = Object.assign(
-        {},
-        msg_user,
-        msg_user_data,
-        top_data
-      )
+      var user_data = Object.assign({}, msg_user, msg_user_data, top_data)
 
       // password -> pass
-      if(null != user_data.password) {
+      if (null != user_data.password) {
         user_data.pass = user_data.pass || user_data.password
         delete user_data.password
       }
 
       // strip undefineds
       Object.keys(user_data).forEach(
-        k=>(void 0)===user_data[k] && (delete user_data[k]))
-      
+        k => void 0 === user_data[k] && delete user_data[k]
+      )
+
       return user_data
     }
   }

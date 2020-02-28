@@ -1,7 +1,7 @@
 {
   "name": "@seneca/user",
   "description": "User management plugin for Seneca",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "keywords": [
     "seneca",
     "user",
@@ -65,7 +65,7 @@
     "seneca-doc": "^2.1.2",
     "seneca-entity": "^7.1.0",
     "seneca-joi": "^7.0.1",
-    "seneca-msg-test": "^2.2.0",
+    "seneca-msg-test": "^2.3.0",
     "seneca-plugin-validator": "^0.6.0",
     "seneca-promisify": "^1.2.0"
   },
