@@ -612,5 +612,73 @@ module.exports = [
       ok: false,
       why: 'verify-not-valid'
     }
-  }
+  },
+
+
+  // verify for a registration
+  {
+    print: print_calls,
+    name: 'vh0',
+    pattern: 'make:verify' + LN(),
+    params: {
+      anon: true,
+      kind: 'register',
+      valid: true,
+      custom: {
+        mode: 'm01',
+        email: 'hamish@example.com',
+        info: {
+          qaz: 1
+        }
+      }
+    },
+    out: {
+      ok: true,
+      verify: {
+        kind: 'register',
+        code: Joi.string().min(16),
+        once: true,
+        used: false,
+        valid: true,
+        mode: 'm01',
+        email: 'hamish@example.com',
+        info: {
+          qaz: 1
+        }
+      }
+    }
+    //verify: function(call) {
+    //  console.log(call.result.out.verify.data$())
+    //}
+  },
+
+
+  {
+    print: print_calls,
+    pattern: 'check:verify' + LN(),
+    params: {
+      anon: true,
+      code: '`vh0:out.verify.code`'
+    },
+    out: {
+      ok: true,
+      verify: {
+        kind: 'register',
+        code: Joi.string().min(16),
+        once: true,
+        used: true,
+        valid: true,
+        mode: 'm01',
+        email: 'hamish@example.com',
+        info: {
+          qaz: 1
+        }
+      }
+    }
+    //verify: function(call) {
+    //  console.log(call.result.out.verify.data$())
+    //}
+  },
+
+  
 ]

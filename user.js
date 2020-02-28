@@ -235,10 +235,12 @@ function make_intern() {
       return out
     },
 
-    build_pass_fields: async function(seneca, msg, ctx) {
-      var pass = null != msg.pass ? msg.pass : msg.password
-      var repeat = msg.repeat // optional
-      var salt = msg.salt
+
+    // expects normalized user data
+    build_pass_fields: async function(seneca, user_data, ctx) {
+      var pass = user_data.pass
+      var repeat = user_data.repeat // optional
+      var salt = user_data.salt
 
       if ('string' === typeof repeat && repeat !== pass) {
         return { ok: false, why: 'repeat-password-mismatch' }
@@ -321,15 +323,14 @@ function make_intern() {
       return data
     },
 
-    // NOTE: modifies msg if needed to ensure consistency
-    ensure_handle: function(msg, options) {
-      var user_data = msg.user_data || msg.user || {}
-      var handle = null == msg.handle ? user_data.handle : msg.handle
+    // expects normalized user data
+    ensure_handle: function(user_data, options) {
+      var handle = user_data.handle
 
       if ('string' != typeof handle) {
-        var email = msg.email || user_data.email || null
+        var email = user_data.email
 
-        // NOTE: assumes email already validated in msg
+        // NOTE: assumes email already validated in user_data
         if (null != email) {
           handle =
             email.split('@')[0].toLowerCase() +
@@ -348,9 +349,6 @@ function make_intern() {
       if (options.handle.downcase) {
         handle = handle.toLowerCase()
       }
-
-      msg.handle = handle
-      user_data.handle = handle
 
       return handle
     },
@@ -511,28 +509,36 @@ function make_intern() {
       return { ok: true, handle: handle }
     },
 
-    // These variations are supported for better REPL DX
-    extract_pass: function(msg) {
-      var pass_data = {}
-      if ('string' === typeof msg.pass || 'string' === typeof msg.password) {
-        pass_data.pass = msg.pass || msg.password
-        pass_data.repeat = msg.repeat
-      } else if (
-        msg.user &&
-        ('string' === typeof msg.user.pass ||
-          'string' === typeof msg.user.password)
-      ) {
-        pass_data.pass = msg.user.pass || msg.user.password
-        pass_data.repeat = msg.user.repeat
-      } else if (
-        msg.user_data &&
-        ('string' === typeof msg.user_data.pass ||
-          'string' === typeof msg.user_data.password)
-      ) {
-        pass_data.pass = msg.user_data.pass || msg.user_data.password
-        pass_data.repeat = msg.user_data.repeat
+    normalize_user_data: function(msg, ctx) {
+      msg = intern.fix_nick_handle(msg, ctx.options)
+
+      var msg_user = msg.user || {}
+      var msg_user_data = msg.user_data || {}
+
+      var top_data = {}
+      var top_fields = ctx.convenience_fields.concat(['pass','password','repeat'])
+      top_fields.forEach(
+        f => null == msg[f] || (top_data[f] = msg[f])
+      )
+
+      var user_data = Object.assign(
+        {},
+        msg_user,
+        msg_user_data,
+        top_data
+      )
+
+      // password -> pass
+      if(null != user_data.password) {
+        user_data.pass = user_data.pass || user_data.password
+        delete user_data.password
       }
-      return pass_data
+
+      // strip undefineds
+      Object.keys(user_data).forEach(
+        k=>(void 0)===user_data[k] && (delete user_data[k]))
+      
+      return user_data
     }
   }
 }

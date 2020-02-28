@@ -84,7 +84,7 @@ module.exports = [
   },
 
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'check:exists' + LN(),
     params: { email: 'foo@example.com' },
     out: { ok: true, user: { email: 'foo@example.com' } }
@@ -93,7 +93,7 @@ module.exports = [
   {
     // can't register with existing email
     pattern: 'register:user' + LN(),
-    print: true || print_calls,
+    print: print_calls,
     params: {
       email: 'foo@example.com'
     },

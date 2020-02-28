@@ -247,7 +247,7 @@ module.exports = [
   {
     // sanitize handle from email
     pattern: 'register:user' + LN(),
-    print: true || print_calls,
+    print: print_calls,
     params: {
       user: {
         email: 'gothic.gallifrey@example.com'

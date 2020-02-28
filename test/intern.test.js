@@ -25,48 +25,23 @@ lab.test('ensure_handle', async () => {
 
   var msg0 = { handle: 'foo' }
   expect(intern.ensure_handle(msg0, opts0)).equal('foo')
-  expect(msg0.handle).equal('foo')
-  expect(msg0.user).not.exists()
 
   // downcasing
-  var msg0D = { handle: 'Foo' }
-  expect(intern.ensure_handle(msg0D, opts0)).equal('foo')
-  expect(msg0D.handle).equal('foo')
-  expect(msg0D.user).not.exists()
+  var ud0D = { handle: 'Foo' }
+  expect(intern.ensure_handle(ud0D, opts0)).equal('foo')
 
-  var msg1 = { user_data: { handle: 'foo' } }
-  expect(intern.ensure_handle(msg1, opts0)).equal('foo')
-  expect(msg1.handle).equal('foo')
-  expect(msg1.user_data.handle).equal('foo')
+  var ud1 = { handle: 'foo' }
+  expect(intern.ensure_handle(ud1, opts0)).equal('foo')
 
-  var msg2 = { email: 'foo@example.com' }
-  expect(intern.ensure_handle(msg2, opts0)).startsWith('foo')
-  expect(msg2.handle).startsWith('foo')
-  expect(msg2.handle.length).equal(7)
-
-  var msg3 = { user_data: { email: 'foo@example.com' } }
-  expect(intern.ensure_handle(msg3, opts0)).startsWith('foo')
-  expect(msg3.handle).startsWith('foo')
-  expect(msg3.handle.length).equal(7)
-
-  // convenience fields have precedence, and override
-  var msg4 = { handle: 'bar', user_data: { handle: 'foo' } }
-  expect(intern.ensure_handle(msg4, opts0)).equal('bar')
-  expect(msg4.handle).equal('bar')
-  expect(msg4.user_data.handle).equal('bar')
-
-  // user shortcut prop
-  var msg5 = { handle: 'bar', user: { handle: 'foo' } }
-  expect(intern.ensure_handle(msg5, opts0)).equal('bar')
-  expect(msg5.handle).equal('bar')
-  expect(msg5.user.handle).equal('bar')
+  var ud2 = { email: 'foo@example.com' }
+  expect(intern.ensure_handle(ud2, opts0)).startsWith('foo')
 
   var opts1 = Seneca.util.deep({}, User.defaults, {
     handle: { downcase: false }
   })
 
-  var msg6 = { handle: 'Foo' }
-  expect(intern.ensure_handle(msg6, opts1)).equal('Foo')
+  var ud6 = { handle: 'Foo' }
+  expect(intern.ensure_handle(ud6, opts1)).equal('Foo')
 })
 
 lab.test('fix_nick_handle', async () => {
@@ -312,7 +287,7 @@ lab.test('build_pass_fields', async () => {
     details: { password_length: 3, minimum: 8 }
   })
 
-  var msg2 = { password: 'abcabcabc' }
+  var msg2 = { pass: 'abcabcabc' }
   var pf2 = await intern.build_pass_fields(si, msg2, ctx)
   expect(pf2.ok).true()
   expect(pf2.fields.pass.length).above(32)
@@ -541,37 +516,56 @@ lab.test('valid_email', async () => {
   })
 })
 
-lab.test('extract_pass', async () => {
-  expect(intern.extract_pass({ pass: 'foo' })).equals({
-    pass: 'foo',
-    repeat: void 0
-  })
-  expect(intern.extract_pass({ password: 'foo' })).equals({
-    pass: 'foo',
-    repeat: void 0
-  })
-  expect(intern.extract_pass({ user: { pass: 'foo' } })).equals({
-    pass: 'foo',
-    repeat: void 0
-  })
-  expect(intern.extract_pass({ user: { password: 'foo' } })).equals({
-    pass: 'foo',
-    repeat: void 0
-  })
-  expect(intern.extract_pass({ user_data: { pass: 'foo' } })).equals({
-    pass: 'foo',
-    repeat: void 0
-  })
-  expect(intern.extract_pass({ user_data: { password: 'foo' } })).equals({
-    pass: 'foo',
-    repeat: void 0
-  })
 
-  expect(intern.extract_pass({ pass: 'foo', repeat: 'bar' })).equals({
-    pass: 'foo',
-    repeat: 'bar'
-  })
+lab.test('normalize_user_data', async () => {
+  var si = await make_seneca().ready()
+  var ctx = intern.make_ctx({}, si.find_plugin('user').options)
+  
+  var nud = (x)=>intern.normalize_user_data(x,ctx)
+
+  // convenience field
+  var r0 = {name:'a'}
+  expect(nud({name:'a'})).equal(r0)
+  expect(nud({user:{name:'a'}})).equal(r0)
+  expect(nud({user_data:{name:'a'}})).equal(r0)
+  expect(nud({name:'a',user_data:{name:'c'}})).equal(r0)
+  expect(nud({user:{name:'b'},user_data:{name:'a'}})).equal(r0)
+  expect(nud({name:'a',user:{name:'b'},user_data:{name:'c'}})).equal(r0)
+  expect(nud({name:'a',email:void 0})).equal(r0)
+  
+  // normal field
+  var r1a = {foo:1}
+  var r1b = {}
+  expect(nud({foo:3})).equal(r1b)
+  expect(nud({user:{foo:1}})).equal(r1a)
+  expect(nud({user_data:{foo:1}})).equal(r1a)
+  expect(nud({foo:2,user_data:{foo:1}})).equal(r1a)
+  expect(nud({user:{foo:2},user_data:{foo:1}})).equal(r1a)
+  expect(nud({foo:3,user:{foo:2},user_data:{foo:1}})).equal(r1a)
+  expect(nud({foo:3,bar:undefined})).equal(r1b)
+  expect(nud({user:{foo:1,bar:undefined}})).equal(r1a)
+  
+  // pass field
+  var r2 = {pass:'a'}
+  expect(nud({pass:'a'})).equal(r2)
+  expect(nud({user:{pass:'a'}})).equal(r2)
+  expect(nud({user_data:{pass:'a'}})).equal(r2)
+  expect(nud({pass:'a',user_data:{pass:'c'}})).equal(r2)
+  expect(nud({user:{pass:'b'},user_data:{pass:'a'}})).equal(r2)
+  expect(nud({pass:'a',user:{pass:'b'},user_data:{pass:'c'}})).equal(r2)
+
+  // password -> pass
+  var r3 = {pass:'a'}
+  expect(nud({password:'a'})).equal(r3)
+  expect(nud({user:{password:'a'}})).equal(r3)
+  expect(nud({user_data:{password:'a'}})).equal(r3)
+  expect(nud({password:'a',user_data:{password:'c'}})).equal(r3)
+  expect(nud({user:{password:'b'},user_data:{password:'a'}})).equal(r3)
+  expect(nud({password:'a',user:{password:'b'},user_data:{password:'c'}})).equal(r3)
+  expect(nud({password:'b',pass:'a'})).equal(r3)
+  
 })
+
 
 function make_seneca() {
   var seneca = Seneca({ legacy: false })
