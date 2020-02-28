@@ -23,7 +23,7 @@ module.exports.defaults = {
   },
 
   pepper: '',
-  
+
   rounds: 11111,
 
   fields: {
