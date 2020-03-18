@@ -145,7 +145,7 @@ module.exports = [
     params: {
       handle: 'cathy'
     },
-    out: { ok: false, handle: 'cathy', why:'handle-exists' }
+    out: { ok: false, handle: 'cathy', why: 'handle-exists' }
   },
 
   // check handle - bad
@@ -155,7 +155,7 @@ module.exports = [
     params: {
       handle: 'cathy!'
     },
-    out: { ok: false, handle: 'cathy!', why:'invalid-chars' }
+    out: { ok: false, handle: 'cathy!', why: 'invalid-chars' }
   },
 
   {
