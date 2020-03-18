@@ -18,6 +18,11 @@ lab.test('happy', async () => {
   var si = Shared.make_seneca()
   await si.ready()
   expect(si.find_plugin('user')).exists()
+
+  // double load works
+  si.use('..')
+  await si.ready()
+  expect(si.find_plugin('user')).exists()
 })
 
 lab.test('export', async () => {

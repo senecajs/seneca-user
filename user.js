@@ -88,6 +88,7 @@ function user(options) {
     .message('change:handle', intern.make_msg('change_handle', ctx))
     .message('change:email', intern.make_msg('change_email', ctx))
 
+    .message('check:handle', intern.make_msg('check_handle', ctx))
     .message('check:verify', intern.make_msg('check_verify', ctx))
     .message('check:exists', intern.make_msg('check_exists', ctx))
 

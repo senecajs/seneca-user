@@ -56,17 +56,17 @@
   },
   "dependencies": {
     "nid": "^1.1.0",
-    "uuid": "^7.0.1"
+    "uuid": "^7.0.2"
   },
   "devDependencies": {
     "coveralls": "^3.0.9",
     "prettier": "^1.19.1",
-    "seneca": "^3.20.1",
-    "seneca-doc": "^2.1.2",
-    "seneca-entity": "^7.1.0",
-    "seneca-joi": "^7.0.1",
-    "seneca-msg-test": "^2.3.0",
-    "seneca-plugin-validator": "^0.6.0",
+    "seneca": "^3.20.2",
+    "seneca-doc": "^2.1.3",
+    "seneca-entity": "^7.1.1",
+    "seneca-joi": "^7.0.2",
+    "seneca-msg-test": "^2.4.0",
+    "seneca-plugin-validator": "^0.6.1",
     "seneca-promisify": "^1.2.0"
   },
   "repository": {

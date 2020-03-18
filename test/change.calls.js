@@ -128,6 +128,36 @@ module.exports = [
     }
   },
 
+  // check handle is valid and available
+  {
+    print: print_calls,
+    pattern: 'check:handle' + LN(),
+    params: {
+      handle: 'catherine'
+    },
+    out: { ok: true, handle: 'catherine' }
+  },
+
+  // check handle - used
+  {
+    print: true || print_calls,
+    pattern: 'check:handle' + LN(),
+    params: {
+      handle: 'cathy'
+    },
+    out: { ok: false, handle: 'cathy', why:'handle-exists' }
+  },
+
+  // check handle - bad
+  {
+    print: true || print_calls,
+    pattern: 'check:handle' + LN(),
+    params: {
+      handle: 'cathy!'
+    },
+    out: { ok: false, handle: 'cathy!', why:'invalid-chars' }
+  },
+
   {
     print: print_calls,
     pattern: 'change:handle' + LN(),
