@@ -139,8 +139,8 @@ function make_intern() {
 
       return Object.assign(
         {
-          intern,
           options,
+          intern,
 
           // Standard entity canons
           sys_user: 'sys/user',
