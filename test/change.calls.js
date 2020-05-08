@@ -140,7 +140,7 @@ module.exports = [
 
   // check handle - used
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'check:handle' + LN(),
     params: {
       handle: 'cathy'
@@ -150,7 +150,7 @@ module.exports = [
 
   // check handle - bad
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'check:handle' + LN(),
     params: {
       handle: 'cathy!'
@@ -214,7 +214,7 @@ module.exports = [
   // change email
 
   {
-    print: true || print_calls,
+    print: print_calls,
     pattern: 'change:email' + LN(),
     params: {
       email: 'cathy@example.com',

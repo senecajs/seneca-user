@@ -15,14 +15,9 @@ const Seneca = require('seneca')
 lab.test('messages', { timeout: 5555 }, async () => {
   var seneca = Shared.make_seneca()
 
-  var LN = SenecaMsgTest.LN
-
   var run = SenecaMsgTest(seneca, {
-    print: false,
-    allow: {
-      missing: true
-    },
     pattern: 'sys:user',
+    print: false,
     log: false,
 
     // NOTE: order is significant
@@ -37,6 +32,7 @@ lab.test('messages', { timeout: 5555 }, async () => {
       .concat(require('./final.calls.js'))
   })
 
+  // TODO: seneca-msg-test should handle this
   try {
     await run()
   } finally {
