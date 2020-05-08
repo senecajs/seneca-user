@@ -37,7 +37,7 @@ lab.test('ensure_handle', async () => {
   expect(intern.ensure_handle(ud2, opts0)).startsWith('foo')
 
   var opts1 = Seneca.util.deep({}, User.defaults, {
-    handle: { downcase: false }
+    handle: { downcase: false },
   })
 
   var ud6 = { handle: 'Foo' }
@@ -52,28 +52,28 @@ lab.test('fix_nick_handle', async () => {
 
   expect(intern.fix_nick_handle({ handle: 'foo' }, o)).equal({ handle: 'foo' })
   expect(intern.fix_nick_handle({ user_data: { handle: 'foo' } }, o)).equal({
-    user_data: { handle: 'foo' }
+    user_data: { handle: 'foo' },
   })
   expect(intern.fix_nick_handle({ user: { handle: 'foo' } }, o)).equal({
-    user: { handle: 'foo' }
+    user: { handle: 'foo' },
   })
   expect(intern.fix_nick_handle({ q: { handle: 'foo' } }, o)).equal({
-    q: { handle: 'foo' }
+    q: { handle: 'foo' },
   })
 
   expect(intern.fix_nick_handle({ nick: 'foo' }, o)).equal({ handle: 'foo' })
   expect(intern.fix_nick_handle({ nick: 'Foo' }, o)).equal({ handle: 'foo' })
   expect(intern.fix_nick_handle({ user_data: { nick: 'foo' } }, o)).equal({
-    user_data: { handle: 'foo' }
+    user_data: { handle: 'foo' },
   })
   expect(intern.fix_nick_handle({ user: { nick: 'foo' } }, o)).equal({
-    user: { handle: 'foo' }
+    user: { handle: 'foo' },
   })
   expect(
     intern.fix_nick_handle({ user: { nick: 'bar', handle: 'foo' } }, o)
   ).equal({ user: { handle: 'foo' } })
   expect(intern.fix_nick_handle({ q: { nick: 'foo' } }, o)).equal({
-    q: { handle: 'foo' }
+    q: { handle: 'foo' },
   })
 
   expect(intern.fix_nick_handle({ user_data: {} }, o)).equal({ user_data: {} })
@@ -83,13 +83,13 @@ lab.test('fix_nick_handle', async () => {
   var o2 = { handle: { downcase: false } }
   expect(intern.fix_nick_handle({ nick: 'Foo' }, o2)).equal({ handle: 'Foo' })
   expect(intern.fix_nick_handle({ user: { nick: 'Foo' } }, o2)).equal({
-    user: { handle: 'Foo' }
+    user: { handle: 'Foo' },
   })
   expect(intern.fix_nick_handle({ user_data: { nick: 'Foo' } }, o2)).equal({
-    user_data: { handle: 'Foo' }
+    user_data: { handle: 'Foo' },
   })
   expect(intern.fix_nick_handle({ q: { nick: 'Foo' } }, o2)).equal({
-    q: { handle: 'Foo' }
+    q: { handle: 'Foo' },
   })
 })
 
@@ -98,8 +98,8 @@ lab.test('find_user', async () => {
   var alice = await si.post('sys:user,register:user', {
     user_data: {
       handle: 'alice',
-      foo: 1
-    }
+      foo: 1,
+    },
   })
   expect(alice.ok).true()
 
@@ -107,8 +107,8 @@ lab.test('find_user', async () => {
     user_data: {
       handle: 'bob',
       foo: 1,
-      bar: 2
-    }
+      bar: 2,
+    },
   })
   expect(bob.ok).true()
 
@@ -122,12 +122,12 @@ lab.test('find_user', async () => {
     entity$: {
       base: 'sys',
       name: 'user',
-      zone: undefined
+      zone: undefined,
     },
     handle: 'alice',
     id: alice.user.id,
     active: true,
-    name: 'alice'
+    name: 'alice',
   })
   expect(found.why).undefined()
 
@@ -139,12 +139,12 @@ lab.test('find_user', async () => {
     entity$: {
       base: 'sys',
       name: 'user',
-      zone: undefined
+      zone: undefined,
     },
     handle: 'bob',
     id: bob.user.id,
     active: true,
-    name: 'bob'
+    name: 'bob',
   })
   expect(found.why).undefined()
 
@@ -206,8 +206,8 @@ lab.test('make_login', async () => {
   var alice = await si.post('sys:user,register:user', {
     user_data: {
       handle: 'alice',
-      email: 'alice@example.com'
-    }
+      email: 'alice@example.com',
+    },
   })
 
   // onetime login
@@ -217,7 +217,7 @@ lab.test('make_login', async () => {
     ctx: intern.make_ctx({}, si.find_plugin('user').options),
     why: 'onetime-test-0',
     login_data: { foo: 1 },
-    onetime: true
+    onetime: true,
   }
 
   var login = await intern.make_login(spec)
@@ -229,7 +229,7 @@ lab.test('make_login', async () => {
     user_id: alice.user.id,
     active: true,
     why: 'onetime-test-0',
-    onetime_active: true
+    onetime_active: true,
   })
 
   expect(login.token).string()
@@ -253,7 +253,7 @@ lab.test('make_login', async () => {
     seneca: si,
     user: alice.user,
     ctx: intern.make_ctx({}, si.find_plugin('user').options),
-    why: 'auto-test-0'
+    why: 'auto-test-0',
   }
 
   var login = await intern.make_login(spec)
@@ -263,7 +263,7 @@ lab.test('make_login', async () => {
     email: 'alice@example.com',
     user_id: alice.user.id,
     active: true,
-    why: 'auto-test-0'
+    why: 'auto-test-0',
   })
   expect(login.onetime_active).not.exists()
 })
@@ -284,7 +284,7 @@ lab.test('build_pass_fields', async () => {
   expect(pf1).equal({
     ok: false,
     why: 'password-too-short',
-    details: { password_length: 3, minimum: 8 }
+    details: { password_length: 3, minimum: 8 },
   })
 
   var msg2 = { pass: 'abcabcabc' }
@@ -314,7 +314,7 @@ lab.test('build_pass_fields', async () => {
   var pf6 = await intern.build_pass_fields(si, msg6, ctx)
   expect(pf6).equal({
     ok: false,
-    why: 'repeat-password-mismatch'
+    why: 'repeat-password-mismatch',
   })
 })
 
@@ -324,36 +324,36 @@ lab.test('load_user_field', () => {
   expect(intern.load_user_fields({ a: 1 })).equal({ a: 1, q: { fields$: [] } })
   expect(intern.load_user_fields({ a: 1 }, null)).equal({
     a: 1,
-    q: { fields$: [] }
+    q: { fields$: [] },
   })
   expect(intern.load_user_fields({ a: 1 }, '')).equal({
     a: 1,
-    q: { fields$: [] }
+    q: { fields$: [] },
   })
   expect(intern.load_user_fields({ a: 1 }, 1)).equal({
     a: 1,
-    q: { fields$: [] }
+    q: { fields$: [] },
   })
   expect(intern.load_user_fields({ a: 1 }, 'x')).equal({
     a: 1,
-    q: { fields$: ['x'] }
+    q: { fields$: ['x'] },
   })
   expect(intern.load_user_fields({ a: 1 }, 'x', 'y')).equal({
     a: 1,
-    q: { fields$: ['x', 'y'] }
+    q: { fields$: ['x', 'y'] },
   })
   expect(intern.load_user_fields({ a: 1 }, ['x', 'y'])).equal({
     a: 1,
-    q: { fields$: ['x', 'y'] }
+    q: { fields$: ['x', 'y'] },
   })
   expect(intern.load_user_fields({ a: 1 }, 'x', ['y', 'z'])).equal({
     a: 1,
-    q: { fields$: ['x', 'y', 'z'] }
+    q: { fields$: ['x', 'y', 'z'] },
   })
 
   expect(intern.load_user_fields({ a: 1, q: {} }, 'x', ['y', 'z'])).equal({
     a: 1,
-    q: { fields$: ['x', 'y', 'z'] }
+    q: { fields$: ['x', 'y', 'z'] },
   })
   expect(
     intern.load_user_fields({ a: 1, q: { k: 1 } }, 'x', ['y', 'z'])
@@ -372,20 +372,20 @@ lab.test('load_user_field', () => {
   expect(
     intern.load_user_fields({ a: 1, q: { k: 1, fields$: ['q'] } }, 'x', [
       'y',
-      'z'
+      'z',
     ])
   ).equal({ a: 1, q: { k: 1, fields$: ['q', 'x', 'y', 'z'] } })
 
   expect(
     intern.load_user_fields({ a: 1, q: { fields$: ['q', 'x'] } }, 'x', [
       'y',
-      'z'
+      'z',
     ])
   ).equal({ a: 1, q: { fields$: ['q', 'x', 'y', 'z'] } })
   expect(
     intern.load_user_fields({ a: 1, q: { k: 1, fields$: ['q', 'x'] } }, 'x', [
       'y',
-      'z'
+      'z',
     ])
   ).equal({ a: 1, q: { k: 1, fields$: ['q', 'x', 'y', 'z'] } })
 })
@@ -404,16 +404,16 @@ lab.test('valid_handle', async () => {
     ok: false,
     why: 'disallowed',
     details: {
-      handle_base64: 'c2hpdA=='
-    }
+      handle_base64: 'c2hpdA==',
+    },
   })
 
   expect(await intern.valid_handle(si, 'guest', ctx)).equals({
     ok: false,
     why: 'reserved',
     details: {
-      handle: 'guest'
-    }
+      handle: 'guest',
+    },
   })
 
   expect(await intern.valid_handle(si, 'aa', ctx)).equals({
@@ -422,8 +422,8 @@ lab.test('valid_handle', async () => {
     details: {
       handle: 'aa',
       handle_length: 2,
-      minimum: 3
-    }
+      minimum: 3,
+    },
   })
 
   expect(await intern.valid_handle(si, '0123456789123456', ctx)).equals({
@@ -432,57 +432,57 @@ lab.test('valid_handle', async () => {
     details: {
       handle: '0123456789123456',
       handle_length: 16,
-      maximum: 15
-    }
+      maximum: 15,
+    },
   })
 
   expect(await intern.valid_handle(si, 'aaa', ctx)).equals({
     handle: 'aaa',
-    ok: true
+    ok: true,
   })
 
   expect(await intern.valid_handle(si, '012345678912345', ctx)).equals({
     handle: '012345678912345',
-    ok: true
+    ok: true,
   })
 
   expect(await intern.valid_handle(si, null, ctx)).equals({
     ok: false,
     why: 'not-string',
     details: {
-      handle: null
-    }
+      handle: null,
+    },
   })
 
   expect(await intern.valid_handle(si, {}, ctx)).equals({
     ok: false,
     why: 'not-string',
     details: {
-      handle: {}
-    }
+      handle: {},
+    },
   })
 
   expect(await intern.valid_handle(si, 'AAA', ctx)).equals({
     handle: 'aaa',
-    ok: true
+    ok: true,
   })
 
   expect(await intern.valid_handle(si, '***', ctx)).equals({
     ok: false,
     why: 'invalid-chars',
-    details: { handle: '***' }
+    details: { handle: '***' },
   })
 
   var ctx0 = ctx
   ctx0.options = si.util.deep({}, ctx.options, {
     handle: {
-      must_match: handle => handle.match(/^[A-Za-z0-9_]+$/),
-      downcase: false
-    }
+      must_match: (handle) => handle.match(/^[A-Za-z0-9_]+$/),
+      downcase: false,
+    },
   })
   expect(await intern.valid_handle(si, 'AAA', ctx0)).equals({
     handle: 'AAA',
-    ok: true
+    ok: true,
   })
 })
 
@@ -496,23 +496,23 @@ lab.test('valid_email', async () => {
   expect(await intern.valid_email(si, 'aaa@example.com', ctx)).equals({
     ok: true,
     email: 'aaa@example.com',
-    why: null
+    why: null,
   })
 
   expect(await intern.valid_email(si, '@example.com', ctx)).equals({
     ok: false,
     email: '@example.com',
-    why: 'email-invalid-format'
+    why: 'email-invalid-format',
   })
 
   var alice = await si.post('sys:user,register:user', {
-    email: 'alice@example.com'
+    email: 'alice@example.com',
   })
 
   expect(await intern.valid_email(si, 'alice@example.com', ctx)).equals({
     ok: false,
     email: 'alice@example.com',
-    why: 'email-exists'
+    why: 'email-exists',
   })
 })
 
@@ -520,7 +520,7 @@ lab.test('normalize_user_data', async () => {
   var si = await make_seneca().ready()
   var ctx = intern.make_ctx({}, si.find_plugin('user').options)
 
-  var nud = x => intern.normalize_user_data(x, ctx)
+  var nud = (x) => intern.normalize_user_data(x, ctx)
 
   // convenience field
   var r0 = { name: 'a' }
@@ -570,7 +570,7 @@ lab.test('normalize_user_data', async () => {
     nud({
       password: 'a',
       user: { password: 'b' },
-      user_data: { password: 'c' }
+      user_data: { password: 'c' },
     })
   ).equal(r3)
   expect(nud({ password: 'b', pass: 'a' })).equal(r3)

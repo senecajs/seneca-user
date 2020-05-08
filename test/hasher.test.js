@@ -11,8 +11,8 @@ var Hasher = require('../lib/hasher')
 
 lab.test('happy-test', async () => {
   var seneca = Seneca().test()
-  return new Promise(resolve => {
-    Hasher(seneca, { src: 'foo', test: true }, function(err, out) {
+  return new Promise((resolve) => {
+    Hasher(seneca, { src: 'foo', test: true }, function (err, out) {
       expect(err).not.exists()
       expect(out.hash).string()
       seneca.close(resolve)
@@ -22,14 +22,14 @@ lab.test('happy-test', async () => {
 
 lab.test('happy-real', { timeout: 5555 }, async () => {
   var seneca = Seneca().test()
-  return new Promise(resolve => {
-    setTimeout(function() {
-      Hasher(seneca, { src: 'foo', interval: 1111 }, function(err, out1) {
+  return new Promise((resolve) => {
+    setTimeout(function () {
+      Hasher(seneca, { src: 'foo', interval: 1111 }, function (err, out1) {
         //console.log('AAA',err,out1)
         expect(err).not.exists()
         expect(out1.hash).string()
 
-        Hasher(seneca, { src: 'bar', interval: 1111 }, function(err, out2) {
+        Hasher(seneca, { src: 'bar', interval: 1111 }, function (err, out2) {
           //console.log('BBB',err,out2)
           expect(err).not.exists()
           expect(out1.hash).string()
@@ -85,9 +85,9 @@ lab.test('handle_message', async () => {
   Hasher.make_handle_message({})({})
   Hasher.make_handle_message({})({ id: 1 })
   Hasher.make_handle_message({
-    2: function(err, out) {
+    2: function (err, out) {
       expect(err).not.exists()
       expect(out.hash).equals('h0')
-    }
+    },
   })({ id: 2, hash: 'h0' })
 })

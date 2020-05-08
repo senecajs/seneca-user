@@ -17,22 +17,22 @@ module.exports = [
     name: 'uf0',
     pattern: 'register:user' + LN(),
     params: {
-      email: 'foo@example.com'
+      email: 'foo@example.com',
     },
     out: {
       ok: true,
       user: {
         email: 'foo@example.com',
-        handle: Joi.string().length(7)
-      }
-    }
+        handle: Joi.string().length(7),
+      },
+    },
   },
 
   // get:user without query returns nothing
   {
     pattern: 'get:user' + LN(),
     params: {},
-    out: { ok: false }
+    out: { ok: false },
   },
 
   //
@@ -40,7 +40,7 @@ module.exports = [
     print: print_calls,
     pattern: 'get:user' + LN(),
     params: { handle: '' },
-    err: { code: 'act_invalid_msg' }
+    err: { code: 'act_invalid_msg' },
   },
 
   // use convenience params
@@ -48,7 +48,7 @@ module.exports = [
     print: print_calls,
     pattern: 'get:user' + LN(),
     params: { id: '`uf0:out.user.id`' },
-    out: { ok: true, user: { email: 'foo@example.com' } }
+    out: { ok: true, user: { email: 'foo@example.com' } },
   },
 
   // `user_id` is an alias for `id`
@@ -56,41 +56,41 @@ module.exports = [
     print: print_calls,
     pattern: 'get:user' + LN(),
     params: { user_id: '`uf0:out.user.id`' },
-    out: { ok: true, user: { email: 'foo@example.com' } }
+    out: { ok: true, user: { email: 'foo@example.com' } },
   },
 
   {
     pattern: 'get:user' + LN(),
     params: { email: 'foo@example.com' },
-    out: { ok: true, user: { email: 'foo@example.com' } }
+    out: { ok: true, user: { email: 'foo@example.com' } },
   },
 
   // use a proper query
   {
     pattern: 'get:user' + LN(),
     params: { q: { email: 'foo@example.com' } },
-    out: { ok: true, user: { email: 'foo@example.com' } }
+    out: { ok: true, user: { email: 'foo@example.com' } },
   },
 
   // use query-by-example
   {
     pattern: 'get:user' + LN(),
     params: { user: { email: 'foo@example.com' } },
-    out: { ok: true, user: { email: 'foo@example.com' } }
+    out: { ok: true, user: { email: 'foo@example.com' } },
   },
 
   // use query-by-example
   {
     pattern: 'get:user' + LN(),
     params: { user_data: { email: 'foo@example.com' } },
-    out: { ok: true, user: { email: 'foo@example.com' } }
+    out: { ok: true, user: { email: 'foo@example.com' } },
   },
 
   {
     print: print_calls,
     pattern: 'check:exists' + LN(),
     params: { email: 'foo@example.com' },
-    out: { ok: true, user: { email: 'foo@example.com' } }
+    out: { ok: true, user: { email: 'foo@example.com' } },
   },
 
   {
@@ -98,13 +98,13 @@ module.exports = [
     pattern: 'register:user' + LN(),
     print: print_calls,
     params: {
-      email: 'foo@example.com'
+      email: 'foo@example.com',
     },
     out: {
       ok: false,
       why: 'email-exists',
-      details: { email: 'foo@example.com' }
-    }
+      details: { email: 'foo@example.com' },
+    },
   },
 
   {
@@ -112,7 +112,7 @@ module.exports = [
     print: print_calls,
     pattern: 'register:user' + LN(),
     params: {
-      handle: 'al'
+      handle: 'al',
     },
     out: {
       ok: false,
@@ -120,9 +120,9 @@ module.exports = [
       details: {
         handle: 'al',
         handle_length: 2,
-        minimum: 3
-      }
-    }
+        minimum: 3,
+      },
+    },
   },
 
   {
@@ -132,10 +132,10 @@ module.exports = [
     params: {
       handle: 'alice',
       user_data: {
-        custom_field0: 'value0'
-      }
+        custom_field0: 'value0',
+      },
     },
-    out: { ok: true, user: { handle: 'alice', custom_field0: 'value0' } }
+    out: { ok: true, user: { handle: 'alice', custom_field0: 'value0' } },
   },
 
   {
@@ -143,30 +143,30 @@ module.exports = [
     print: print_calls,
     pattern: 'register:user' + LN(),
     params: {
-      handle: 'alice'
+      handle: 'alice',
     },
-    out: { ok: false, why: 'handle-exists', details: { handle: 'alice' } }
+    out: { ok: false, why: 'handle-exists', details: { handle: 'alice' } },
   },
 
   // use convenience params
   {
     pattern: 'get:user' + LN(),
     params: { handle: 'alice' },
-    out: { ok: true, user: { handle: 'alice' } }
+    out: { ok: true, user: { handle: 'alice' } },
   },
 
   // legacy
   {
     pattern: 'get:user' + LN(),
     params: { q: { nick: 'alice' } },
-    out: { ok: true, user: { handle: 'alice' } }
+    out: { ok: true, user: { handle: 'alice' } },
   },
 
   // use a proper query
   {
     pattern: 'get:user' + LN(),
     params: { q: { handle: 'alice' } },
-    out: { ok: true, user: { handle: 'alice' } }
+    out: { ok: true, user: { handle: 'alice' } },
   },
 
   {
@@ -176,10 +176,13 @@ module.exports = [
       handle: 'bob',
       user_data: {
         email: 'bob@example.com',
-        foo: 1
-      }
+        foo: 1,
+      },
     },
-    out: { ok: true, user: { handle: 'bob', email: 'bob@example.com', foo: 1 } }
+    out: {
+      ok: true,
+      user: { handle: 'bob', email: 'bob@example.com', foo: 1 },
+    },
   },
 
   // custom fields query
@@ -187,28 +190,34 @@ module.exports = [
     print: false,
     pattern: 'get:user' + LN(),
     params: { handle: 'bob', fields: ['foo'] },
-    out: { ok: true, user: { handle: 'bob', email: 'bob@example.com', foo: 1 } }
+    out: {
+      ok: true,
+      user: { handle: 'bob', email: 'bob@example.com', foo: 1 },
+    },
   },
 
   {
     print: false,
     pattern: 'get:user' + LN(),
     params: { q: { handle: 'bob', fields$: ['foo'] } },
-    out: { ok: true, user: { handle: 'bob', email: 'bob@example.com', foo: 1 } }
+    out: {
+      ok: true,
+      user: { handle: 'bob', email: 'bob@example.com', foo: 1 },
+    },
   },
 
   {
     print: false,
     pattern: 'get:user' + LN(),
     params: { q: { handle: 'not-bob', fields$: ['foo'] } },
-    out: { ok: false, user: null }
+    out: { ok: false, user: null },
   },
 
   {
     print: false,
     pattern: 'get:user' + LN(),
     params: { q: { fields$: ['foo'] } },
-    out: { ok: false, user: null }
+    out: { ok: false, user: null },
   },
 
   {
@@ -218,10 +227,10 @@ module.exports = [
       nick: 'cathy',
       email: 'cathy@example.com',
       user_data: {
-        nick: 'cathy-overridden'
-      }
+        nick: 'cathy-overridden',
+      },
     },
-    out: { ok: true, user: { handle: 'cathy' } }
+    out: { ok: true, user: { handle: 'cathy' } },
   },
 
   {
@@ -232,10 +241,10 @@ module.exports = [
       handle: 'derek',
       user_data: {
         nick: 'derek-nope-nope',
-        handle: 'derek-overridden'
-      }
+        handle: 'derek-overridden',
+      },
     },
-    out: { ok: true, user: { handle: 'derek' } }
+    out: { ok: true, user: { handle: 'derek' } },
   },
 
   // convenience params nick->handle
@@ -243,25 +252,25 @@ module.exports = [
     pattern: 'get:user' + LN(),
     params: {
       nick: 'alice',
-      q: { handle: 'alice-nope', nick: 'alice-overridden' }
+      q: { handle: 'alice-nope', nick: 'alice-overridden' },
     },
-    out: { ok: true, user: { handle: 'alice' } }
+    out: { ok: true, user: { handle: 'alice' } },
   },
 
   {
     // always generate a handle
     pattern: 'register:user' + LN(),
     params: {},
-    out: { ok: true, user: { handle: Joi.string().length(12) } }
+    out: { ok: true, user: { handle: Joi.string().length(12) } },
   },
 
   {
     // always generate a handle
     pattern: 'register:user' + LN(),
     params: {
-      user_data: {}
+      user_data: {},
     },
-    out: { ok: true, user: { handle: Joi.string().length(12) } }
+    out: { ok: true, user: { handle: Joi.string().length(12) } },
   },
 
   {
@@ -269,24 +278,24 @@ module.exports = [
     pattern: 'register:user' + LN(),
     params: {
       user_data: {
-        email: 'example.com'
-      }
+        email: 'example.com',
+      },
     },
-    err: { code: 'act_invalid_msg' }
+    err: { code: 'act_invalid_msg' },
   },
 
   {
     // always generate a handle
     pattern: 'register:user' + LN(),
     params: {
-      user_data: {}
+      user_data: {},
     },
     out: {
       ok: true,
       user: {
-        handle: Joi.string().length(12)
-      }
-    }
+        handle: Joi.string().length(12),
+      },
+    },
   },
 
   {
@@ -296,26 +305,26 @@ module.exports = [
       user_data: {
         name: 'Adam Ant',
         pass: 'foo',
-        repeat: 'foo'
-      }
+        repeat: 'foo',
+      },
     },
     out: {
       ok: true,
       user: {
         name: 'Adam Ant',
-        handle: Joi.string().length(12)
-      }
+        handle: Joi.string().length(12),
+      },
     },
-    verify: function(call) {
+    verify: function (call) {
       Assert(call.out.user.repeat === void 0)
-    }
+    },
   },
 
   {
     pattern: 'register:user' + LN(),
     params: {
-      handle: ''
+      handle: '',
     },
-    err: { code: 'act_invalid_msg' }
-  }
+    err: { code: 'act_invalid_msg' },
+  },
 ]

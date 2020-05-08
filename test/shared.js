@@ -14,9 +14,9 @@ module.exports = {
       .use('entity')
       .use('..', {
         password: {
-          minlen: 3
-        }
+          minlen: 3,
+        },
       })
     return seneca
-  }
+  },
 }

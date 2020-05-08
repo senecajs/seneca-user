@@ -18,11 +18,11 @@ module.exports = [
     pattern: 'change:pass' + LN(),
     params: {
       user: {
-        email: 'cathy@example.com'
+        email: 'cathy@example.com',
       },
-      generate: true
+      generate: true,
     },
-    out: { ok: true, pass: Joi.string().min(12), user: { handle: 'cathy' } }
+    out: { ok: true, pass: Joi.string().min(12), user: { handle: 'cathy' } },
   },
 
   // not a user
@@ -31,11 +31,11 @@ module.exports = [
     pattern: 'change:pass' + LN(),
     params: {
       user: {
-        email: 'not-cathy@example.com'
+        email: 'not-cathy@example.com',
       },
-      generate: true
+      generate: true,
     },
-    out: { ok: false, why: 'user-not-found' }
+    out: { ok: false, why: 'user-not-found' },
   },
 
   // by repeat password
@@ -44,12 +44,12 @@ module.exports = [
     pattern: 'change:pass' + LN(),
     params: {
       q: {
-        email: 'cathy@example.com'
+        email: 'cathy@example.com',
       },
       password: 'cathy-pass-01',
-      repeat: 'cathy-pass-01'
+      repeat: 'cathy-pass-01',
     },
-    out: { ok: true, user: { handle: 'cathy' } }
+    out: { ok: true, user: { handle: 'cathy' } },
   },
 
   // verify login works
@@ -58,15 +58,15 @@ module.exports = [
     pattern: 'login:user' + LN(),
     params: {
       q: {
-        email: 'cathy@example.com'
+        email: 'cathy@example.com',
       },
-      pass: 'cathy-pass-01'
+      pass: 'cathy-pass-01',
     },
     out: {
       ok: true,
       user: { handle: 'cathy' },
-      login: { handle: 'cathy' }
-    }
+      login: { handle: 'cathy' },
+    },
   },
 
   // bad repeat password
@@ -75,12 +75,12 @@ module.exports = [
     pattern: 'change:pass' + LN(),
     params: {
       q: {
-        email: 'not-cathy@example.com'
+        email: 'not-cathy@example.com',
       },
       password: 'cathy-pass-01',
-      repeat: 'not-cathy-pass-01'
+      repeat: 'not-cathy-pass-01',
     },
-    out: { ok: false, why: 'repeat-password-mismatch' }
+    out: { ok: false, why: 'repeat-password-mismatch' },
   },
 
   // verify login still works using correct pass
@@ -89,15 +89,15 @@ module.exports = [
     pattern: 'login:user' + LN(),
     params: {
       q: {
-        email: 'cathy@example.com'
+        email: 'cathy@example.com',
       },
-      pass: 'cathy-pass-01'
+      pass: 'cathy-pass-01',
     },
     out: {
       ok: true,
       user: { handle: 'cathy' },
-      login: { handle: 'cathy' }
-    }
+      login: { handle: 'cathy' },
+    },
   },
 
   // simple
@@ -106,9 +106,9 @@ module.exports = [
     pattern: 'change:pass' + LN(),
     params: {
       email: 'cathy@example.com',
-      password: 'cathy-pass-02'
+      password: 'cathy-pass-02',
     },
-    out: { ok: true, user: { handle: 'cathy' } }
+    out: { ok: true, user: { handle: 'cathy' } },
   },
 
   // verify login works with new pass
@@ -117,15 +117,15 @@ module.exports = [
     pattern: 'login:user' + LN(),
     params: {
       q: {
-        email: 'cathy@example.com'
+        email: 'cathy@example.com',
       },
-      pass: 'cathy-pass-02'
+      pass: 'cathy-pass-02',
     },
     out: {
       ok: true,
       user: { handle: 'cathy' },
-      login: { handle: 'cathy' }
-    }
+      login: { handle: 'cathy' },
+    },
   },
 
   // check handle is valid and available
@@ -133,9 +133,9 @@ module.exports = [
     print: print_calls,
     pattern: 'check:handle' + LN(),
     params: {
-      handle: 'catherine'
+      handle: 'catherine',
     },
-    out: { ok: true, handle: 'catherine' }
+    out: { ok: true, handle: 'catherine' },
   },
 
   // check handle - used
@@ -143,9 +143,9 @@ module.exports = [
     print: print_calls,
     pattern: 'check:handle' + LN(),
     params: {
-      handle: 'cathy'
+      handle: 'cathy',
     },
-    out: { ok: false, handle: 'cathy', why: 'handle-exists' }
+    out: { ok: false, handle: 'cathy', why: 'handle-exists' },
   },
 
   // check handle - bad
@@ -153,9 +153,9 @@ module.exports = [
     print: print_calls,
     pattern: 'check:handle' + LN(),
     params: {
-      handle: 'cathy!'
+      handle: 'cathy!',
     },
-    out: { ok: false, handle: 'cathy!', why: 'invalid-chars' }
+    out: { ok: false, handle: 'cathy!', why: 'invalid-chars' },
   },
 
   {
@@ -163,9 +163,12 @@ module.exports = [
     pattern: 'change:handle' + LN(),
     params: {
       handle: 'cathy',
-      new_handle: 'catherine'
+      new_handle: 'catherine',
     },
-    out: { ok: true, user: { handle: 'catherine', email: 'cathy@example.com' } }
+    out: {
+      ok: true,
+      user: { handle: 'catherine', email: 'cathy@example.com' },
+    },
   },
 
   // change to same has no effect
@@ -174,9 +177,12 @@ module.exports = [
     pattern: 'change:handle' + LN(),
     params: {
       email: 'cathy@example.com',
-      new_handle: 'catherine'
+      new_handle: 'catherine',
     },
-    out: { ok: true, user: { handle: 'catherine', email: 'cathy@example.com' } }
+    out: {
+      ok: true,
+      user: { handle: 'catherine', email: 'cathy@example.com' },
+    },
   },
 
   // can't use existing handle
@@ -185,16 +191,16 @@ module.exports = [
     pattern: 'change:handle' + LN(),
     params: {
       handle: 'catherine',
-      new_handle: 'alice'
+      new_handle: 'alice',
     },
     out: {
       ok: false,
       why: 'handle-exists',
       details: {
         handle: 'alice',
-        user_handle: 'catherine'
-      }
-    }
+        user_handle: 'catherine',
+      },
+    },
   },
 
   //
@@ -203,12 +209,12 @@ module.exports = [
     pattern: 'change:handle' + LN(),
     params: {
       handle: 'not-catherine',
-      new_handle: 'alice'
+      new_handle: 'alice',
     },
     out: {
       ok: false,
-      why: 'user-not-found'
-    }
+      why: 'user-not-found',
+    },
   },
 
   // change email
@@ -218,12 +224,12 @@ module.exports = [
     pattern: 'change:email' + LN(),
     params: {
       email: 'cathy@example.com',
-      new_email: 'catherine@example.com'
+      new_email: 'catherine@example.com',
     },
     out: {
       ok: true,
-      user: { handle: 'catherine', email: 'catherine@example.com' }
-    }
+      user: { handle: 'catherine', email: 'catherine@example.com' },
+    },
   },
 
   {
@@ -231,9 +237,9 @@ module.exports = [
     pattern: 'change:email' + LN(),
     params: {
       email: 'cathy@example.com',
-      new_email: 'not-an-email'
+      new_email: 'not-an-email',
     },
-    err: { code: 'act_invalid_msg' }
+    err: { code: 'act_invalid_msg' },
   },
 
   // email change with code
@@ -246,16 +252,16 @@ module.exports = [
       kind: 'email',
       valid: true,
       unique: false,
-      expire_point: new Date().getTime() + 10 * 60 * 1000
+      expire_point: new Date().getTime() + 10 * 60 * 1000,
     },
     out: {
       ok: true,
       verify: {
         code: Joi.string(),
         once: true,
-        used: false
-      }
-    }
+        used: false,
+      },
+    },
     /*
     verify: function(call) {
       console.log(call.result.out.verify.data$())
@@ -268,9 +274,9 @@ module.exports = [
     pattern: 'change:email' + LN(),
     params: {
       email: 'not-catherine@example.com',
-      new_email: 'catherinethegreat@example.com'
+      new_email: 'catherinethegreat@example.com',
     },
-    out: { ok: false, why: 'user-not-found' }
+    out: { ok: false, why: 'user-not-found' },
   },
 
   {
@@ -279,22 +285,22 @@ module.exports = [
     params: {
       email: 'catherine@example.com',
       new_email: 'catherinethegreat@example.com',
-      verify: 'bad-code'
+      verify: 'bad-code',
     },
     out: {
       ok: false,
       why: 'no-verify',
-      details: { q: { kind: 'email', code: 'bad-code' } }
-    }
+      details: { q: { kind: 'email', code: 'bad-code' } },
+    },
   },
 
   {
     print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
-      email: 'catherine@example.com'
+      email: 'catherine@example.com',
     },
-    out: { ok: true, user: { email: 'catherine@example.com' } }
+    out: { ok: true, user: { email: 'catherine@example.com' } },
   },
 
   {
@@ -303,18 +309,18 @@ module.exports = [
     params: {
       email: 'catherine@example.com',
       new_email: 'catherinethegreat@example.com',
-      verify: '`emailcode0:out.verify.code`'
+      verify: '`emailcode0:out.verify.code`',
     },
-    out: { ok: true, user: { email: 'catherinethegreat@example.com' } }
+    out: { ok: true, user: { email: 'catherinethegreat@example.com' } },
   },
 
   {
     print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
-      email: 'catherinethegreat@example.com'
+      email: 'catherinethegreat@example.com',
     },
-    out: { ok: true, user: { email: 'catherinethegreat@example.com' } }
+    out: { ok: true, user: { email: 'catherinethegreat@example.com' } },
   },
 
   {
@@ -323,9 +329,9 @@ module.exports = [
     params: {
       handle: 'catherine',
       new_email: 'catherinethegreat@example.com',
-      verify: '`emailcode0:out.verify.code`'
+      verify: '`emailcode0:out.verify.code`',
     },
-    out: { ok: false, why: 'verify-already-used' }
+    out: { ok: false, why: 'verify-already-used' },
   },
 
   {
@@ -333,9 +339,9 @@ module.exports = [
     pattern: 'change:email' + LN(),
     params: {
       handle: 'catherine',
-      new_email: 'catherinethegreat@example.com'
+      new_email: 'catherinethegreat@example.com',
     },
-    out: { ok: true }
+    out: { ok: true },
   },
 
   {
@@ -343,16 +349,16 @@ module.exports = [
     pattern: 'change:email' + LN(),
     params: {
       handle: 'catherine',
-      new_email: 'bob@example.com'
+      new_email: 'bob@example.com',
     },
     out: {
       ok: false,
       why: 'email-exists',
       details: {
         new_email: 'bob@example.com',
-        old_email: 'catherinethegreat@example.com'
-      }
-    }
+        old_email: 'catherinethegreat@example.com',
+      },
+    },
   },
 
   {
@@ -362,17 +368,17 @@ module.exports = [
       handle: 'frank',
       user: {
         foo: 1,
-        zed: 'a'
-      }
+        zed: 'a',
+      },
     },
     out: {
       ok: true,
       user: {
         handle: 'frank',
         foo: 1,
-        zed: 'a'
-      }
-    }
+        zed: 'a',
+      },
+    },
   },
 
   {
@@ -380,16 +386,16 @@ module.exports = [
     pattern: 'get:user' + LN(),
     params: {
       handle: 'frank',
-      fields: ['foo', 'zed']
+      fields: ['foo', 'zed'],
     },
     out: {
       ok: true,
       user: {
         handle: 'frank',
         foo: 1,
-        zed: 'a'
-      }
-    }
+        zed: 'a',
+      },
+    },
   },
 
   {
@@ -398,16 +404,16 @@ module.exports = [
     params: {
       handle: 'frank',
       user: {
-        email: 'frankly@example.com'
-      }
+        email: 'frankly@example.com',
+      },
     },
     out: {
       ok: true,
       user: {
         handle: 'frank',
-        email: 'frankly@example.com'
-      }
-    }
+        email: 'frankly@example.com',
+      },
+    },
   },
 
   {
@@ -416,13 +422,13 @@ module.exports = [
     params: {
       handle: 'not-frank',
       user: {
-        email: 'frankly2@example.com'
-      }
+        email: 'frankly2@example.com',
+      },
     },
     out: {
       ok: false,
-      why: 'user-not-found'
-    }
+      why: 'user-not-found',
+    },
   },
 
   {
@@ -430,14 +436,14 @@ module.exports = [
     pattern: 'update:user' + LN(),
     params: {
       handle: 'frank',
-      pass: 'frank001'
+      pass: 'frank001',
     },
     out: {
       ok: true,
       user: {
-        handle: 'frank'
-      }
-    }
+        handle: 'frank',
+      },
+    },
   },
 
   {
@@ -446,15 +452,15 @@ module.exports = [
     params: {
       handle: 'frank',
       user: {
-        pass: 'frank002'
-      }
+        pass: 'frank002',
+      },
     },
     out: {
       ok: true,
       user: {
-        handle: 'frank'
-      }
-    }
+        handle: 'frank',
+      },
+    },
   },
 
   {
@@ -463,15 +469,15 @@ module.exports = [
     params: {
       handle: 'frank',
       user_data: {
-        pass: 'frank002'
-      }
+        pass: 'frank002',
+      },
     },
     out: {
       ok: true,
       user: {
-        handle: 'frank'
-      }
-    }
+        handle: 'frank',
+      },
+    },
   },
 
   {
@@ -480,15 +486,15 @@ module.exports = [
     params: {
       handle: 'frank',
       user: {
-        handle: 'franklymaybe'
-      }
+        handle: 'franklymaybe',
+      },
     },
     out: {
       ok: true,
       user: {
-        handle: 'franklymaybe'
-      }
-    }
+        handle: 'franklymaybe',
+      },
+    },
   },
 
   {
@@ -497,15 +503,15 @@ module.exports = [
     params: {
       handle: 'franklymaybe',
       user_data: {
-        handle: 'frankly'
-      }
+        handle: 'frankly',
+      },
     },
     out: {
       ok: true,
       user: {
-        handle: 'frankly'
-      }
-    }
+        handle: 'frankly',
+      },
+    },
   },
 
   {
@@ -514,12 +520,12 @@ module.exports = [
     params: {
       handle: 'frankly',
       user_data: {
-        handle: 'bob'
-      }
+        handle: 'bob',
+      },
     },
     out: {
-      ok: false
-    }
+      ok: false,
+    },
   },
 
   {
@@ -528,12 +534,12 @@ module.exports = [
     params: {
       handle: 'frankly',
       user_data: {
-        email: 'bob@example.com'
-      }
+        email: 'bob@example.com',
+      },
     },
     out: {
-      ok: false
-    }
+      ok: false,
+    },
   },
 
   {
@@ -543,11 +549,11 @@ module.exports = [
       handle: 'frankly',
       user_data: {
         pass: 'aaa',
-        repeat: 'bbb'
-      }
+        repeat: 'bbb',
+      },
     },
     out: {
-      ok: false
-    }
-  }
+      ok: false,
+    },
+  },
 ]

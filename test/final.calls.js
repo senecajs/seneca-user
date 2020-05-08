@@ -23,7 +23,7 @@ module.exports = [
           name: 'cathy',
           handle: 'catherine',
           email: 'catherinethegreat@example.com',
-          active: true
+          active: true,
         },
         { name: 'derek', handle: 'derek', active: false },
         { active: true },
@@ -34,16 +34,16 @@ module.exports = [
           name: 'edward',
           handle: 'edward',
           email: 'edward@example.com',
-          active: true
+          active: true,
         },
         {
           name: 'frank',
           handle: 'frankly',
           email: 'frankly@example.com',
-          active: true
-        }
-      ]
-    }
+          active: true,
+        },
+      ],
+    },
   },
 
   {
@@ -51,8 +51,8 @@ module.exports = [
     pattern: 'list:user' + LN(),
     params: {
       q: {
-        foo: 1
-      }
+        foo: 1,
+      },
     },
     out: {
       ok: true,
@@ -62,29 +62,29 @@ module.exports = [
           email: 'bob@example.com',
           foo: 1,
           handle: 'bob',
-          active: true
+          active: true,
         },
         {
           name: 'frank',
           foo: 1,
           handle: 'frankly',
           email: 'frankly@example.com',
-          active: true
-        }
-      ]
-    }
+          active: true,
+        },
+      ],
+    },
   },
 
   {
     print: print_calls,
     pattern: 'list:user' + LN(),
     params: {
-      active: false
+      active: false,
     },
     out: {
       ok: true,
-      items: [{ name: 'derek', handle: 'derek', active: false }]
-    }
+      items: [{ name: 'derek', handle: 'derek', active: false }],
+    },
   },
 
   {
@@ -93,12 +93,12 @@ module.exports = [
     params: {
       handle: 'edward',
       user: {
-        address: 'edward house'
-      }
+        address: 'edward house',
+      },
     },
     out: {
-      ok: true
-    }
+      ok: true,
+    },
   },
 
   {
@@ -107,24 +107,24 @@ module.exports = [
     params: {
       handle: 'edward',
       fields: ['address'],
-      auto: true
+      auto: true,
     },
     out: {
       ok: true,
-      user: { address: 'edward house' }
-    }
+      user: { address: 'edward house' },
+    },
   },
 
   {
     print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
-      handle: 'edward'
+      handle: 'edward',
     },
     out: {
       ok: true,
-      items: Joi.array().length(2)
-    }
+      items: Joi.array().length(2),
+    },
   },
 
   {
@@ -132,15 +132,15 @@ module.exports = [
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
-      handle: 'edward'
+      handle: 'edward',
     },
     out: {
       ok: true,
       login_count: 2,
       removed: Joi.string(),
       purged: false,
-      user_id: Joi.string()
-    }
+      user_id: Joi.string(),
+    },
   },
 
   {
@@ -148,19 +148,17 @@ module.exports = [
     pattern: 'get:user' + LN(),
     params: {
       user_id: '`re0:out.user_id`',
-      q: { fields$: ['address'] }
+      q: { fields$: ['address'] },
     },
     out: {
       ok: true,
       user: {
         active: false,
         removed: Joi.string(),
-        handle: Joi.string()
-          .invalid('edward')
-          .length(12),
-        address: 'edward house'
-      }
-    }
+        handle: Joi.string().invalid('edward').length(12),
+        address: 'edward house',
+      },
+    },
   },
 
   // can run multiple times, custom anon fields
@@ -171,15 +169,15 @@ module.exports = [
     params: {
       user_id: '`re0:out.user_id`',
       q: { fields$: ['address'] },
-      anon_fields: ['address']
+      anon_fields: ['address'],
     },
     out: {
       ok: true,
       login_count: 2,
       removed: Joi.string(),
       purged: false,
-      user_id: Joi.string()
-    }
+      user_id: Joi.string(),
+    },
   },
 
   {
@@ -187,21 +185,17 @@ module.exports = [
     pattern: 'get:user' + LN(),
     params: {
       user_id: '`re0:out.user_id`',
-      q: { fields$: ['address'] }
+      q: { fields$: ['address'] },
     },
     out: {
       ok: true,
       user: {
         active: false,
         removed: Joi.string(),
-        handle: Joi.string()
-          .invalid('edward')
-          .length(12),
-        address: Joi.string()
-          .invalid('edward house')
-          .length(12)
-      }
-    }
+        handle: Joi.string().invalid('edward').length(12),
+        address: Joi.string().invalid('edward house').length(12),
+      },
+    },
   },
 
   // explicitly purge data
@@ -211,27 +205,27 @@ module.exports = [
     pattern: 'remove:user' + LN(),
     params: {
       user_id: '`re0:out.user_id`',
-      purge: true
+      purge: true,
     },
     out: {
       ok: true,
       login_count: 2,
       removed: Joi.string(),
       purged: true,
-      user_id: Joi.string()
-    }
+      user_id: Joi.string(),
+    },
   },
 
   {
     print: print_calls,
     pattern: 'get:user' + LN(),
     params: {
-      user_id: '`re0:out.user_id`'
+      user_id: '`re0:out.user_id`',
     },
     out: {
       ok: false,
-      why: 'user-not-found'
-    }
+      why: 'user-not-found',
+    },
   },
 
   {
@@ -239,12 +233,12 @@ module.exports = [
     name: 're0',
     pattern: 'remove:user' + LN(),
     params: {
-      user_id: '`re0:out.user_id`'
+      user_id: '`re0:out.user_id`',
     },
     out: {
       ok: false,
-      why: 'user-not-found'
-    }
+      why: 'user-not-found',
+    },
   },
 
   {
@@ -253,15 +247,15 @@ module.exports = [
     print: print_calls,
     params: {
       user: {
-        email: 'gothic.gallifrey@example.com'
-      }
+        email: 'gothic.gallifrey@example.com',
+      },
     },
     out: {
       ok: true,
       user: {
         handle: 'gothic_gallifre',
-        email: 'gothic.gallifrey@example.com'
-      }
-    }
-  }
+        email: 'gothic.gallifrey@example.com',
+      },
+    },
+  },
 ]

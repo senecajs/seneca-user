@@ -17,7 +17,7 @@ module.exports = [
     print: print_calls,
     pattern: 'adjust:user' + LN(),
     params: {},
-    out: { ok: false, why: 'no-user-query' }
+    out: { ok: false, why: 'no-user-query' },
   },
 
   // user not found
@@ -25,12 +25,12 @@ module.exports = [
     print: print_calls,
     pattern: 'adjust:user' + LN(),
     params: {
-      handle: 'not-a-user'
+      handle: 'not-a-user',
     },
     out: {
       ok: false,
-      user: null
-    }
+      user: null,
+    },
   },
 
   (call.get_alice_active = {
@@ -39,24 +39,24 @@ module.exports = [
     params: {
       q: {
         handle: 'alice',
-        fields$: ['custom_field0'] // test retrieval of custom fields
-      }
+        fields$: ['custom_field0'], // test retrieval of custom fields
+      },
     },
     out: {
-      user: { handle: 'alice', custom_field0: 'value0', active: true }
-    }
+      user: { handle: 'alice', custom_field0: 'value0', active: true },
+    },
   }),
   {
     print: print_calls,
     pattern: 'login:user' + LN(),
     params: {
       handle: 'alice',
-      auto: true
+      auto: true,
     },
     out: {
       ok: true,
-      user: { handle: 'alice', active: true }
-    }
+      user: { handle: 'alice', active: true },
+    },
   },
 
   // do nothing
@@ -65,12 +65,12 @@ module.exports = [
     pattern: 'adjust:user' + LN(),
     params: {
       q: {
-        handle: 'alice'
-      }
+        handle: 'alice',
+      },
     },
     out: {
-      user: { handle: 'alice', active: true }
-    }
+      user: { handle: 'alice', active: true },
+    },
   },
 
   call.get_alice_active,
@@ -79,12 +79,12 @@ module.exports = [
     print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
-      handle: 'alice'
+      handle: 'alice',
     },
     out: {
       ok: true,
-      items: Joi.array().length(1)
-    }
+      items: Joi.array().length(1),
+    },
   },
 
   // deactivate
@@ -93,14 +93,14 @@ module.exports = [
     pattern: 'adjust:user' + LN(),
     params: {
       q: {
-        handle: 'alice'
+        handle: 'alice',
       },
       active: false,
-      fields: ['custom_field0'] // test retrieval of custom fields
+      fields: ['custom_field0'], // test retrieval of custom fields
     },
     out: {
-      user: { handle: 'alice', custom_field0: 'value0', active: false }
-    }
+      user: { handle: 'alice', custom_field0: 'value0', active: false },
+    },
   },
 
   // confirm cannot login
@@ -109,12 +109,12 @@ module.exports = [
     pattern: 'login:user' + LN(),
     params: {
       handle: 'alice',
-      auto: true
+      auto: true,
     },
     out: {
       ok: false,
-      why: 'user-not-active'
-    }
+      why: 'user-not-active',
+    },
   },
 
   // confirm no active logins
@@ -122,12 +122,12 @@ module.exports = [
     print: print_calls,
     pattern: 'list:login' + LN(),
     params: {
-      handle: 'alice'
+      handle: 'alice',
     },
     out: {
       ok: true,
-      items: Joi.array().length(0)
-    }
+      items: Joi.array().length(0),
+    },
   },
 
   // idempotent
@@ -136,14 +136,14 @@ module.exports = [
     pattern: 'adjust:user' + LN(),
     params: {
       q: {
-        handle: 'alice'
+        handle: 'alice',
       },
       active: false,
-      fields: ['custom_field0']
+      fields: ['custom_field0'],
     },
     out: {
-      user: { handle: 'alice', custom_field0: 'value0', active: false }
-    }
+      user: { handle: 'alice', custom_field0: 'value0', active: false },
+    },
   },
 
   // confirm not active
@@ -153,12 +153,12 @@ module.exports = [
     params: {
       q: {
         handle: 'alice',
-        fields$: ['custom_field0']
-      }
+        fields$: ['custom_field0'],
+      },
     },
     out: {
-      user: { handle: 'alice', custom_field0: 'value0', active: false }
-    }
+      user: { handle: 'alice', custom_field0: 'value0', active: false },
+    },
   },
 
   // adjust back to active
@@ -167,14 +167,14 @@ module.exports = [
     pattern: 'adjust:user' + LN(),
     params: {
       q: {
-        handle: 'alice'
+        handle: 'alice',
       },
       active: true,
-      fields: ['custom_field0']
+      fields: ['custom_field0'],
     },
     out: {
-      user: { handle: 'alice', custom_field0: 'value0', active: true }
-    }
+      user: { handle: 'alice', custom_field0: 'value0', active: true },
+    },
   },
 
   call.get_alice_active,
@@ -185,13 +185,13 @@ module.exports = [
     pattern: 'adjust:user' + LN(),
     params: {
       q: {
-        handle: 'derek'
+        handle: 'derek',
       },
-      active: false
+      active: false,
     },
     out: {
-      user: { handle: 'derek', active: false }
-    }
+      user: { handle: 'derek', active: false },
+    },
   },
 
   // login code for derek...
@@ -204,16 +204,16 @@ module.exports = [
       kind: 'login',
       valid: true,
       unique: false,
-      expire_point: new Date().getTime() + 10 * 60 * 1000
+      expire_point: new Date().getTime() + 10 * 60 * 1000,
     },
     out: {
       ok: true,
       verify: {
         code: Joi.string(),
         once: true,
-        used: false
-      }
-    }
+        used: false,
+      },
+    },
   },
 
   // .. won't work, as not active
@@ -223,12 +223,12 @@ module.exports = [
     pattern: 'login:user' + LN(),
     params: {
       handle: 'derek',
-      verify: '`dereklogin0:out.verify.code`'
+      verify: '`dereklogin0:out.verify.code`',
     },
     out: {
       ok: false,
       user_id: Joi.string(),
-      why: 'user-not-active'
-    }
-  }
+      why: 'user-not-active',
+    },
+  },
 ]

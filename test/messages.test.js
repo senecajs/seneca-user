@@ -29,7 +29,7 @@ lab.test('messages', { timeout: 5555 }, async () => {
       .concat(require('./login.calls.js'))
       .concat(require('./logout.calls.js'))
       .concat(require('./change.calls.js'))
-      .concat(require('./final.calls.js'))
+      .concat(require('./final.calls.js')),
   })
 
   // TODO seneca-msg-test should handle this

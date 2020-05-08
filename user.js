@@ -19,7 +19,7 @@ module.exports.defaults = {
 
   salt: {
     bytelen: 16,
-    format: 'hex'
+    format: 'hex',
   },
 
   pepper: '',
@@ -27,29 +27,29 @@ module.exports.defaults = {
   rounds: 11111,
 
   fields: {
-    standard: ['handle', 'email', 'name', 'active']
+    standard: ['handle', 'email', 'name', 'active'],
   },
 
   onetime: {
-    expire: 15 * 60 * 1000 // 15 minutes
+    expire: 15 * 60 * 1000, // 15 minutes
   },
 
   password: {
-    minlen: 8
+    minlen: 8,
   },
 
   handle: {
     minlen: 3,
     maxlen: 15,
     reserved: ['guest', 'visitor'],
-    must_match: handle => handle.match(/^[a-z0-9_]+$/),
+    must_match: (handle) => handle.match(/^[a-z0-9_]+$/),
 
     // a function returning an array of strings
     must_not_contain: Nid.curses,
 
-    sanitize: handle => handle.replace(/[^a-z0-9_]/g, '_'),
+    sanitize: (handle) => handle.replace(/[^a-z0-9_]/g, '_'),
 
-    downcase: true
+    downcase: true,
   },
 
   limit: 111, // default result limit
@@ -57,7 +57,7 @@ module.exports.defaults = {
   generate_salt: intern.generate_salt,
   ensure_handle: intern.ensure_handle,
   make_handle: intern.make_handle,
-  make_token: intern.make_token
+  make_token: intern.make_token,
 }
 
 function user(options) {
@@ -102,12 +102,12 @@ function user(options) {
 
   return {
     exports: {
-      find_user: async function(seneca, msg, special_ctx) {
+      find_user: async function (seneca, msg, special_ctx) {
         var merged_ctx =
           null == special_ctx ? ctx : seneca.util.deep({}, ctx, special_ctx)
         return intern.find_user(seneca, msg, merged_ctx)
-      }
-    }
+      },
+    },
   }
 }
 
@@ -115,11 +115,11 @@ function make_intern() {
   return {
     SV: 1, // semantic version, used for data migration
 
-    make_msg: function(msg_fn, ctx) {
+    make_msg: function (msg_fn, ctx) {
       return require('./lib/' + msg_fn)(ctx)
     },
 
-    make_ctx: function(initial_ctx, options) {
+    make_ctx: function (initial_ctx, options) {
       Assert(initial_ctx)
       Assert(options)
 
@@ -153,19 +153,19 @@ function make_intern() {
           // Convenience query fields - msg.email etc.
           convenience_fields: 'id,user_id,handle,email,name'.split(','),
 
-          handle
+          handle,
         },
         initial_ctx
       )
     },
 
-    user_exists: async function(seneca, msg, ctx) {
+    user_exists: async function (seneca, msg, ctx) {
       ctx.fields = []
       var found = await intern.find_user(seneca, msg, ctx)
       return found.ok
     },
 
-    find_user: async function(seneca, msg, ctx) {
+    find_user: async function (seneca, msg, ctx) {
       // User may already be provided in parameters.
       var user = msg.user && msg.user.entity$ ? msg.user : null
 
@@ -208,7 +208,7 @@ function make_intern() {
           // Add additional fields to standard fields.
           var fields = Array.isArray(msg.fields) ? msg.fields : []
           q.fields$ = [
-            ...new Set((q.fields$ || fields).concat(ctx.standard_user_fields))
+            ...new Set((q.fields$ || fields).concat(ctx.standard_user_fields)),
           ]
 
           // These are the unique fields
@@ -239,7 +239,7 @@ function make_intern() {
     },
 
     // expects normalized user data
-    build_pass_fields: async function(seneca, user_data, ctx) {
+    build_pass_fields: async function (seneca, user_data, ctx) {
       var pass = user_data.pass
       var repeat = user_data.repeat // optional
       var salt = user_data.salt
@@ -251,7 +251,7 @@ function make_intern() {
       var res = await seneca.post('sys:user,hook:password,cmd:encrypt', {
         pass: pass,
         salt: salt,
-        whence: 'build'
+        whence: 'build',
       })
 
       if (res.ok) {
@@ -259,8 +259,8 @@ function make_intern() {
           ok: true,
           fields: {
             pass: res.pass,
-            salt: res.salt
-          }
+            salt: res.salt,
+          },
         }
       } else {
         return {
@@ -268,13 +268,13 @@ function make_intern() {
           why: res.why,
 
           /* $lab:coverage:off$ */
-          details: res.details || {}
+          details: res.details || {},
           /* $lab:coverage:on$ */
         }
       }
     },
 
-    generate_salt: function(options) {
+    generate_salt: function (options) {
       return Crypto.randomBytes(options.salt.bytelen).toString(
         options.salt.format
       )
@@ -282,7 +282,7 @@ function make_intern() {
 
     // Automate migration of nick->handle. Removes nick.
     // Assume update value will be saved elsewhere in due course.
-    fix_nick_handle: function(data, options) {
+    fix_nick_handle: function (data, options) {
       Assert(options)
 
       if (null == data) {
@@ -327,7 +327,7 @@ function make_intern() {
     },
 
     // expects normalized user data
-    ensure_handle: function(user_data, options) {
+    ensure_handle: function (user_data, options) {
       var handle = user_data.handle
 
       if ('string' != typeof handle) {
@@ -360,7 +360,7 @@ function make_intern() {
 
     make_token: Uuid.v4, // Random! Don't leak things.
 
-    make_login: async function(spec) {
+    make_login: async function (spec) {
       /* $lab:coverage:off$ */
       var seneca = Assert(spec.seneca) || spec.seneca
       var user = Assert(spec.user) || spec.user
@@ -390,7 +390,7 @@ function make_intern() {
         active: true,
         why: why,
 
-        sv: intern.SV
+        sv: intern.SV,
       }
 
       if (onetime) {
@@ -407,13 +407,13 @@ function make_intern() {
       return login
     },
 
-    load_user_fields: function(msg, ...rest) {
+    load_user_fields: function (msg, ...rest) {
       /* $lab:coverage:off$ */
       // Seventh Circle of Hell, aka node < 12
       rest.flat =
         'function' == typeof rest.flat
           ? rest.flat
-          : function() {
+          : function () {
               return this.reduce((a, y) => {
                 return Array.isArray(y) ? a.concat(y) : (a.push(y), a)
               }, [])
@@ -422,7 +422,7 @@ function make_intern() {
 
       var fields = rest
         .flat()
-        .filter(f => 'string' === typeof f && 0 < f.length)
+        .filter((f) => 'string' === typeof f && 0 < f.length)
       msg.q = msg.q || {}
       msg.q.fields$ = msg.q.fields$ || []
       msg.q.fields$ = msg.q.fields$.concat(fields)
@@ -430,11 +430,9 @@ function make_intern() {
       return msg
     },
 
-    email_schema: Joi.string()
-      .email()
-      .required(),
+    email_schema: Joi.string().email().required(),
 
-    valid_email: async function(seneca, email, ctx) {
+    valid_email: async function (seneca, email, ctx) {
       var email_valid = intern.email_schema.validate(email)
       if (email_valid.error) {
         return { ok: false, email: email, why: 'email-invalid-format' }
@@ -445,11 +443,11 @@ function make_intern() {
       return {
         ok: !email_taken.ok,
         email: email,
-        why: email_taken.ok ? 'email-exists' : null
+        why: email_taken.ok ? 'email-exists' : null,
       }
     },
 
-    valid_handle: async function(seneca, handle, ctx) {
+    valid_handle: async function (seneca, handle, ctx) {
       var options = ctx.options
 
       if ('string' != typeof handle) {
@@ -467,7 +465,7 @@ function make_intern() {
         return {
           ok: false,
           why: 'disallowed',
-          details: { handle_base64: Buffer.from(handle).toString('base64') }
+          details: { handle_base64: Buffer.from(handle).toString('base64') },
         }
       }
 
@@ -482,8 +480,8 @@ function make_intern() {
           details: {
             handle: handle,
             handle_length: handle.length,
-            minimum: options.handle.minlen
-          }
+            minimum: options.handle.minlen,
+          },
         }
       }
 
@@ -494,8 +492,8 @@ function make_intern() {
           details: {
             handle: handle,
             handle_length: handle.length,
-            maximum: options.handle.maxlen
-          }
+            maximum: options.handle.maxlen,
+          },
         }
       }
 
@@ -505,14 +503,14 @@ function make_intern() {
         return {
           ok: false,
           why: 'handle-exists',
-          details: { handle: handle }
+          details: { handle: handle },
         }
       }
 
       return { ok: true, handle: handle }
     },
 
-    normalize_user_data: function(msg, ctx) {
+    normalize_user_data: function (msg, ctx) {
       msg = intern.fix_nick_handle(msg, ctx.options)
 
       var msg_user = msg.user || {}
@@ -522,9 +520,9 @@ function make_intern() {
       var top_fields = ctx.convenience_fields.concat([
         'pass',
         'password',
-        'repeat'
+        'repeat',
       ])
-      top_fields.forEach(f => null == msg[f] || (top_data[f] = msg[f]))
+      top_fields.forEach((f) => null == msg[f] || (top_data[f] = msg[f]))
 
       var user_data = Object.assign({}, msg_user, msg_user_data, top_data)
 
@@ -536,10 +534,10 @@ function make_intern() {
 
       // strip undefineds
       Object.keys(user_data).forEach(
-        k => void 0 === user_data[k] && delete user_data[k]
+        (k) => void 0 === user_data[k] && delete user_data[k]
       )
 
       return user_data
-    }
+    },
   }
 }

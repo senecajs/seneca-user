@@ -33,7 +33,7 @@ lab.test('export', async () => {
   expect(find_user).function()
 
   var alice = await si.post('sys:user,register:user', {
-    handle: 'alice'
+    handle: 'alice',
   })
 
   expect(alice.ok).true()
@@ -70,7 +70,7 @@ lab.test('bad-data', async () => {
     login_id: bad_login0.id,
     ok: false,
     token: 'bad0',
-    why: 'user-not-found'
+    why: 'user-not-found',
   })
 })
 
@@ -79,7 +79,7 @@ lab.test('legacy-data', async () => {
   await si.ready()
 
   var alice = await si.post('sys:user,register:user', {
-    handle: 'alice'
+    handle: 'alice',
   })
 
   var legacy_login0 = await si

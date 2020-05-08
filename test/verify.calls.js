@@ -17,7 +17,7 @@ module.exports = [
     print: print_calls,
     pattern: 'make:verify' + LN(),
     params: {},
-    out: { ok: false, why: 'no-user-query' }
+    out: { ok: false, why: 'no-user-query' },
   },
 
   // mark a user email as verified
@@ -30,8 +30,8 @@ module.exports = [
       valid: true,
       once: false,
       custom: {
-        email: 'alice@example.com'
-      }
+        email: 'alice@example.com',
+      },
     },
     out: {
       ok: true,
@@ -47,9 +47,9 @@ module.exports = [
         t_c: Joi.number(),
         t_c_s: Joi.string(),
         t_m: Joi.number(),
-        t_m_s: Joi.string()
-      }
-    }
+        t_m_s: Joi.string(),
+      },
+    },
     /*
     verify: function(call) {
       console.log(call.result.out.verify.data$())
@@ -67,7 +67,7 @@ module.exports = [
       kind: 'email',
       valid: true,
       once: false,
-      email: 'alice-other@example.com' // `kind` can go at top level
+      email: 'alice-other@example.com', // `kind` can go at top level
     },
     out: {
       ok: true,
@@ -82,9 +82,9 @@ module.exports = [
         t_c: Joi.number(),
         t_c_s: Joi.string(),
         t_m: Joi.number(),
-        t_m_s: Joi.string()
-      }
-    }
+        t_m_s: Joi.string(),
+      },
+    },
   },
 
   // unique verification
@@ -95,7 +95,7 @@ module.exports = [
       handle: 'alice',
       kind: 'email',
       valid: true,
-      email: 'alice@example.com'
+      email: 'alice@example.com',
     },
     out: {
       ok: false,
@@ -104,10 +104,10 @@ module.exports = [
         query: {
           user_id: Joi.string(),
           kind: 'email',
-          email: 'alice@example.com'
-        }
-      }
-    }
+          email: 'alice@example.com',
+        },
+      },
+    },
   },
 
   {
@@ -116,14 +116,14 @@ module.exports = [
     params: {
       handle: 'alice',
       kind: 'email',
-      email: 'alice@example.com'
+      email: 'alice@example.com',
     },
     out: {
       ok: true,
       verify: {
-        used: false
-      }
-    }
+        used: false,
+      },
+    },
   },
 
   {
@@ -132,12 +132,12 @@ module.exports = [
     params: {
       handle: 'not-alice',
       kind: 'email',
-      email: 'alice@example.com'
+      email: 'alice@example.com',
     },
     out: {
       ok: false,
-      why: 'user-not-found'
-    }
+      why: 'user-not-found',
+    },
   },
 
   // multiple use
@@ -147,14 +147,14 @@ module.exports = [
     params: {
       handle: 'alice',
       kind: 'email',
-      email: 'alice@example.com'
+      email: 'alice@example.com',
     },
     out: {
       ok: true,
       verify: {
-        used: false
-      }
-    }
+        used: false,
+      },
+    },
   },
 
   // password reset
@@ -167,16 +167,16 @@ module.exports = [
       kind: 'pass',
       valid: true,
       unique: false,
-      expire_point: new Date().getTime() + 10 * 60 * 1000
+      expire_point: new Date().getTime() + 10 * 60 * 1000,
     },
     out: {
       ok: true,
       verify: {
         code: Joi.string(),
         once: true,
-        used: false
-      }
-    }
+        used: false,
+      },
+    },
     /*
     verify: function(call) {
       console.log(call.result.out.verify.data$())
@@ -194,16 +194,16 @@ module.exports = [
       kind: 'pass',
       valid: true,
       unique: false,
-      expire_duration: 10 * 60 * 1000
+      expire_duration: 10 * 60 * 1000,
     },
     out: {
       ok: true,
       verify: {
         code: Joi.string(),
         once: true,
-        used: false
-      }
-    }
+        used: false,
+      },
+    },
     /*
     verify: function(call) {
       console.log(call.result.out.verify.data$())
@@ -215,24 +215,12 @@ module.exports = [
     print: print_calls,
     pattern: 'list:verify' + LN(),
     params: {
-      handle: 'not-alice'
+      handle: 'not-alice',
     },
     out: {
       ok: false,
-      why: 'user-not-found'
-    }
-  },
-
-  {
-    print: print_calls,
-    pattern: 'list:verify' + LN(),
-    params: {
-      handle: 'alice'
+      why: 'user-not-found',
     },
-    out: {
-      ok: true,
-      items: Joi.array().length(4)
-    }
   },
 
   {
@@ -240,12 +228,24 @@ module.exports = [
     pattern: 'list:verify' + LN(),
     params: {
       handle: 'alice',
-      kind: 'pass'
     },
     out: {
       ok: true,
-      items: Joi.array().length(2)
-    }
+      items: Joi.array().length(4),
+    },
+  },
+
+  {
+    print: print_calls,
+    pattern: 'list:verify' + LN(),
+    params: {
+      handle: 'alice',
+      kind: 'pass',
+    },
+    out: {
+      ok: true,
+      items: Joi.array().length(2),
+    },
   },
 
   {
@@ -254,12 +254,12 @@ module.exports = [
     params: {
       handle: 'alice',
       kind: 'email',
-      email: 'alice@example.com'
+      email: 'alice@example.com',
     },
     out: {
       ok: true,
-      items: Joi.array().length(1)
-    }
+      items: Joi.array().length(1),
+    },
   },
 
   // change password with onetime code
@@ -270,9 +270,9 @@ module.exports = [
       handle: 'alice',
       // email: 'alice@example.com', // TODO enable once update tests written
       pass: 'alice-pass-change-01',
-      verify: '`avc0:out.verify.code`'
+      verify: '`avc0:out.verify.code`',
     },
-    out: { ok: true, user: { handle: 'alice' } }
+    out: { ok: true, user: { handle: 'alice' } },
   },
 
   // can't change password twice with onetime code
@@ -283,9 +283,9 @@ module.exports = [
       handle: 'alice',
       // email: 'alice@example.com', // TODO enable once update tests written
       pass: 'alice-pass-change-02',
-      verify: '`avc0:out.verify.code`'
+      verify: '`avc0:out.verify.code`',
     },
-    out: { ok: false, why: 'verify-already-used' }
+    out: { ok: false, why: 'verify-already-used' },
   },
 
   // login with alice-pass-change-01
@@ -294,13 +294,13 @@ module.exports = [
     pattern: 'login:user' + LN(),
     params: {
       handle: 'alice',
-      pass: 'alice-pass-change-01'
+      pass: 'alice-pass-change-01',
     },
     out: {
       ok: true,
       user: { handle: 'alice' },
-      login: { handle: 'alice' }
-    }
+      login: { handle: 'alice' },
+    },
   },
 
   // custom, unique:true by default, so can't reuse code
@@ -312,8 +312,8 @@ module.exports = [
       kind: 'foo',
       code: 'foo-code-01',
       custom: {
-        bar: 1
-      }
+        bar: 1,
+      },
     },
     out: {
       ok: true,
@@ -323,9 +323,9 @@ module.exports = [
         code: 'foo-code-01',
         once: true,
         used: false,
-        valid: false
-      }
-    }
+        valid: false,
+      },
+    },
     //verify: function(call) {
     //  console.log(call.result.out.verify.data$())
     //}
@@ -340,14 +340,14 @@ module.exports = [
       kind: 'foo',
       code: 'foo-code-01',
       custom: {
-        bar: 1
-      }
+        bar: 1,
+      },
     },
     out: {
       ok: false,
       why: 'not-unique',
-      details: { query: { kind: 'foo', code: 'foo-code-01' } }
-    }
+      details: { query: { kind: 'foo', code: 'foo-code-01' } },
+    },
     //verify: function(call) {
     //  console.log(call.result.out.verify.data$())
     //}
@@ -358,17 +358,17 @@ module.exports = [
     pattern: 'get:user' + LN(),
     params: {
       handle: 'alice',
-      verification: true
+      verification: true,
     },
     out: {
       ok: true,
       user: {
-        verified: false
+        verified: false,
       },
       verification: {
-        items: Joi.array().length(5)
-      }
-    }
+        items: Joi.array().length(5),
+      },
+    },
     //verify: function(call) {
     //  console.log(call.result.out.verify.data$())
     //}
@@ -380,12 +380,12 @@ module.exports = [
     pattern: 'list:verify' + LN(),
     params: {
       handle: 'alice',
-      code: 'foo-code-01'
+      code: 'foo-code-01',
     },
     out: {
       ok: true,
-      items: Joi.array().length(1)
-    }
+      items: Joi.array().length(1),
+    },
   },
 
   // custom queries
@@ -395,8 +395,8 @@ module.exports = [
     params: {
       handle: 'alice',
       q: {
-        bar: 1
-      }
+        bar: 1,
+      },
     },
     out: {
       ok: true,
@@ -404,8 +404,8 @@ module.exports = [
         .items(
           Joi.object({ bar: 1, kind: 'foo', code: 'foo-code-01' }).unknown()
         )
-        .length(1)
-    }
+        .length(1),
+    },
   },
 
   {
@@ -413,11 +413,11 @@ module.exports = [
     pattern: 'list:verify' + LN(),
     params: {
       user_q: {
-        handle: 'alice'
+        handle: 'alice',
       },
       q: {
-        bar: 1
-      }
+        bar: 1,
+      },
     },
     out: {
       ok: true,
@@ -425,8 +425,8 @@ module.exports = [
         .items(
           Joi.object({ bar: 1, kind: 'foo', code: 'foo-code-01' }).unknown()
         )
-        .length(1)
-    }
+        .length(1),
+    },
   },
 
   {
@@ -434,14 +434,14 @@ module.exports = [
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'alice',
-      email: 'alice@example.com'
+      email: 'alice@example.com',
     },
     out: {
       ok: true,
       verify: {
-        used: false
-      }
-    }
+        used: false,
+      },
+    },
   },
 
   {
@@ -450,14 +450,14 @@ module.exports = [
     params: {
       handle: 'alice',
       q: {
-        email: 'not-alice@example.com'
-      }
+        email: 'not-alice@example.com',
+      },
     },
     out: {
       ok: false,
       why: 'no-verify',
-      details: { q: { email: 'not-alice@example.com' } }
-    }
+      details: { q: { email: 'not-alice@example.com' } },
+    },
   },
 
   // bob
@@ -471,16 +471,16 @@ module.exports = [
       code: 'bob-foo-code-01',
       expire_duration: 1, // so that's gonna expire real soon...
       once: false,
-      valid: true
+      valid: true,
     },
     out: {
       ok: true,
       verify: {
         kind: 'foo',
         code: 'bob-foo-code-01',
-        t_expiry: Joi.number().min(Date.now() - 111)
-      }
-    }
+        t_expiry: Joi.number().min(Date.now() - 111),
+      },
+    },
     //verify: function(call) {
     //  console.log(call.result.out.verify.data$())
     //}
@@ -493,12 +493,12 @@ module.exports = [
     params: {
       handle: 'bob',
       code: 'bob-foo-code-01',
-      expiry: true
+      expiry: true,
     },
     out: {
       ok: false,
-      why: 'verify-expired'
-    }
+      why: 'verify-expired',
+    },
   },
 
   // go back in time
@@ -509,11 +509,11 @@ module.exports = [
       handle: 'bob',
       code: 'bob-foo-code-01',
       expiry: true,
-      now: Date.now() - 1111
+      now: Date.now() - 1111,
     },
     out: {
-      ok: true
-    }
+      ok: true,
+    },
   },
 
   {
@@ -521,15 +521,15 @@ module.exports = [
     pattern: 'check:verify' + LN(),
     params: {
       user_q: {
-        handle: 'bob'
+        handle: 'bob',
       },
       code: 'bob-foo-code-01',
       expiry: true,
-      now: Date.now() - 1111
+      now: Date.now() - 1111,
     },
     out: {
-      ok: true
-    }
+      ok: true,
+    },
   },
 
   // once and used
@@ -541,16 +541,16 @@ module.exports = [
       handle: 'bob',
       kind: 'foo',
       code: 'bob-foo-code-02',
-      valid: true
+      valid: true,
     },
     out: {
       ok: true,
       verify: {
         kind: 'foo',
         code: 'bob-foo-code-02',
-        t_expiry: Joi.number().min(Date.now() - 111) // always set even if not used
-      }
-    }
+        t_expiry: Joi.number().min(Date.now() - 111), // always set even if not used
+      },
+    },
     //verify: function(call) {
     //  console.log(call.result.out.verify.data$())
     //}
@@ -561,11 +561,11 @@ module.exports = [
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'bob',
-      code: 'bob-foo-code-02'
+      code: 'bob-foo-code-02',
     },
     out: {
-      ok: true
-    }
+      ok: true,
+    },
   },
 
   {
@@ -573,15 +573,15 @@ module.exports = [
     pattern: 'check:verify' + LN(),
     params: {
       handle: 'bob',
-      code: 'bob-foo-code-02'
+      code: 'bob-foo-code-02',
     },
     out: {
       ok: false, // once is true, so second time fails
       why: 'verify-already-used',
       details: {
-        q: { code: 'bob-foo-code-02' }
-      }
-    }
+        q: { code: 'bob-foo-code-02' },
+      },
+    },
   },
 
   // not valid
@@ -592,15 +592,15 @@ module.exports = [
     params: {
       handle: 'bob',
       kind: 'foo',
-      code: 'bob-foo-code-03'
+      code: 'bob-foo-code-03',
     },
     out: {
       ok: true,
       verify: {
         kind: 'foo',
-        code: 'bob-foo-code-03'
-      }
-    }
+        code: 'bob-foo-code-03',
+      },
+    },
   },
 
   {
@@ -609,12 +609,12 @@ module.exports = [
     params: {
       handle: 'bob',
       code: 'bob-foo-code-03',
-      verify: true
+      verify: true,
     },
     out: {
       ok: false,
-      why: 'verify-not-valid'
-    }
+      why: 'verify-not-valid',
+    },
   },
 
   // verify for a registration
@@ -630,9 +630,9 @@ module.exports = [
         mode: 'm01',
         email: 'hamish@example.com',
         info: {
-          qaz: 1
-        }
-      }
+          qaz: 1,
+        },
+      },
     },
     out: {
       ok: true,
@@ -645,10 +645,10 @@ module.exports = [
         mode: 'm01',
         email: 'hamish@example.com',
         info: {
-          qaz: 1
-        }
-      }
-    }
+          qaz: 1,
+        },
+      },
+    },
     //verify: function(call) {
     //  console.log(call.result.out.verify.data$())
     //}
@@ -659,7 +659,7 @@ module.exports = [
     pattern: 'check:verify' + LN(),
     params: {
       anon: true,
-      code: '`vh0:out.verify.code`'
+      code: '`vh0:out.verify.code`',
     },
     out: {
       ok: true,
@@ -672,12 +672,12 @@ module.exports = [
         mode: 'm01',
         email: 'hamish@example.com',
         info: {
-          qaz: 1
-        }
-      }
-    }
+          qaz: 1,
+        },
+      },
+    },
     //verify: function(call) {
     //  console.log(call.result.out.verify.data$())
     //}
-  }
+  },
 ]
