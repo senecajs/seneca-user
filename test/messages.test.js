@@ -32,7 +32,7 @@ lab.test('messages', { timeout: 5555 }, async () => {
       .concat(require('./final.calls.js'))
   })
 
-  // TODO: seneca-msg-test should handle this
+  // TODO seneca-msg-test should handle this
   try {
     await run()
   } finally {

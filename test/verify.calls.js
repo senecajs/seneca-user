@@ -268,7 +268,7 @@ module.exports = [
     pattern: 'change:password' + LN(),
     params: {
       handle: 'alice',
-      // email: 'alice@example.com', // TODO: enable once update tests written
+      // email: 'alice@example.com', // TODO enable once update tests written
       pass: 'alice-pass-change-01',
       verify: '`avc0:out.verify.code`'
     },
@@ -281,7 +281,7 @@ module.exports = [
     pattern: 'change:password' + LN(),
     params: {
       handle: 'alice',
-      // email: 'alice@example.com', // TODO: enable once update tests written
+      // email: 'alice@example.com', // TODO enable once update tests written
       pass: 'alice-pass-change-02',
       verify: '`avc0:out.verify.code`'
     },

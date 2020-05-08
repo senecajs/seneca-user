@@ -5,7 +5,7 @@ const Seneca = require('seneca')
 
 module.exports = {
   make_seneca: () => {
-    // TODO: hide logs of expected errors
+    // TODO hide logs of expected errors
     var seneca = Seneca({ legacy: false })
       .test()
       .use('promisify')

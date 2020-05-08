@@ -64,8 +64,8 @@ function user(options) {
   var seneca = this
   var ctx = intern.make_ctx({}, options)
 
-  // TODO: @seneca/audit - record user modifications - e.g activate
-  // TODO: @seneca/microcache - short duration cache of msg responses
+  // TODO @seneca/audit - record user modifications - e.g activate
+  // TODO @seneca/microcache - short duration cache of msg responses
 
   seneca
     .fix('sys:user')
@@ -97,7 +97,7 @@ function user(options) {
     .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
     .message('hook:password,cmd:pass', intern.make_msg('cmd_pass', ctx))
 
-    // TODO: seneca.alias method?
+    // TODO seneca.alias method?
     .message('change:password', intern.make_msg('change_pass', ctx))
 
   return {
@@ -202,7 +202,7 @@ function make_intern() {
         }
         delete q.user_id
 
-        // TODO: waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
+        // TODO waiting for fix: https://github.com/senecajs/seneca-entity/issues/57
 
         if (0 < Object.keys(seneca.util.clean(q)).length) {
           // Add additional fields to standard fields.
