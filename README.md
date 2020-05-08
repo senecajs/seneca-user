@@ -6,6 +6,7 @@
 [![npm version][npm-badge]][npm-url]
 [![Build Status][travis-badge]][travis-url]
 [![Coverage Status][coveralls-badge]][coveralls-url]
+[![Maintainability][codeclimate-badge]][codeclimate-url]
 [![Dependency Status][david-badge]][david-url]
 [![Gitter][gitter-badge]][gitter-url]
 
@@ -788,6 +789,8 @@ Licensed under [MIT][].
 [travis-url]: https://travis-ci.org/senecajs/seneca-user
 [coveralls-badge]: https://coveralls.io/repos/github/senecajs/seneca-user/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/senecajs/seneca-user?branch=master
+[codeclimate-badge]: https://api.codeclimate.com/v1/badges/404faaa89a95635ddfc0/maintainability
+[codeclimate-url]: https://codeclimate.com/github/senecajs/seneca-user/maintainability
 [npm-badge]: https://img.shields.io/npm/v/@seneca/user.svg
 [npm-url]: https://npmjs.com/package/@seneca/user
 [david-badge]: https://david-dm.org/senecajs/seneca-user.svg
