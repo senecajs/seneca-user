@@ -10,8 +10,6 @@ const Joi = require('@hapi/joi')
 
 // TODO: test03
 
-
-
 module.exports = user
 
 module.exports.errors = {}
