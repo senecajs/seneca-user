@@ -7,7 +7,6 @@ const Crypto = require('crypto')
 const Nid = require('nid')
 const Uuid = require('uuid')
 
-
 module.exports = user
 
 module.exports.errors = {}
@@ -431,7 +430,6 @@ function make_intern() {
     },
 
     valid_email: async function (seneca, email, ctx) {
-
       // TODO: improve
       var email_valid = /@/.test(email)
       if (!email_valid) {

@@ -121,7 +121,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: []
+      items: [],
     },
   },
 

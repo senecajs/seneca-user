@@ -20,8 +20,7 @@ module.exports = [
     out: {
       ok: true,
       salt: 'abe44aba97de143916a27522ab365ccb',
-      pass:
-        'fd61a166af8a86b2e6f43415e175c3459b22741b4936c6beb71ae65d374115b5dfd89e8fae61100e1454b8bc48a18fd24bf9d0d6f316fe9791d1ca387f6b83ae',
+      pass: 'fd61a166af8a86b2e6f43415e175c3459b22741b4936c6beb71ae65d374115b5dfd89e8fae61100e1454b8bc48a18fd24bf9d0d6f316fe9791d1ca387f6b83ae',
     },
   },
 

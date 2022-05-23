@@ -11,7 +11,6 @@ const Plugin = require('..')
 
 const Shared = require('./shared')
 
-
 lab.test('happy', async () => {
   var si = Shared.make_seneca()
   await si.ready()

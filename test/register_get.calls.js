@@ -268,7 +268,7 @@ module.exports = [
     params: {
       user_data: {},
     },
-    out: { ok: true, user: { } },
+    out: { ok: true, user: {} },
   },
 
   {
@@ -282,8 +282,8 @@ module.exports = [
     out: {
       ok: false,
       why: 'email-invalid-format',
-      details: { email: 'example.com' }
-    }
+      details: { email: 'example.com' },
+    },
   },
 
   {
@@ -294,8 +294,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      user: {
-      },
+      user: {},
     },
   },
 
@@ -325,6 +324,6 @@ module.exports = [
     params: {
       handle: '',
     },
-    out: { ok: false, why: 'invalid-chars', details: { handle: '' } }
+    out: { ok: false, why: 'invalid-chars', details: { handle: '' } },
   },
 ]

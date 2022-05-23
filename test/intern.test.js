@@ -13,7 +13,6 @@ var lab = (exports.lab = Lab.script())
 var User = require('..')
 var intern = User.intern
 
-
 lab.test('make_seneca', async () => {
   var si = await make_seneca()
   expect(si).exist()
@@ -363,9 +362,9 @@ lab.test('load_user_field', () => {
     a: 1,
     q: { fields$: ['x', 'y', 'z'] },
   })
-  expect(
-    intern.load_user_fields({ a: 1, q: { k: 1 } }, 'x', ['y', 'z'])
-  ).equal({ a: 1, q: { k: 1, fields$: ['x', 'y', 'z'] } })
+  expect(intern.load_user_fields({ a: 1, q: { k: 1 } }, 'x', ['y', 'z'])).equal(
+    { a: 1, q: { k: 1, fields$: ['x', 'y', 'z'] } }
+  )
 
   expect(
     intern.load_user_fields({ a: 1, q: { fields$: [] } }, 'x', ['y', 'z'])
@@ -586,11 +585,11 @@ lab.test('normalize_user_data', async () => {
 
 function make_seneca() {
   var seneca = Seneca({ legacy: false })
-      .test()
-      .quiet()
-      .use('promisify')
-      .use('doc')
-      .use('entity')
-      .use('../user')
+    .test()
+    .quiet()
+    .use('promisify')
+    .use('doc')
+    .use('entity')
+    .use('../user')
   return seneca
 }

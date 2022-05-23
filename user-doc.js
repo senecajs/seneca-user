@@ -1,7 +1,6 @@
 // NOTE: validation is not defined here as that would require calling code to
 // use seneca-doc
 
-
 module.exports = {
   adjust_user: {
     desc: 'Adjust user status idempotently (activated, etc.).',
