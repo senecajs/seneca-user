@@ -6,9 +6,7 @@ const Assert = require('assert')
 const Crypto = require('crypto')
 const Nid = require('nid')
 const Uuid = require('uuid')
-const Joi = require('@hapi/joi')
 
-// TODO: test03
 
 module.exports = user
 
@@ -432,11 +430,11 @@ function make_intern() {
       return msg
     },
 
-    email_schema: Joi.string().email().required(),
-
     valid_email: async function (seneca, email, ctx) {
-      var email_valid = intern.email_schema.validate(email)
-      if (email_valid.error) {
+
+      // TODO: improve
+      var email_valid = /@/.test(email)
+      if (!email_valid) {
         return { ok: false, email: email, why: 'email-invalid-format' }
       }
 

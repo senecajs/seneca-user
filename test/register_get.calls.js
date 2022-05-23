@@ -1,9 +1,7 @@
-/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+/* Copyright (c) 2020-2022 Richard Rodger and other contributors, MIT License */
 'use strict'
 
 const Assert = require('assert')
-
-const Joi = require('@hapi/joi')
 
 var print_calls = false
 
@@ -23,7 +21,6 @@ module.exports = [
       ok: true,
       user: {
         email: 'foo@example.com',
-        handle: Joi.string().length(7),
       },
     },
   },
@@ -40,7 +37,8 @@ module.exports = [
     print: print_calls,
     pattern: 'get:user' + LN(),
     params: { handle: '' },
-    err: { code: 'act_invalid_msg' },
+    // err: { code: 'act_invalid_msg' },
+    out: { ok: false, why: 'user-not-found' },
   },
 
   // use convenience params
@@ -261,7 +259,7 @@ module.exports = [
     // always generate a handle
     pattern: 'register:user' + LN(),
     params: {},
-    out: { ok: true, user: { handle: Joi.string().length(12) } },
+    out: { ok: true, user: {} },
   },
 
   {
@@ -270,7 +268,7 @@ module.exports = [
     params: {
       user_data: {},
     },
-    out: { ok: true, user: { handle: Joi.string().length(12) } },
+    out: { ok: true, user: { } },
   },
 
   {
@@ -281,7 +279,11 @@ module.exports = [
         email: 'example.com',
       },
     },
-    err: { code: 'act_invalid_msg' },
+    out: {
+      ok: false,
+      why: 'email-invalid-format',
+      details: { email: 'example.com' }
+    }
   },
 
   {
@@ -293,7 +295,6 @@ module.exports = [
     out: {
       ok: true,
       user: {
-        handle: Joi.string().length(12),
       },
     },
   },
@@ -312,7 +313,6 @@ module.exports = [
       ok: true,
       user: {
         name: 'Adam Ant',
-        handle: Joi.string().length(12),
       },
     },
     verify: function (call) {
@@ -325,6 +325,6 @@ module.exports = [
     params: {
       handle: '',
     },
-    err: { code: 'act_invalid_msg' },
+    out: { ok: false, why: 'invalid-chars', details: { handle: '' } }
   },
 ]

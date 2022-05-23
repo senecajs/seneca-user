@@ -1,7 +1,5 @@
-/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+/* Copyright (c) 2020-2022 Richard Rodger and other contributors, MIT License */
 'use strict'
-
-const Joi = require('@hapi/joi')
 
 const Shared = require('./shared')
 
@@ -18,7 +16,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(2),
+      items: [],
     },
   },
 
@@ -31,7 +29,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(1),
+      items: [],
     },
   },
 
@@ -44,7 +42,6 @@ module.exports = [
     out: {
       ok: true,
       count: 2,
-      batch: Joi.string().min(1),
     },
   },
 
@@ -57,7 +54,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(3),
+      items: [],
     },
   },
 
@@ -105,7 +102,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(3),
+      items: [],
     },
   },
 
@@ -122,7 +119,6 @@ module.exports = [
     out: {
       ok: true,
       count: 2,
-      batch: Joi.string().min(1),
       items: [
         { handle: 'bob', bar: 1 },
         { handle: 'bob', bar: 1 },
@@ -138,9 +134,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array()
-        .ordered(Joi.object({ bar: 2 }).unknown())
-        .length(1),
+      items: [],
     },
   },
 
@@ -185,7 +179,6 @@ module.exports = [
     out: {
       ok: true,
       count: 2,
-      batch: Joi.string().min(1),
       items: [
         { handle: 'bob', bar: 2 },
         { handle: 'bob', bar: 3 },
@@ -253,7 +246,6 @@ module.exports = [
     out: {
       ok: true,
       count: 1,
-      batch: Joi.string().min(1),
       items: [{ handle: 'bob', bar: 4 }],
     },
   },
@@ -269,7 +261,6 @@ module.exports = [
     out: {
       ok: true,
       count: 1,
-      batch: Joi.string().min(1),
       items: [{ handle: 'bob', bar: 5 }],
     },
   },

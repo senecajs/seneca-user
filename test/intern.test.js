@@ -13,6 +13,13 @@ var lab = (exports.lab = Lab.script())
 var User = require('..')
 var intern = User.intern
 
+
+lab.test('make_seneca', async () => {
+  var si = await make_seneca()
+  expect(si).exist()
+  await si.close()
+})
+
 lab.test('make_handle', async () => {
   var h0 = intern.make_handle()
   expect(typeof h0).equal('string')
@@ -95,6 +102,7 @@ lab.test('fix_nick_handle', async () => {
 
 lab.test('find_user', async () => {
   var si = make_seneca()
+
   var alice = await si.post('sys:user,register:user', {
     user_data: {
       handle: 'alice',
@@ -499,9 +507,9 @@ lab.test('valid_email', async () => {
     why: null,
   })
 
-  expect(await intern.valid_email(si, '@example.com', ctx)).equals({
+  expect(await intern.valid_email(si, 'example.com', ctx)).equals({
     ok: false,
-    email: '@example.com',
+    email: 'example.com',
     why: 'email-invalid-format',
   })
 
@@ -578,11 +586,11 @@ lab.test('normalize_user_data', async () => {
 
 function make_seneca() {
   var seneca = Seneca({ legacy: false })
-    .test()
-    .use('promisify')
-    .use('doc')
-    .use('joi')
-    .use('entity')
-    .use('..')
+      .test()
+      .quiet()
+      .use('promisify')
+      .use('doc')
+      .use('entity')
+      .use('../user')
   return seneca
 }

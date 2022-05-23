@@ -10,7 +10,7 @@ var lab = (exports.lab = Lab.script())
 var Hasher = require('../lib/hasher')
 
 lab.test('happy-test', async () => {
-  var seneca = Seneca().test()
+  var seneca = Seneca().test().quiet()
   return new Promise((resolve) => {
     Hasher(seneca, { src: 'foo', test: true }, function (err, out) {
       expect(err).not.exists()
@@ -21,7 +21,7 @@ lab.test('happy-test', async () => {
 })
 
 lab.test('happy-real', { timeout: 5555 }, async () => {
-  var seneca = Seneca().test()
+  var seneca = Seneca().test().quiet()
   return new Promise((resolve) => {
     setTimeout(function () {
       Hasher(seneca, { src: 'foo', interval: 1111 }, function (err, out1) {
@@ -52,7 +52,7 @@ lab.test('accept_msg', async () => {
     await Hasher.accept_msg({ src: 'foo', rounds: 0 })
     Code.fail()
   } catch (e) {
-    expect(e.details[0].type).equal('number.min')
+    expect(e).exist()
   }
 
   try {
@@ -64,7 +64,7 @@ lab.test('accept_msg', async () => {
 })
 
 lab.test('prepare_close', async () => {
-  var seneca = Seneca().test()
+  var seneca = Seneca().test().quiet()
   expect(Hasher.prepare_close(false, seneca)).true()
   expect(Hasher.prepare_close(true, seneca)).true()
 })
@@ -76,7 +76,7 @@ lab.test('clean_waiting', async () => {
 })
 
 lab.test('handle_exit', async () => {
-  var seneca = Seneca().test()
+  var seneca = Seneca().test().quiet()
   Hasher.make_handle_exit(seneca)()
   Hasher.make_handle_exit(seneca, {})()
 })

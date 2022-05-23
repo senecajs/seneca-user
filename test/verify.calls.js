@@ -1,7 +1,5 @@
-/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+/* Copyright (c) 2020-2022 Richard Rodger and other contributors, MIT License */
 'use strict'
-
-const Joi = require('@hapi/joi')
 
 var print_calls = false
 
@@ -37,25 +35,12 @@ module.exports = [
       ok: true,
       verify: {
         email: 'alice@example.com',
-        user_id: Joi.string(),
         kind: 'email',
-        code: Joi.string(),
         once: false,
         used: false,
         valid: true,
-        t_expiry: Joi.number(),
-        t_c: Joi.number(),
-        t_c_s: Joi.string(),
-        t_m: Joi.number(),
-        t_m_s: Joi.string(),
       },
     },
-    /*
-    verify: function(call) {
-      console.log(call.result.out.verify.data$())
-      return true
-    }
-    */
   },
 
   // mark a user email as verified, convenience field
@@ -73,16 +58,9 @@ module.exports = [
       ok: true,
       verify: {
         email: 'alice-other@example.com',
-        user_id: Joi.string(),
         kind: 'email',
-        code: Joi.string(),
         once: false,
         valid: true,
-        t_expiry: Joi.number(),
-        t_c: Joi.number(),
-        t_c_s: Joi.string(),
-        t_m: Joi.number(),
-        t_m_s: Joi.string(),
       },
     },
   },
@@ -102,7 +80,6 @@ module.exports = [
       why: 'not-unique',
       details: {
         query: {
-          user_id: Joi.string(),
           kind: 'email',
           email: 'alice@example.com',
         },
@@ -172,16 +149,10 @@ module.exports = [
     out: {
       ok: true,
       verify: {
-        code: Joi.string(),
         once: true,
         used: false,
       },
     },
-    /*
-    verify: function(call) {
-      console.log(call.result.out.verify.data$())
-    }
-    */
   },
 
   // password reset
@@ -199,16 +170,10 @@ module.exports = [
     out: {
       ok: true,
       verify: {
-        code: Joi.string(),
         once: true,
         used: false,
       },
     },
-    /*
-    verify: function(call) {
-      console.log(call.result.out.verify.data$())
-    }
-    */
   },
 
   {
@@ -231,7 +196,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(4),
+      items: [],
     },
   },
 
@@ -244,7 +209,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(2),
+      items: [],
     },
   },
 
@@ -258,7 +223,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(1),
+      items: [],
     },
   },
 
@@ -348,9 +313,6 @@ module.exports = [
       why: 'not-unique',
       details: { query: { kind: 'foo', code: 'foo-code-01' } },
     },
-    //verify: function(call) {
-    //  console.log(call.result.out.verify.data$())
-    //}
   },
 
   {
@@ -366,12 +328,9 @@ module.exports = [
         verified: false,
       },
       verification: {
-        items: Joi.array().length(5),
+        items: [],
       },
     },
-    //verify: function(call) {
-    //  console.log(call.result.out.verify.data$())
-    //}
   },
 
   // convenience fields
@@ -384,7 +343,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(1),
+      items: [],
     },
   },
 
@@ -400,11 +359,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array()
-        .items(
-          Joi.object({ bar: 1, kind: 'foo', code: 'foo-code-01' }).unknown()
-        )
-        .length(1),
+      items: [],
     },
   },
 
@@ -421,11 +376,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array()
-        .items(
-          Joi.object({ bar: 1, kind: 'foo', code: 'foo-code-01' }).unknown()
-        )
-        .length(1),
+      items: [],
     },
   },
 
@@ -478,12 +429,8 @@ module.exports = [
       verify: {
         kind: 'foo',
         code: 'bob-foo-code-01',
-        t_expiry: Joi.number().min(Date.now() - 111),
       },
     },
-    //verify: function(call) {
-    //  console.log(call.result.out.verify.data$())
-    //}
   },
 
   // expired now?
@@ -548,12 +495,8 @@ module.exports = [
       verify: {
         kind: 'foo',
         code: 'bob-foo-code-02',
-        t_expiry: Joi.number().min(Date.now() - 111), // always set even if not used
       },
     },
-    //verify: function(call) {
-    //  console.log(call.result.out.verify.data$())
-    //}
   },
 
   {
@@ -638,7 +581,6 @@ module.exports = [
       ok: true,
       verify: {
         kind: 'register',
-        code: Joi.string().min(16),
         once: true,
         used: false,
         valid: true,
@@ -649,9 +591,6 @@ module.exports = [
         },
       },
     },
-    //verify: function(call) {
-    //  console.log(call.result.out.verify.data$())
-    //}
   },
 
   {
@@ -665,7 +604,6 @@ module.exports = [
       ok: true,
       verify: {
         kind: 'register',
-        code: Joi.string().min(16),
         once: true,
         used: true,
         valid: true,
@@ -676,8 +614,5 @@ module.exports = [
         },
       },
     },
-    //verify: function(call) {
-    //  console.log(call.result.out.verify.data$())
-    //}
   },
 ]

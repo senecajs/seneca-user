@@ -1,7 +1,5 @@
-/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+/* Copyright (c) 2020-2022 Richard Rodger and other contributors, MIT License */
 'use strict'
-
-const Joi = require('@hapi/joi')
 
 const Shared = require('./shared')
 
@@ -123,7 +121,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(2),
+      items: []
     },
   },
 
@@ -137,9 +135,7 @@ module.exports = [
     out: {
       ok: true,
       login_count: 2,
-      removed: Joi.string(),
       purged: false,
-      user_id: Joi.string(),
     },
   },
 
@@ -154,8 +150,6 @@ module.exports = [
       ok: true,
       user: {
         active: false,
-        removed: Joi.string(),
-        handle: Joi.string().invalid('edward').length(12),
         address: 'edward house',
       },
     },
@@ -174,9 +168,7 @@ module.exports = [
     out: {
       ok: true,
       login_count: 2,
-      removed: Joi.string(),
       purged: false,
-      user_id: Joi.string(),
     },
   },
 
@@ -191,9 +183,6 @@ module.exports = [
       ok: true,
       user: {
         active: false,
-        removed: Joi.string(),
-        handle: Joi.string().invalid('edward').length(12),
-        address: Joi.string().invalid('edward house').length(12),
       },
     },
   },
@@ -210,9 +199,7 @@ module.exports = [
     out: {
       ok: true,
       login_count: 2,
-      removed: Joi.string(),
       purged: true,
-      user_id: Joi.string(),
     },
   },
 

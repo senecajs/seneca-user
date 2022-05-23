@@ -1,7 +1,5 @@
-/* Copyright (c) 2020 Richard Rodger and other contributors, MIT License */
+/* Copyright (c) 2020-2022 Richard Rodger and other contributors, MIT License */
 'use strict'
-
-const Joi = require('@hapi/joi')
 
 var print_calls = false
 
@@ -330,7 +328,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(2), // 2 active logins
+      items: [],
     },
   },
 
@@ -346,7 +344,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(1), // 1 matching active login
+      items: [],
     },
   },
 
@@ -371,7 +369,7 @@ module.exports = [
     },
     out: {
       ok: true,
-      items: Joi.array().length(0), // 0 non-active logins
+      items: [],
     },
   },
 
@@ -404,7 +402,6 @@ module.exports = [
     out: {
       ok: true,
       verify: {
-        code: Joi.string(),
         once: true,
         used: false,
       },

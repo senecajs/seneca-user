@@ -8,11 +8,9 @@ const expect = Code.expect
 
 const Seneca = require('seneca')
 const Plugin = require('..')
-const PluginValidator = require('seneca-plugin-validator')
 
 const Shared = require('./shared')
 
-lab.test('validate', PluginValidator(Plugin, module))
 
 lab.test('happy', async () => {
   var si = Shared.make_seneca()
@@ -20,7 +18,7 @@ lab.test('happy', async () => {
   expect(si.find_plugin('user')).exists()
 
   // double load works
-  si.use('..')
+  si.use('../user')
   await si.ready()
   expect(si.find_plugin('user')).exists()
 })

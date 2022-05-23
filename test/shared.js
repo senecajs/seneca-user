@@ -7,12 +7,13 @@ module.exports = {
   make_seneca: () => {
     // TODO hide logs of expected errors
     var seneca = Seneca({ legacy: false })
-      .test()
+        .test()
+        // .quiet()
       .use('promisify')
       .use('doc')
-      .use('joi')
+        // .use('joi')
       .use('entity')
-      .use('..', {
+      .use('../user', {
         password: {
           minlen: 3,
         },
