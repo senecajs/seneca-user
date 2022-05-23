@@ -19,7 +19,7 @@
     "test-some": "lab -v -L -P test -g",
     "test-msgs": "lab -t 90 --coverage-exclude lib/hasher.js -P messages.test -r console -o stdout -r html -o test/coverage.html",
     "doc": "seneca-doc",
-    "coveralls": "lab -s -P test -r lcov | coveralls",
+    "coveralls": "lab -s -P test -I AggregateError,atob,btoa,DOMException,AbortController,AbortSignal,EventTarget,Event,MessageChannel,MessagePort,MessageEvent,performance,structuredClone -r lcov > ./coverage/lcov.info",
     "prettier": "prettier --write --no-semi --single-quote *.js lib/*.js test/*.js",
     "reset": "npm run clean && npm i && npm test",
     "clean": "rm -rf node_modules package-lock.json yarn.lock",
