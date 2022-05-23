@@ -7,8 +7,6 @@
 [![build](https://github.com/senecajs/seneca-user/actions/workflows/build.yml/badge.svg)](https://github.com/senecajs/seneca-user/actions/workflows/build.yml)
 [![Coverage Status][coveralls-badge]][coveralls-url]
 [![Maintainability][codeclimate-badge]][codeclimate-url]
-[![Dependency Status][david-badge]][david-url]
-[![Gitter][gitter-badge]][gitter-url]
 
 
 | ![Voxgig](https://www.voxgig.com/res/img/vgt01r.png) | This open source module is sponsored and supported by [Voxgig](https://www.voxgig.com). |
@@ -791,8 +789,4 @@ Licensed under [MIT][].
 [codeclimate-url]: https://codeclimate.com/github/senecajs/seneca-user/maintainability
 [npm-badge]: https://img.shields.io/npm/v/@seneca/user.svg
 [npm-url]: https://npmjs.com/package/@seneca/user
-[david-badge]: https://david-dm.org/senecajs/seneca-user.svg
-[david-url]: https://david-dm.org/senecajs/seneca-user
-[gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
-[gitter-url]: https://gitter.im/senecajs/seneca
 [Senecajs org]: https://github.com/senecajs/
