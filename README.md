@@ -4,7 +4,7 @@
 
 # @seneca/user
 [![npm version][npm-badge]][npm-url]
-[![build](https://github.com/senecajs/seneca-user/actions/workusers/build.yml/badge.svg)](https://github.com/senecajs/seneca-user/actions/workflows/build.yml)
+[![build](https://github.com/senecajs/seneca-user/actions/workflows/build.yml/badge.svg)](https://github.com/senecajs/seneca-user/actions/workflows/build.yml)
 [![Coverage Status][coveralls-badge]][coveralls-url]
 [![Maintainability][codeclimate-badge]][codeclimate-url]
 [![Dependency Status][david-badge]][david-url]
