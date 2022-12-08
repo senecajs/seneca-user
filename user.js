@@ -26,7 +26,7 @@ module.exports.defaults = {
   rounds: 11111,
 
   fields: {
-    standard: ['handle', 'email', 'name', 'active'],
+    standard: ['handle', 'email', 'name', 'active', 'profile'],
   },
 
   onetime: {
