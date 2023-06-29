@@ -1,11 +1,14 @@
-/* Copyright (c) 2012-2020 Richard Rodger and other contributors, MIT License. */
+/* Copyright (c) 2012-2023 Richard Rodger and other contributors, MIT License. */
 'use strict'
 
 const Assert = require('assert')
 
 const Crypto = require('crypto')
-const Nid = require('nid')
+
+const Seneca = require('seneca')
 const Uuid = require('uuid')
+
+const { Nid } = Seneca.util
 
 module.exports = user
 
