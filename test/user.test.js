@@ -44,7 +44,7 @@ lab.test('export', async () => {
   found = await find_user(
     si,
     { handle: 'alice' },
-    { standard_user_fields: ['name'] }
+    { standard_user_fields: ['name'] },
   )
   expect(found.ok).true()
   expect(found.why).not.exists()

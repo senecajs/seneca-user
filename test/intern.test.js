@@ -76,7 +76,7 @@ lab.test('fix_nick_handle', async () => {
     user: { handle: 'foo' },
   })
   expect(
-    intern.fix_nick_handle({ user: { nick: 'bar', handle: 'foo' } }, o)
+    intern.fix_nick_handle({ user: { nick: 'bar', handle: 'foo' } }, o),
   ).equal({ user: { handle: 'foo' } })
   expect(intern.fix_nick_handle({ q: { nick: 'foo' } }, o)).equal({
     q: { handle: 'foo' },
@@ -363,37 +363,40 @@ lab.test('load_user_field', () => {
     q: { fields$: ['x', 'y', 'z'] },
   })
   expect(intern.load_user_fields({ a: 1, q: { k: 1 } }, 'x', ['y', 'z'])).equal(
-    { a: 1, q: { k: 1, fields$: ['x', 'y', 'z'] } }
+    { a: 1, q: { k: 1, fields$: ['x', 'y', 'z'] } },
   )
 
   expect(
-    intern.load_user_fields({ a: 1, q: { fields$: [] } }, 'x', ['y', 'z'])
+    intern.load_user_fields({ a: 1, q: { fields$: [] } }, 'x', ['y', 'z']),
   ).equal({ a: 1, q: { fields$: ['x', 'y', 'z'] } })
   expect(
-    intern.load_user_fields({ a: 1, q: { k: 1, fields$: [] } }, 'x', ['y', 'z'])
+    intern.load_user_fields({ a: 1, q: { k: 1, fields$: [] } }, 'x', [
+      'y',
+      'z',
+    ]),
   ).equal({ a: 1, q: { k: 1, fields$: ['x', 'y', 'z'] } })
 
   expect(
-    intern.load_user_fields({ a: 1, q: { fields$: ['q'] } }, 'x', ['y', 'z'])
+    intern.load_user_fields({ a: 1, q: { fields$: ['q'] } }, 'x', ['y', 'z']),
   ).equal({ a: 1, q: { fields$: ['q', 'x', 'y', 'z'] } })
   expect(
     intern.load_user_fields({ a: 1, q: { k: 1, fields$: ['q'] } }, 'x', [
       'y',
       'z',
-    ])
+    ]),
   ).equal({ a: 1, q: { k: 1, fields$: ['q', 'x', 'y', 'z'] } })
 
   expect(
     intern.load_user_fields({ a: 1, q: { fields$: ['q', 'x'] } }, 'x', [
       'y',
       'z',
-    ])
+    ]),
   ).equal({ a: 1, q: { fields$: ['q', 'x', 'y', 'z'] } })
   expect(
     intern.load_user_fields({ a: 1, q: { k: 1, fields$: ['q', 'x'] } }, 'x', [
       'y',
       'z',
-    ])
+    ]),
   ).equal({ a: 1, q: { k: 1, fields$: ['q', 'x', 'y', 'z'] } })
 })
 
@@ -537,7 +540,7 @@ lab.test('normalize_user_data', async () => {
   expect(nud({ name: 'a', user_data: { name: 'c' } })).equal(r0)
   expect(nud({ user: { name: 'b' }, user_data: { name: 'a' } })).equal(r0)
   expect(
-    nud({ name: 'a', user: { name: 'b' }, user_data: { name: 'c' } })
+    nud({ name: 'a', user: { name: 'b' }, user_data: { name: 'c' } }),
   ).equal(r0)
   expect(nud({ name: 'a', email: void 0 })).equal(r0)
 
@@ -561,7 +564,7 @@ lab.test('normalize_user_data', async () => {
   expect(nud({ pass: 'a', user_data: { pass: 'c' } })).equal(r2)
   expect(nud({ user: { pass: 'b' }, user_data: { pass: 'a' } })).equal(r2)
   expect(
-    nud({ pass: 'a', user: { pass: 'b' }, user_data: { pass: 'c' } })
+    nud({ pass: 'a', user: { pass: 'b' }, user_data: { pass: 'c' } }),
   ).equal(r2)
 
   // password -> pass
@@ -571,14 +574,14 @@ lab.test('normalize_user_data', async () => {
   expect(nud({ user_data: { password: 'a' } })).equal(r3)
   expect(nud({ password: 'a', user_data: { password: 'c' } })).equal(r3)
   expect(nud({ user: { password: 'b' }, user_data: { password: 'a' } })).equal(
-    r3
+    r3,
   )
   expect(
     nud({
       password: 'a',
       user: { password: 'b' },
       user_data: { password: 'c' },
-    })
+    }),
   ).equal(r3)
   expect(nud({ password: 'b', pass: 'a' })).equal(r3)
 })

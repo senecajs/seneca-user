@@ -157,7 +157,7 @@ function make_intern() {
 
           handle,
         },
-        initial_ctx
+        initial_ctx,
       )
     },
 
@@ -185,7 +185,7 @@ function make_intern() {
           {},
           msg.user || {},
           msg.user_data || {},
-          msg_user_query
+          msg_user_query,
         )
 
         // can only use one convenience field - they are ordered by decreasing
@@ -278,7 +278,7 @@ function make_intern() {
 
     generate_salt: function (options) {
       return Crypto.randomBytes(options.salt.bytelen).toString(
-        options.salt.format
+        options.salt.format,
       )
     },
 
@@ -535,7 +535,7 @@ function make_intern() {
 
       // strip undefineds
       Object.keys(user_data).forEach(
-        (k) => void 0 === user_data[k] && delete user_data[k]
+        (k) => void 0 === user_data[k] && delete user_data[k],
       )
 
       return user_data
