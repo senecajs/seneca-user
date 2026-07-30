@@ -96,6 +96,10 @@ function user(options) {
 
     .message('auth:user', intern.make_msg('auth_user', ctx))
 
+    .message('sso:login', intern.make_msg('sso_login', ctx))
+    .message('link:provider', intern.make_msg('link_provider', ctx))
+    .message('unlink:provider', intern.make_msg('unlink_provider', ctx))
+
     .message('hook:password,cmd:encrypt', intern.make_msg('cmd_encrypt', ctx))
     .message('hook:password,cmd:pass', intern.make_msg('cmd_pass', ctx))
 
@@ -148,6 +152,7 @@ function make_intern() {
           sys_user: 'sys/user',
           sys_login: 'sys/login',
           sys_verify: 'sys/verify',
+          sys_login_provider: 'sys/login_provider',
 
           // Standard user fields to load - keep data volume low by default
           standard_user_fields: options.fields.standard,
