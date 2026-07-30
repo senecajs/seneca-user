@@ -88,6 +88,7 @@ detailed usage examples:
 * [cmd:encrypt,hook:password,sys:user](#-cmdencrypthookpasswordsysuser-)
 * [cmd:pass,hook:password,sys:user](#-cmdpasshookpasswordsysuser-)
 * [get:user,sys:user](#-getusersysuser-)
+* [link:provider,sys:user](#-linkprovidersysuser-)
 * [list:user,sys:user](#-listusersysuser-)
 * [list:login,sys:user](#-listloginsysuser-)
 * [list:verify,sys:user](#-listverifysysuser-)
@@ -96,6 +97,8 @@ detailed usage examples:
 * [make:verify,sys:user](#-makeverifysysuser-)
 * [register:user,sys:user](#-registerusersysuser-)
 * [remove:user,sys:user](#-removeusersysuser-)
+* [sso:login,sys:user](#-ssologinsysuser-)
+* [sys:user,unlink:provider](#-sysuserunlinkprovider-)
 * [sys:user,update:user](#-sysuserupdateuser-)
 
 
@@ -474,6 +477,36 @@ Get user details
 
 
 ----------
+### &laquo; `link:provider,sys:user` &raquo;
+
+Attach an external provider identity to an already-identified user.
+
+
+#### Parameters
+
+
+* _user_id_ : string
+* _provider_ : string
+* _provider_id_ : string
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _email_verified_ : boolean <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if linked (or already linked to the same user)',
+  user_id: 'string',
+  provider: 'string'
+}
+```
+
+
+----------
 ### &laquo; `list:user,sys:user` &raquo;
 
 List users
@@ -733,6 +766,66 @@ Remove a user
 {
   ok: '_true_ if user removed',
   user: 'user entity'
+}
+```
+
+
+----------
+### &laquo; `sso:login,sys:user` &raquo;
+
+Federated login: find-or-create a user from an externally-verified provider identity, then log in.
+
+
+#### Parameters
+
+
+* _provider_ : string
+* _provider_id_ : string
+* _email_ : string <i><small>{presence:optional}</small></i>
+* _email_verified_ : boolean <i><small>{presence:optional}</small></i>
+* _profile_ : object <i><small>{presence:optional}</small></i>
+* _login_data_ : object <i><small>{presence:optional}</small></i>
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if login succeeded',
+  user: 'user entity',
+  login: 'login entity',
+  why: 'string coded reason for the login',
+  registered: '_true_ if a new user was registered as part of this call'
+}
+```
+
+
+----------
+### &laquo; `sys:user,unlink:provider` &raquo;
+
+Detach an external provider identity from a user. Refuses if it is the last auth method.
+
+
+#### Parameters
+
+
+* _user_id_ : string
+* _provider_ : string
+
+
+
+
+#### Replies With
+
+
+```
+{
+  ok: '_true_ if unlinked',
+  user_id: 'string',
+  provider: 'string'
 }
 ```
 
