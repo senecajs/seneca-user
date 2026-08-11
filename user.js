@@ -117,16 +117,9 @@ function make_intern() {
   return {
     SV: 1, // semantic version, used for data migration
 
-    // A dynamic, computed require() call — bundlers targeting an
-    // environment with no runtime module resolution (e.g. Cloudflare
-    // Workers, esbuild-bundled AWS Lambda) can't statically resolve
-    // `'./lib/' + msg_fn`, and it throws "Module not found in bundle" the
-    // moment this plugin initializes. Every ./lib/*.js file this ever
-    // loads is a small, fixed, known set (every make_msg() call site in
-    // this file), so a static map lets a bundler resolve each require()
-    // literally, then does a plain object lookup at runtime instead of a
-    // computed require path. Functionally identical on a real Node
-    // process — same files, same lazy-once semantics either way.
+    // Static map instead of require('./lib/' + msg_fn) — bundlers with no
+    // runtime module resolution (Cloudflare Workers, esbuild-bundled AWS
+    // Lambda) can't resolve a computed require() and throw at init.
     make_msg: function (msg_fn, ctx) {
       const lib_map = {
         register_user: require('./lib/register_user'),
