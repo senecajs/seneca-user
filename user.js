@@ -28,6 +28,10 @@ module.exports.defaults = {
 
   rounds: 11111,
 
+  // Fork a child process to hash off the main event loop. Set false on
+  // runtimes with no child_process support (e.g. Cloudflare Workers).
+  fork: true,
+
   fields: {
     standard: ['handle', 'email', 'name', 'active', 'profile'],
   },

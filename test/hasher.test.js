@@ -41,6 +41,21 @@ lab.test('happy-real', { timeout: 5555 }, async () => {
   })
 })
 
+lab.test('fork-false-hashes-inline', async () => {
+  var seneca = Seneca().test().quiet()
+  return new Promise((resolve) => {
+    Hasher(
+      seneca,
+      { src: 'foo', rounds: 3, fork: false },
+      function (err, out) {
+        expect(err).not.exists()
+        expect(out.hash).equal(Hasher.runhash({ src: 'foo', rounds: 3 }))
+        resolve()
+      },
+    )
+  })
+})
+
 lab.test('close', async () => {
   Hasher.close()
 })
