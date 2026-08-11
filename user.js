@@ -28,6 +28,10 @@ module.exports.defaults = {
 
   rounds: 11111,
 
+  // Fork a child process to hash off the main event loop. Set false on
+  // runtimes with no child_process support (e.g. Cloudflare Workers).
+  fork: true,
+
   fields: {
     standard: ['handle', 'email', 'name', 'active', 'profile'],
   },
@@ -117,8 +121,34 @@ function make_intern() {
   return {
     SV: 1, // semantic version, used for data migration
 
+    // Static map instead of require('./lib/' + msg_fn) — bundlers with no
+    // runtime module resolution (Cloudflare Workers, esbuild-bundled AWS
+    // Lambda) can't resolve a computed require() and throw at init.
     make_msg: function (msg_fn, ctx) {
-      return require('./lib/' + msg_fn)(ctx)
+      const lib_map = {
+        register_user: require('./lib/register_user'),
+        get_user: require('./lib/get_user'),
+        list_user: require('./lib/list_user'),
+        adjust_user: require('./lib/adjust_user'),
+        update_user: require('./lib/update_user'),
+        remove_user: require('./lib/remove_user'),
+        login_user: require('./lib/login_user'),
+        logout_user: require('./lib/logout_user'),
+        list_login: require('./lib/list_login'),
+        make_verify: require('./lib/make_verify'),
+        list_verify: require('./lib/list_verify'),
+        change_pass: require('./lib/change_pass'),
+        change_handle: require('./lib/change_handle'),
+        change_email: require('./lib/change_email'),
+        check_handle: require('./lib/check_handle'),
+        check_verify: require('./lib/check_verify'),
+        check_exists: require('./lib/check_exists'),
+        auth_user: require('./lib/auth_user'),
+        cmd_encrypt: require('./lib/cmd_encrypt'),
+        cmd_pass: require('./lib/cmd_pass'),
+      }
+
+      return lib_map[msg_fn](ctx)
     },
 
     make_ctx: function (initial_ctx, options) {
