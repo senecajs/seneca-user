@@ -23,11 +23,12 @@ common user management actions (`register`, `login` etc.).
 ## Install
 
 ```sh
-npm install seneca
-npm install seneca-promisify // dependency
-npm install seneca-entity // dependency
-npm install @seneca/user
+npm install seneca@^4 @seneca/entity @seneca/user
 ```
+
+Version 7 needs Seneca 4 and Node.js 24 or later. It uses the
+[@seneca/entity](https://www.npmjs.com/package/@seneca/entity) plugin
+(version 29 or later) to store users. With Seneca 3, use `@seneca/user@6`.
 
 ### Quick example
 
@@ -37,9 +38,8 @@ Register a user and then create an automatic login for testing.
 const Seneca = require('seneca')
 
 var seneca = Seneca()
-  .use('promisify')
-  .use('entity')
-  .use('user')
+  .use('@seneca/entity')
+  .use('@seneca/user')
 
 var out = await seneca.post('sys:user,register:user', {
   handle: 'alice'

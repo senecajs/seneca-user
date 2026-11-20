@@ -16,7 +16,11 @@ module.exports.errors = {}
 
 const intern = (module.exports.intern = make_intern())
 
-module.exports.defaults = {
+// Seneca 4 builds a shape from these defaults. A plain array there is a
+// fixed-length tuple whose entries are defaults by position, so the array
+// options use valid.Default: an array given by the caller replaces the
+// default list, as on Seneca 3.
+module.exports.defaults = ({ valid }) => ({
   test: false,
 
   salt: {
@@ -29,7 +33,10 @@ module.exports.defaults = {
   rounds: 11111,
 
   fields: {
-    standard: ['handle', 'email', 'name', 'active', 'profile'],
+    standard: valid.Default(
+      ['handle', 'email', 'name', 'active', 'profile'],
+      [String],
+    ),
   },
 
   onetime: {
@@ -43,7 +50,7 @@ module.exports.defaults = {
   handle: {
     minlen: 3,
     maxlen: 15,
-    reserved: ['guest', 'visitor'],
+    reserved: valid.Default(['guest', 'visitor'], [String]),
     must_match: (handle) => handle.match(/^[a-z0-9_]+$/),
 
     // a function returning an array of strings
@@ -60,7 +67,7 @@ module.exports.defaults = {
   ensure_handle: intern.ensure_handle,
   make_handle: intern.make_handle,
   make_token: intern.make_token,
-}
+})
 
 function user(options) {
   var seneca = this

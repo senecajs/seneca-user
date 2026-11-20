@@ -1,7 +1,7 @@
 {
   "name": "@seneca/user",
   "description": "User management plugin for Seneca",
-  "version": "6.4.0",
+  "version": "7.0.0",
   "keywords": [
     "seneca",
     "user",
@@ -18,7 +18,6 @@
     "test": "lab -v -L  -t 90 -P test -I AggregateError,atob,btoa,AbortController,AbortSignal,EventTarget,Event,MessageChannel,MessagePort,MessageEvent,performance -r console -o stdout -r html -o test/coverage.html",
     "test-some": "lab -v -L -P test -g",
     "test-msgs": "lab -t 90 --coverage-exclude lib/hasher.js -P messages.test -r console -o stdout -r html -o test/coverage.html",
-    "doc": "seneca-doc",
     "coveralls": "lab -s -P test -I AggregateError,atob,btoa,DOMException,AbortController,AbortSignal,EventTarget,Event,MessageChannel,MessagePort,MessageEvent,performance,structuredClone -r lcov > ./coverage/lcov.info",
     "prettier": "prettier --write --no-semi --single-quote *.js lib/*.js test/*.js",
     "reset": "npm run clean && npm i && npm test",
@@ -31,7 +30,7 @@
     "LICENSE",
     "README.md",
     "user.js",
-    "user-docs.js",
+    "user-doc.js",
     "lib"
   ],
   "contributors": [
@@ -53,7 +52,7 @@
     "Sorin Silaghi (https://github.com/sorin7486)"
   ],
   "engines": {
-    "node": ">=12"
+    "node": ">=24"
   },
   "dependencies": {
     "uuid": "^10.0.0"
@@ -61,20 +60,21 @@
   "devDependencies": {
     "@hapi/code": "9",
     "@hapi/lab": "25",
-    "coveralls": "^3.1.1",
+    "@seneca/entity": "^29.0.0",
     "prettier": "^3.3.1",
-    "seneca-doc": "^2.1.3",
-    "seneca-msg-test": "^4.1.0",
-    "@seneca/maintain": "^0.1.0"
+    "seneca": "^4.0.0",
+    "seneca-msg-test": "^5.0.0"
   },
   "peerDependencies": {
-    "seneca": ">=3||>=4.0.0-rc2",
-    "seneca-promisify": ">=3",
-    "seneca-entity": ">=26"
+    "seneca": "^4.0.0",
+    "@seneca/entity": "^29.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/senecajs/seneca-user.git"
+    "url": "git+https://github.com/senecajs/seneca-user.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "pre-commit": [
     "test"

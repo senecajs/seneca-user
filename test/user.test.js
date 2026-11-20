@@ -100,3 +100,54 @@ lab.test('handle-sanitize', async () => {
 
   expect(sanitize('alice.anderson')).equal('alice_anderson')
 })
+
+lab.test('array-options', async () => {
+  var make = (options) =>
+    Seneca({ legacy: false })
+      .test()
+      .quiet()
+      .use('@seneca/entity')
+      .use('../user', options)
+      .ready()
+
+  // defaults
+  var si = await make({})
+  var opts = si.find_plugin('user').options
+  expect(opts.handle.reserved).equal(['guest', 'visitor'])
+  expect(opts.fields.standard).equal([
+    'handle',
+    'email',
+    'name',
+    'active',
+    'profile',
+  ])
+  await si.close()
+
+  // a longer list replaces the default list
+  si = await make({ handle: { reserved: ['guest', 'visitor', 'admin'] } })
+  opts = si.find_plugin('user').options
+  expect(opts.handle.reserved).equal(['guest', 'visitor', 'admin'])
+  var admin = await si.post('sys:user,register:user', { handle: 'admin' })
+  expect(admin).contains({ ok: false, why: 'reserved' })
+  await si.close()
+
+  // an empty list reserves nothing
+  si = await make({ handle: { reserved: [] } })
+  opts = si.find_plugin('user').options
+  expect(opts.handle.reserved).equal([])
+  var guest = await si.post('sys:user,register:user', { handle: 'guest' })
+  expect(guest.ok).true()
+  expect(guest.user.handle).equal('guest')
+  await si.close()
+
+  // a shorter list is not filled up from the default list
+  si = await make({ fields: { standard: ['handle'] } })
+  opts = si.find_plugin('user').options
+  expect(opts.fields.standard).equal(['handle'])
+  await si.post('sys:user,register:user', { handle: 'alice' })
+  var found = await si.post('sys:user,get:user', { handle: 'alice' })
+  expect(found.ok).true()
+  expect(found.user.handle).equal('alice')
+  expect(found.user.name).not.exists()
+  await si.close()
+})

@@ -9,10 +9,7 @@ module.exports = {
     var seneca = Seneca({ legacy: false })
       .test()
       // .quiet()
-      .use('promisify')
-      .use('doc')
-      // .use('joi')
-      .use('entity')
+      .use('@seneca/entity')
       .use('../user', {
         password: {
           minlen: 3,

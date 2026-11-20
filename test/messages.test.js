@@ -3,7 +3,6 @@
 
 const Code = require('@hapi/code')
 const Lab = require('@hapi/lab')
-const Joi = require('@hapi/joi')
 const expect = Code.expect
 const lab = (exports.lab = Lab.script())
 
