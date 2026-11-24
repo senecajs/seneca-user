@@ -13,6 +13,11 @@ var lab = (exports.lab = Lab.script())
 var User = require('..')
 var intern = User.intern
 
+// The default options as Seneca resolves them from the defaults shape.
+function default_options() {
+  return Seneca.valid(User.defaults({ valid: Seneca.valid }))({})
+}
+
 lab.test('make_seneca', async () => {
   var si = await make_seneca()
   expect(si).exist()
@@ -27,7 +32,7 @@ lab.test('make_handle', async () => {
 })
 
 lab.test('ensure_handle', async () => {
-  var opts0 = User.defaults
+  var opts0 = default_options()
 
   var msg0 = { handle: 'foo' }
   expect(intern.ensure_handle(msg0, opts0)).equal('foo')
@@ -42,7 +47,7 @@ lab.test('ensure_handle', async () => {
   var ud2 = { email: 'foo@example.com' }
   expect(intern.ensure_handle(ud2, opts0)).startsWith('foo')
 
-  var opts1 = Seneca.util.deep({}, User.defaults, {
+  var opts1 = Seneca.util.deep({}, default_options(), {
     handle: { downcase: false },
   })
 
@@ -119,7 +124,7 @@ lab.test('find_user', async () => {
   })
   expect(bob.ok).true()
 
-  var ctx = intern.make_ctx({}, User.defaults)
+  var ctx = intern.make_ctx({}, default_options())
 
   var msg0 = { handle: 'alice' }
   var found = await intern.find_user(si, msg0, ctx)
@@ -278,7 +283,7 @@ lab.test('make_login', async () => {
 lab.test('build_pass_fields', async () => {
   var si = make_seneca()
 
-  var ctx = intern.make_ctx({}, User.defaults)
+  var ctx = intern.make_ctx({}, default_options())
 
   var msg0 = { pass: 'abcabcabc' }
   var pf0 = await intern.build_pass_fields(si, msg0, ctx)
@@ -590,9 +595,7 @@ function make_seneca() {
   var seneca = Seneca({ legacy: false })
     .test()
     .quiet()
-    .use('promisify')
-    .use('doc')
-    .use('entity')
+    .use('@seneca/entity')
     .use('../user')
   return seneca
 }
