@@ -420,7 +420,9 @@ module.exports = [
       handle: 'bob',
       kind: 'foo',
       code: 'bob-foo-code-01',
-      expire_duration: 1, // so that's gonna expire real soon...
+      // already expired: with 1 ms, a fast machine can check it within the
+      // same millisecond, before it expires
+      expire_duration: -1,
       once: false,
       valid: true,
     },
