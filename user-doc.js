@@ -19,6 +19,35 @@ module.exports = {
     },
   },
 
+  sso_login: {
+    desc: 'Federated login: find-or-create a user from an externally-verified provider identity, then log in.',
+    reply_desc: {
+      ok: '_true_ if login succeeded',
+      user: 'user entity',
+      login: 'login entity',
+      why: 'string coded reason for the login',
+      registered: '_true_ if a new user was registered as part of this call',
+    },
+  },
+
+  link_provider: {
+    desc: 'Attach an external provider identity to an already-identified user.',
+    reply_desc: {
+      ok: '_true_ if linked (or already linked to the same user)',
+      user_id: 'string',
+      provider: 'string',
+    },
+  },
+
+  unlink_provider: {
+    desc: 'Detach an external provider identity from a user. Refuses if it is the last auth method.',
+    reply_desc: {
+      ok: '_true_ if unlinked',
+      user_id: 'string',
+      provider: 'string',
+    },
+  },
+
   register_user: {
     desc: 'Register a new user',
     reply_desc: {
